@@ -33,7 +33,7 @@
   },
   "scripts": {
     "frontend": "npm run dev --prefix BillingWeb",
-    "backend": "node Backend/index.js",
+    "backend": "npm start --prefix Backend",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\""
   },
   "repository": {

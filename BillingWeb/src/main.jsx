@@ -9,13 +9,13 @@ import { StoreProvider } from "./PrivateRouter/StoreContext.jsx";
 import PrivateRoute from "./PrivateRouter/PrivateRouter.jsx";
 import { AdminProvider } from "./PrivateRouter/AdminContext.jsx";
 import { Toaster } from "react-hot-toast";
-import Loader from "./Components/CommenComponents/Loader.jsx";
+import Loader from "./components/Loader.jsx";
 
 // Lazy Load Main Components
-const Home = React.lazy(() => import("./Components/Home/Home.jsx"));
+const Home = React.lazy(() => import("./Home/Home.jsx"));
 
-const Login = React.lazy(() => import("./Components/Auth/Login.jsx"));
-const Register = React.lazy(() => import("./Components/Auth/Register.jsx"));
+const Login = React.lazy(() => import("./components/Auth/Login.jsx"));
+const Register = React.lazy(() => import("./components/Auth/Register.jsx"));
 
 // Lazy Load Admin Components
 const AdminPanel = React.lazy(() => import("./Admin/AdminPanel.jsx"));
@@ -26,10 +26,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    errorElement: <ErrorPage />,
+
     children: [
       { path: "/", element: <Home /> },
-
+      
 
     ],
   },
@@ -44,9 +44,11 @@ const router = createBrowserRouter([
         </AdminProvider>
       </PrivateRoute>
     ),
-    errorElement: <ErrorPage />,
+  
     children: [
       { index: true, element: <Dashboard /> },
+      
+    
     ],
   },
 ]);
@@ -63,3 +65,4 @@ createRoot(document.getElementById("root")).render(
     </AuthProvider>
   </GoogleOAuthProvider>
 );
+

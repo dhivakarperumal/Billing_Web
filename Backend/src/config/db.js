@@ -1,7 +1,7 @@
 import mysql from "mysql2";
-import dotenv from "dotenv";
+import "./env.js";
 
-dotenv.config();
+// Remove the local dotenv.config() call as it's handled by env.js
 
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
