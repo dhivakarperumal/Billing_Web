@@ -75,9 +75,9 @@ export const getProductById = async (req, res) => {
 };
 
 export const createProduct = async (req, res) => {
-    const { name, category, mrp, offer_price, total_stock, status, images, variants, description } = req.body;
+    const { product_code: requestedCode, name, category, mrp, offer_price, total_stock, status, images, variants, description } = req.body;
     try {
-        const product_code = await generateProductCode();
+        const product_code = requestedCode ? requestedCode : await generateProductCode();
         const imagesJson = JSON.stringify(images || []);
         const variantsJson = JSON.stringify(variants || []);
         
