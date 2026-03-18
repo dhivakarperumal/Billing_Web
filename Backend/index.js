@@ -5,7 +5,7 @@ import cors from "cors";
 import authRouter from "./src/routers/authRouter.js";
 import categoryRouter from "./src/routers/categoryRouter.js";
 import productRouter from "./src/routers/productRouter.js";
-import orderRouter from "./src/routers/orderRouter.js";
+import dashboardRouter from "./src/routers/dashboardRouter.js";
 
 const app = express();
 
@@ -17,7 +17,8 @@ app.use("/api/auth", authRouter);
 // Feature Routes
 app.use("/api/categories", categoryRouter);
 app.use("/api/products", productRouter);
-app.use("/api/orders", orderRouter);
+app.use("/api/dashboard", dashboardRouter);
+
 
 // Test Route
 app.get("/", (req, res) => {

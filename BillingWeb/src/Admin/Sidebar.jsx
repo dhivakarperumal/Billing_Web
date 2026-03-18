@@ -42,7 +42,6 @@ const navItems = [
 
   
 
-  { path: "/admin/orders/create", label: "Billing", icon: PlusCircle },
   { path: "/admin/users/all", label: "Customers", icon: Users },
   {
     label: "Dealers",
@@ -67,7 +66,6 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
   /* ================= ACTIVE ROUTE MAP ================= */
   const activeRouteMap = {
     "/admin/products": ["/admin/products/all", "/admin/products/add", "/admin/products/category"],
-    "/admin/orders": ["/admin/orders/all", "/admin/orders/new", "/admin/orders/create", "/admin/orders/delivery", "/admin/orders/cancelled"],
     "/admin/users": ["/admin/users/all"],
   };
 
@@ -230,13 +228,13 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
                   setOpenMenu(null);
                   if (isOpen) onClose();
                 }}
-                className={`
-                  flex items-center gap-3 px-4 py-3 rounded-xl transition-all
-                  ${isActive
-                    ? "bg-primary text-white shadow-xl shadow-primary/20"
-                    : "text-white/50 hover:bg-white/5 hover:text-white"
-                  }
-                `}
+                  className={`
+                    flex items-center gap-3 px-4 py-3 rounded-xl transition-all
+                    ${isActive
+                      ? "bg-primary text-white shadow-xl shadow-primary/20"
+                      : "text-white/50 hover:bg-white/5 hover:text-white"
+                    }
+                  `}
               >
                 <Icon className="w-5 h-5 shrink-0" />
                 {!collapsed && <span className="text-sm font-bold tracking-wide">{item.label}</span>}

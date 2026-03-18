@@ -26,9 +26,6 @@ const Category = React.lazy(() => import("./Admin/Products/Category.jsx"));
 const AddCategory = React.lazy(() => import("./Admin/Products/AddCategory.jsx"));
 const StockDetails = React.lazy(() => import("./Admin/Pages/StockDetails.jsx"));
 const AddStock = React.lazy(() => import("./Admin/Pages/AddStock.jsx"));
-const Orders = React.lazy(() => import("./Admin/Pages/Orders.jsx"));
-const CreateOrder = React.lazy(() => import("./Admin/Pages/CreateOrder.jsx"));
-const OrderDetail = React.lazy(() => import("./Admin/Pages/OrderDetail.jsx"));
 const Users = React.lazy(() => import("./Admin/Pages/Users.jsx"));
 const Dealers = React.lazy(() => import("./Admin/Pages/Dealers.jsx"));
 const AddDealer = React.lazy(() => import("./Admin/Pages/AddDealer.jsx"));
@@ -74,12 +71,6 @@ const router = createBrowserRouter([
       { path: "products/category/edit/:id", element: <AddCategory /> },
       { path: "products/stock", element: <StockDetails /> },
       { path: "products/stock/add", element: <AddStock /> },
-      { path: "orders/all", element: <Orders filter="all" /> },
-      { path: "orders/new", element: <Orders filter="Order Placed" /> },
-      { path: "orders/delivery", element: <Orders filter="Delivered" /> },
-      { path: "orders/cancelled", element: <Orders filter="Cancelled" /> },
-      { path: "orders/create", element: <CreateOrder /> },
-      { path: "orders/:id", element: <OrderDetail /> },
       { path: "users/all", element: <Users /> },
       { path: "dealers", element: <Dealers /> },
       { path: "dealers/add", element: <AddDealer /> },
