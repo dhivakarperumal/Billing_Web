@@ -3,9 +3,27 @@ import db from "../config/db.js";
 // Helper to generate Category ID
 const generateCatID = async () => {
     const prefix = "CAT";
-    const [rows] = await db.promise().query("SELECT COUNT(*) as count FROM categories");
-    const count = (rows[0].count || 0) + 1;
-    return `${prefix}${count.toString().padStart(3, '0')}`;
+    try {
+        const [rows] = await db.promise().query(
+            "SELECT catId FROM categories WHERE catId LIKE ? ORDER BY id DESC LIMIT 1",
+            [`${prefix}%`]
+        );
+        
+        let nextNum = 1;
+        if (rows.length > 0) {
+            const lastId = rows[0].catId;
+            const numericPart = lastId.substring(prefix.length);
+            const lastNum = parseInt(numericPart, 10);
+            if (!isNaN(lastNum)) {
+                nextNum = lastNum + 1;
+            }
+        }
+        
+        return `${prefix}${nextNum.toString().padStart(3, '0')}`;
+    } catch (error) {
+        console.error("Error generating CatID:", error);
+        return `${prefix}001`;
+    }
 };
 
 export const getCategories = async (req, res) => {
@@ -40,9 +58,9 @@ export const getCategoryById = async (req, res) => {
 };
 
 export const createCategory = async (req, res) => {
-    const { name, image, description, subcategories } = req.body;
+    const { catId: providedId, name, image, description, subcategories } = req.body;
     try {
-        const catId = await generateCatID();
+        const catId = providedId || await generateCatID();
         const subcategoriesJson = JSON.stringify(subcategories || []);
         
         const [result] = await db.promise().query(

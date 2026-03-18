@@ -373,7 +373,7 @@ const AllProducts = () => {
                                                         <span className="md:hidden text-[11px] font-black text-gray-400 uppercase tracking-widest">Actions</span>
                                                         <div className="flex items-center justify-start md:justify-end gap-3">
                                                             <Link
-                                                                to={`/admin/products/${product.id}`}
+                                                                to={`/admin/products/detail/${product.id}`}
                                                                 className="p-3 border border-gray-200 text-gray-500 rounded-xl hover:bg-primary hover:text-white transition-all shadow-sm md:shadow-none"
                                                                 title="View Product"
                                                             >
@@ -426,7 +426,7 @@ const AllProducts = () => {
                                             </div>
                                         </div>
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                                            <Link to={`/admin/products/${product.id}`} className="w-full py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 shadow-2xl hover:bg-white hover:text-slate-900 transition-all">
+                                            <Link to={`/admin/products/detail/${product.id}`} className="w-full py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 shadow-2xl hover:bg-white hover:text-slate-900 transition-all">
                                                 Visual Details <FiChevronRight />
                                             </Link>
                                         </div>

@@ -22,7 +22,7 @@ const AdminLayout = () => {
     }, []);
 
     return (
-        <div className="admin-root flex min-h-screen bg-gray-50 text-slate-900">
+        <div className="admin-root flex min-h-screen bg-white text-slate-900">
 
             {/* Sidebar */}
             <Sidebar
@@ -51,7 +51,7 @@ const AdminLayout = () => {
                 </main>
 
                 {/* Footer */}
-                <footer className="glass-footer text-center py-4 mt-10 text-sm text-white/70">
+                <footer className="glass-footer text-center py-4 mt-10 text-sm text-slate-400">
                     © {new Date().getFullYear()} Q-Techx Solutions. All rights reserved.
                 </footer>
 

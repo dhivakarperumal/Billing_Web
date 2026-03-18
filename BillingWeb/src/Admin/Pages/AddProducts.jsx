@@ -213,6 +213,49 @@ const AddProducts = () => {
   );
 };
 
+/* 🔹 Helper Components */
+
+const FormSection = ({ title, icon, children, compact = false }) => (
+    <div className={`bg-white ${compact ? 'p-6' : 'p-8 md:p-10'} rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden group`}>
+        <div className="relative z-10 space-y-6">
+            <div className="flex items-center gap-3">
+                <span className="p-2.5 bg-slate-50 rounded-xl group-hover:bg-white group-hover:shadow-md transition-all">{icon}</span>
+                <h3 className="text-xl font-black text-slate-800 tracking-tight">{title}</h3>
+            </div>
+            {children}
+        </div>
+        <div className="absolute -top-6 -right-6 opacity-[0.02] text-slate-900 group-hover:scale-110 transition-transform pointer-events-none">
+            {icon}
+        </div>
+    </div>
+);
+
+const InputLabel = ({ label, required = false }) => (
+    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 ml-1">
+        {label} {required && <span className="text-rose-500">*</span>}
+    </label>
+);
+
+const PricingInput = ({ label, name, value, onChange, icon, highlight = false }) => (
+    <div className="relative group">
+        <InputLabel label={label} />
+        <div className="relative">
+            <span className={`absolute left-4 top-1/2 -translate-y-1/2 font-black text-lg ${highlight ? 'text-emerald-500' : 'text-slate-900'}`}>₹</span>
+            <input 
+                type="number" name={name} value={value} onChange={onChange}
+                className={`w-full pl-10 pr-4 py-4 rounded-2xl outline-none transition-all font-black text-lg ${
+                    highlight 
+                    ? 'bg-emerald-50/50 border border-emerald-100 focus:bg-white focus:border-emerald-500 text-emerald-600' 
+                    : 'bg-slate-50 border border-slate-100 focus:bg-white focus:border-primary/30 text-slate-900'
+                }`}
+            />
+            {icon && <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-30 group-hover:opacity-100 transition-opacity">
+                {icon}
+            </div>}
+        </div>
+    </div>
+);
+
 export default AddProducts;
 
 /* UI */
