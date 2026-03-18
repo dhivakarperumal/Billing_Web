@@ -73,14 +73,14 @@ const More = () => {
               </div>
 
               {/* FOOTER LINE */}
-              <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
+              {/* <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
                 <span className="text-[10px] font-black uppercase tracking-widest text-primary">
                   Open Panel
                 </span>
                 <span className="text-[10px] text-gray-300 group-hover:text-primary transition-all">
                   →
                 </span>
-              </div>
+              </div> */}
             </div>
           );
         })}
