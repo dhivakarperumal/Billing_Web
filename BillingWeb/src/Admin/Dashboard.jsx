@@ -48,6 +48,33 @@ const revenueData = [
   { name: "Dec", total: 2600, completed: 2200, rejected: 400 },
 ];
 
+const stockStats = [
+  {
+    title: "Total Stock",
+    value: 320,
+    icon: <FiBox />,
+    color: "bg-indigo-100 text-indigo-600",
+  },
+  {
+    title: "In Stock",
+    value: 250,
+    icon: <FiBox />,
+    color: "bg-green-100 text-green-600",
+  },
+  {
+    title: "Low Stock",
+    value: 45,
+    icon: <FiAlertTriangle />,
+    color: "bg-yellow-100 text-yellow-600",
+  },
+  {
+    title: "Out of Stock",
+    value: 25,
+    icon: <FiAlertTriangle />,
+    color: "bg-red-100 text-red-600",
+  },
+];
+
 /* 🔹 Mock Data */
 const stats = [
   {
@@ -161,6 +188,40 @@ const Dashboard = () => {
             </p>
           </div>
         ))}
+      </div>
+
+      {/* STOCK OVERVIEW */}
+      <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-sm font-black text-slate-800">Stock Overview</h2>
+
+          <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+            Inventory Status
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {stockStats.map((item, i) => (
+            <div
+              key={i}
+              className="bg-gray-50 border border-gray-100 p-4 rounded-2xl hover:shadow-md transition-all"
+            >
+              <div className="flex justify-between items-center mb-3">
+                <span className={`p-2 rounded-xl ${item.color}`}>
+                  {item.icon}
+                </span>
+              </div>
+
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                {item.title}
+              </p>
+
+              <p className="text-lg font-black text-slate-800 mt-1">
+                {item.value}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* CHART + REVENUE */}
