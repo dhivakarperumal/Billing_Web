@@ -22,6 +22,7 @@ const CreateBilling = () => {
     // UI States
     const [showVariantModal, setShowVariantModal] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
+    const [dropdownValue, setDropdownValue] = useState("");
     const [isListening, setIsListening] = useState(false);
     const [isScannerFocused, setIsScannerFocused] = useState(true);
     const [showCameraScanner, setShowCameraScanner] = useState(false);
@@ -162,23 +163,35 @@ const CreateBilling = () => {
     };
 
     const addItemToBill = (product, variant) => {
-        const itemId = variant ? `${product.id}-${variant.quantity}-${variant.unit}` : product.id;
-        if (formData.items.find(item => item.id === itemId)) {
-            toast.error("Item already added");
-            return;
-        }
-        const price = variant ? parseFloat(vPrice(variant)) : parseFloat(product.offer_price || product.price || 0);
-        const newItem = {
-            id: itemId,
-            product_id: product.id,
-            name: variant ? `${product.name} (${variant.quantity} ${variant.unit})` : product.name,
-            price: price,
-            quantity: 1,
-            total: price,
-            variant_info: variant ? { weight: variant.quantity, unit: variant.unit } : null
-        };
-        const updatedItems = [...formData.items, newItem];
-        updateTotal(updatedItems);
+        setFormData(prev => {
+            const itemId = variant ? `${product.id}-${variant.quantity}-${variant.unit}` : product.id;
+            
+            // Duplicate prevention
+            if (prev.items.find(item => item.id === itemId)) {
+                toast.error("Item already added");
+                return prev;
+            }
+
+            const price = variant ? parseFloat(vPrice(variant)) : parseFloat(product.offer_price || product.price || 0);
+            const newItem = {
+                id: itemId,
+                product_id: product.id,
+                name: variant ? `${product.name} (${variant.quantity} ${variant.unit})` : product.name,
+                price: price,
+                quantity: 1,
+                total: price,
+                variant_info: variant ? { weight: variant.quantity, unit: variant.unit } : null
+            };
+
+            const updatedItems = [...prev.items, newItem];
+            const updatedTotal = updatedItems.reduce((sum, item) => sum + item.total, 0);
+
+            return {
+                ...prev,
+                items: updatedItems,
+                total_amount: updatedTotal
+            };
+        });
         setShowVariantModal(false);
     };
 
@@ -227,17 +240,45 @@ const CreateBilling = () => {
     };
 
     const addSelectedToBill = () => {
-        selectedItems.forEach(p => {
-            if (p.variants && p.variants.length > 0) {
-                // For bulk, we'll just add the first variant or default if no selection
-                addItemToBill(p, p.variants[0]);
+        setFormData(prev => {
+            const currentItems = [...prev.items];
+            let addedCount = 0;
+
+            selectedItems.forEach(p => {
+                const variant = (p.variants && p.variants.length > 0) ? p.variants[0] : null;
+                const itemId = variant ? `${p.id}-${variant.quantity}-${variant.unit}` : p.id;
+
+                if (!currentItems.find(item => item.id === itemId)) {
+                    const price = variant ? parseFloat(vPrice(variant)) : parseFloat(p.offer_price || p.price || 0);
+                    const newItem = {
+                        id: itemId,
+                        product_id: p.id,
+                        name: variant ? `${p.name} (${variant.quantity} ${variant.unit})` : p.name,
+                        price: price,
+                        quantity: 1,
+                        total: price,
+                        variant_info: variant ? { weight: variant.quantity, unit: variant.unit } : null
+                    };
+                    currentItems.push(newItem);
+                    addedCount++;
+                }
+            });
+
+            if (addedCount > 0) {
+                toast.success(`Broadly added ${addedCount} items`);
+                return {
+                    ...prev,
+                    items: currentItems,
+                    total_amount: currentItems.reduce((sum, i) => sum + i.total, 0)
+                };
             } else {
-                addItemToBill(p, null);
+                toast.error("No new items were added (already in bill)");
+                return prev;
             }
         });
+
         setSelectedItems([]);
         setSelectMode(false);
-        toast.success(`Broadly added ${selectedItems.length} items`);
     };
 
     const getProductImage = (product) => {
@@ -245,10 +286,10 @@ const CreateBilling = () => {
             let imgUrl = null;
             const images = typeof product.images === 'string' ? JSON.parse(product.images) : (product.images || []);
             if (Array.isArray(images) && images.length > 0) imgUrl = images[0];
-            
+
             if (!imgUrl) return `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name || 'P')}&background=random`;
             if (imgUrl.startsWith('http') || imgUrl.startsWith('data:')) return imgUrl;
-            
+
             const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
             const cleanPath = imgUrl.startsWith('/') ? imgUrl : `/${imgUrl}`;
             return `${backendUrl}${cleanPath}`;
@@ -281,7 +322,11 @@ const CreateBilling = () => {
                             onChange={(e) => {
                                 const p = products.find(prod => prod.name === e.target.value);
                                 if (p) {
-                                    handleProductClick(p);
+                                    if (selectMode) {
+                                        toggleSelectItem(p);
+                                    } else {
+                                        handleProductClick(p);
+                                    }
                                     e.target.value = "";
                                 }
                             }}
@@ -295,15 +340,19 @@ const CreateBilling = () => {
 
                     <div className="relative hidden lg:block">
                         <select
-                            value={selectedProduct}
+                            value={dropdownValue}
                             onChange={(e) => {
                                 const productId = e.target.value;
-                                setSelectedProduct(productId);
+                                setDropdownValue(productId);
 
                                 const p = products.find(prod => prod.id === productId);
                                 if (p) {
-                                    handleProductClick(p);
-                                    setSelectedProduct(""); // reset after adding
+                                    if (selectMode) {
+                                        toggleSelectItem(p);
+                                    } else {
+                                        handleProductClick(p);
+                                    }
+                                    setDropdownValue(""); // reset after adding
                                 }
                             }}
                             className="pl-3 pr-4 py-2 bg-white border border-gray-200 rounded-xl text-[10px] font-black uppercase tracking-widest focus:ring-4 focus:ring-primary/10 transition-all outline-none w-48"
@@ -341,35 +390,66 @@ const CreateBilling = () => {
                     </div>
 
                     <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm space-y-6">
-                        <div className="flex justify-between items-center gap-4">
-                            <div className="flex items-center gap-3">
-                                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2"><FiPackage /> Products</h3>
-                                <div className="hidden sm:flex bg-gray-50 p-1 rounded-lg border gap-1">
-                                    <button onClick={() => setViewMode("grid")} className={`px-2.5 py-1 rounded text-[8px] font-black uppercase tracking-tighter ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'text-gray-400'}`}>Grid</button>
-                                    <button onClick={() => setViewMode("table")} className={`px-2.5 py-1 rounded text-[8px] font-black uppercase tracking-tighter ${viewMode === 'table' ? 'bg-white shadow-sm' : 'text-gray-400'}`}>Table</button>
+                        <div className="flex justify-between items-center mb-3">
+
+                            {/* Left Title */}
+                            <h3 className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                                <FiPackage className="text-rose-500" />
+                                Products
+                            </h3>
+
+                            {/* Right Controls */}
+                            <div className="flex items-center gap-2">
+
+                                {/* View Mode */}
+                                <div className="hidden sm:flex bg-gray-50 p-1 rounded-lg border border-gray-100 gap-1">
+                                    <button
+                                        onClick={() => setViewMode("grid")}
+                                        className={`px-3 py-1 rounded-md text-[8px] font-black uppercase tracking-wider transition-all
+        ${viewMode === "grid"
+                                                ? "bg-white shadow text-rose-500"
+                                                : "text-gray-400 hover:text-gray-600"}`}
+                                    >
+                                        Grid
+                                    </button>
+
+                                    <button
+                                        onClick={() => setViewMode("table")}
+                                        className={`px-3 py-1 rounded-md text-[8px] font-black uppercase tracking-wider transition-all
+        ${viewMode === "table"
+                                                ? "bg-white shadow text-rose-500"
+                                                : "text-gray-400 hover:text-gray-600"}`}
+                                    >
+                                        Table
+                                    </button>
                                 </div>
+
+                                {/* Select Mode */}
                                 <button
                                     onClick={() => {
                                         setSelectMode(!selectMode);
                                         if (selectMode) setSelectedItems([]);
                                     }}
-                                    className={`px-3 py-1.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${selectMode ? 'bg-rose-600 text-white shadow-lg' : 'bg-white border text-gray-400 hover:bg-gray-50'}`}
+                                    className={`px-3 py-1.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all
+      ${selectMode
+                                            ? "bg-rose-600 text-white shadow-md"
+                                            : "bg-white border border-gray-200 text-gray-500 hover:bg-gray-50"}`}
                                 >
-                                    {selectMode ? 'Cancel Selection' : 'Select Multiple'}
+                                    {selectMode ? "Cancel Selection" : "Select Multiple"}
                                 </button>
+
+                                {/* Add Selected */}
                                 {selectMode && selectedItems.length > 0 && (
                                     <button
                                         onClick={addSelectedToBill}
-                                        className="px-3 py-1.5 bg-rose-500 text-white rounded-lg text-[8px] font-black uppercase tracking-widest shadow-lg animate-bounce"
+                                        className="px-3 py-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-[8px] font-black uppercase tracking-widest shadow-md"
                                     >
-                                        Add {selectedItems.length} Items
+                                        Add {selectedItems.length}
                                     </button>
                                 )}
+
                             </div>
-                            <div className="flex overflow-x-auto hide-scrollbar gap-2 p-1 bg-gray-50 rounded-xl">
-                                <button onClick={() => setSelectedCategory("All")} className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest ${selectedCategory === 'All' ? 'bg-rose-600 text-white shadow-lg' : 'text-gray-400'}`}>All</button>
-                                {categories.map(c => <button key={c.id} onClick={() => setSelectedCategory(c.name)} className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest ${selectedCategory === c.name ? 'bg-rose-600 text-white shadow-lg' : 'text-gray-400'}`}>{c.name}</button>)}
-                            </div>
+
                         </div>
 
                         <div className="flex gap-2 relative">
@@ -394,10 +474,14 @@ const CreateBilling = () => {
                                                 <button
                                                     key={p.id}
                                                     onClick={() => {
-                                                        handleProductClick(p);
-                                                        setProductSearchTerm("");
+                                                        if (selectMode) {
+                                                            toggleSelectItem(p);
+                                                        } else {
+                                                            handleProductClick(p);
+                                                            setProductSearchTerm("");
+                                                        }
                                                     }}
-                                                    className="w-full px-5 py-3 flex items-center justify-between hover:bg-indigo-50 transition-colors border-b border-gray-50 last:border-0 group text-left"
+                                                    className={`w-full px-5 py-3 flex items-center justify-between hover:bg-indigo-50 transition-colors border-b border-gray-50 last:border-0 group text-left ${selectMode && selectedItems.find(si => si.id === p.id) ? 'bg-indigo-50' : ''}`}
                                                 >
                                                     <div className="flex items-center gap-3">
                                                         <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center p-1 overflow-hidden border border-gray-100">
