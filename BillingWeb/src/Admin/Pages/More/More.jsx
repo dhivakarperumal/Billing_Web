@@ -13,10 +13,10 @@ const More = () => {
       path: "/admin/printer",
     },
     {
-      title: "System Settings",
-      desc: "Manage application preferences",
+      title: "Printer Settings",
+      desc: "Customize invoice print layout & behavior",
       icon: Settings,
-      path: "/admin/settings",
+      path: "/admin/printer-settings",
     },
     {
       title: "Backup & Restore",
@@ -28,7 +28,6 @@ const More = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 min-h-screen pb-20">
-
       {/* HEADER */}
       <div>
         <h1 className="text-2xl font-black text-slate-800 tracking-tight">

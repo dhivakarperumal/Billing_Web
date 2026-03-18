@@ -1,137 +1,174 @@
 import React, { useState } from "react";
-import { FiPrinter, FiSave, FiCheckCircle } from "react-icons/fi";
+import { FiSave } from "react-icons/fi";
 
 const PrinterSettings = () => {
-  const [printer, setPrinter] = useState({
-    name: "Thermal Printer",
-    type: "thermal",
-    paperSize: "80mm",
-    autoPrint: true,
+  const [settings, setSettings] = useState({
+    shopName: "My Store",
+    gst: "GSTIN123456",
+    address: "Mumbai, India",
+    footer: "Thank You! Visit Again",
+
+    showLogo: true,
+    logo: null, // ✅ NEW
+
+    fontSize: "14",
+    align: "center",
   });
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setPrinter({
-      ...printer,
+    setSettings({
+      ...settings,
       [name]: type === "checkbox" ? checked : value,
     });
   };
 
-  const handleSave = () => {
-    console.log("Saved:", printer);
-    alert("Printer settings saved successfully!");
-  };
-
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 min-h-screen pb-20">
-
+    <div className="min-h-screen space-y-6 pb-20">
       {/* HEADER */}
       <div>
-        <h1 className="text-2xl font-black text-slate-800">
-          Printer Configuration
-        </h1>
-        <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">
-          Manage billing printer settings
+        <h1 className="text-2xl font-black text-slate-800">Printer Settings</h1>
+        <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">
+          Customize your invoice & preview in real-time
         </p>
       </div>
 
-      {/* MAIN CARD */}
-      <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm p-8 max-w-3xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* ================= LEFT PANEL ================= */}
+        <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm p-6 space-y-5">
+          <h2 className="font-black text-slate-800 text-lg">
+            Invoice Settings
+          </h2>
 
-        {/* ICON HEADER */}
-        <div className="flex items-center gap-4 mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center text-xl shadow-inner">
-            <FiPrinter />
-          </div>
-          <div>
-            <h2 className="text-lg font-black text-slate-800">
-              Printer Setup
-            </h2>
-            <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest">
-              Configure your billing device
-            </p>
-          </div>
-        </div>
+          <input
+            name="shopName"
+            value={settings.shopName}
+            onChange={handleChange}
+            placeholder="Shop Name"
+            className="w-full px-4 py-3 bg-gray-50 rounded-2xl border"
+          />
 
-        {/* FORM */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <input
+            name="gst"
+            value={settings.gst}
+            onChange={handleChange}
+            placeholder="GST Number"
+            className="w-full px-4 py-3 bg-gray-50 rounded-2xl border"
+          />
 
-          {/* Printer Name */}
+          <input
+            name="address"
+            value={settings.address}
+            onChange={handleChange}
+            placeholder="Address"
+            className="w-full px-4 py-3 bg-gray-50 rounded-2xl border"
+          />
+
+          <textarea
+            name="footer"
+            value={settings.footer}
+            onChange={handleChange}
+            placeholder="Footer Message"
+            className="w-full px-4 py-
+            3 bg-gray-50 rounded-2xl border"
+          />
+
+          {/* LOGO UPLOAD */}
           <div className="space-y-2">
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-              Printer Name
+              Upload Logo
             </label>
+
             <input
-              type="text"
-              name="name"
-              value={printer.name}
-              onChange={handleChange}
-              className="w-full px-5 py-3 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-primary transition-all font-bold text-slate-800"
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  const previewUrl = URL.createObjectURL(file);
+                  setSettings({ ...settings, logo: previewUrl });
+                }
+              }}
+              className="w-full text-xs font-bold"
             />
           </div>
 
-          {/* Printer Type */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-              Printer Type
-            </label>
-            <select
-              name="type"
-              value={printer.type}
-              onChange={handleChange}
-              className="w-full px-5 py-3 bg-gray-50 border border-gray-100 rounded-2xl outline-none font-bold text-slate-800"
-            >
-              <option value="thermal">Thermal</option>
-              <option value="inkjet">Inkjet</option>
-              <option value="laser">Laser</option>
-            </select>
-          </div>
-
-          {/* Paper Size */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-              Paper Size
-            </label>
-            <select
-              name="paperSize"
-              value={printer.paperSize}
-              onChange={handleChange}
-              className="w-full px-5 py-3 bg-gray-50 border border-gray-100 rounded-2xl outline-none font-bold text-slate-800"
-            >
-              <option value="80mm">80mm</option>
-              <option value="58mm">58mm</option>
-            </select>
-          </div>
-
-          {/* Auto Print Toggle */}
-          <div className="flex items-center justify-between bg-gray-50 border border-gray-100 rounded-2xl px-5 py-3">
-            <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">
-              Auto Print
-            </span>
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-bold">Show Logo</span>
             <input
               type="checkbox"
-              name="autoPrint"
-              checked={printer.autoPrint}
+              name="showLogo"
+              checked={settings.showLogo}
               onChange={handleChange}
-              className="w-5 h-5 accent-primary"
             />
           </div>
-        </div>
 
-        {/* ACTION BUTTONS */}
-        <div className="flex items-center gap-4 mt-10">
-          <button
-            onClick={handleSave}
-            className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg hover:opacity-90 transition-all"
+          <select
+            name="fontSize"
+            value={settings.fontSize}
+            onChange={handleChange}
+            className="w-full px-4 py-3 bg-gray-50 rounded-2xl border"
           >
+            <option value="12">Small</option>
+            <option value="14">Medium</option>
+            <option value="18">Large</option>
+          </select>
+
+          <select
+            name="align"
+            value={settings.align}
+            onChange={handleChange}
+            className="w-full px-4 py-3 bg-gray-50 rounded-2xl border"
+          >
+            <option value="left">Left</option>
+            <option value="center">Center</option>
+            <option value="right">Right</option>
+          </select>
+
+          <button className="w-full py-3 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2">
             <FiSave /> Save Settings
           </button>
+        </div>
 
-          <button
-            className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 text-gray-500 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-gray-50 transition-all"
+        {/* ================= RIGHT PANEL (LIVE PREVIEW) ================= */}
+        <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm p-6 flex justify-center">
+          {/* THERMAL BILL */}
+          <div
+            className="bg-white border border-gray-200 p-4 w-[260px] text-black"
+            style={{
+              fontSize: `${settings.fontSize}px`,
+              textAlign: settings.align,
+            }}
           >
-            <FiCheckCircle /> Test Print
-          </button>
+            {settings.showLogo && settings.logo && (
+              <div className="flex justify-center mb-2">
+                <img
+                  src={settings.logo}
+                  alt="Logo"
+                  className="h-12 object-contain"
+                />
+              </div>
+            )}
+
+            <h2 className="font-bold">{settings.shopName}</h2>
+            <p>{settings.address}</p>
+            <p>{settings.gst}</p>
+
+            <hr className="my-2" />
+
+            <div className="text-left text-xs">
+              <p>Item 1 x1 ₹100</p>
+              <p>Item 2 x2 ₹200</p>
+            </div>
+
+            <hr className="my-2" />
+
+            <p>Total: ₹300</p>
+
+            <hr className="my-2" />
+
+            <p>{settings.footer}</p>
+          </div>
         </div>
       </div>
     </div>

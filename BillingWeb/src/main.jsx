@@ -12,6 +12,7 @@ import { Toaster } from "react-hot-toast";
 import Loader from "./components/Loader.jsx";
 import More from "./Admin/Pages/More/More.jsx";
 import PrinterSettings from "./Admin/Pages/More/PrinterSettings.jsx";
+import PrinterConfig from "./Admin/Pages/More/PrinterConfig.jsx";
 
 // Lazy Load Main Components
 const Home = React.lazy(() => import("./Home/Home.jsx"));
@@ -82,7 +83,8 @@ const router = createBrowserRouter([
       { path: "reviews", element: <Reviews /> },
       { path: "reports", element: <Reports /> },
       { path: "more", element: <More /> },
-      { path: "printer", element: <PrinterSettings /> },
+      { path: "printer", element: <PrinterConfig /> },
+      { path: "printer-settings", element: <PrinterSettings /> },
       { path: "profile", element: <Profile /> },
     
     ],
