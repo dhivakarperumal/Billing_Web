@@ -1,158 +1,234 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useAdmin } from "../../PrivateRouter/AdminContext";
-import api from "../../api";
-import { toast, Toaster } from "react-hot-toast";
+import React, { useState } from "react";
 import {
-    FiBarChart2,
-    FiPieChart,
-    FiTrendingUp,
-    FiActivity,
-    FiDownload,
-    FiCalendar,
-    FiArrowUpRight,
-    FiArrowDownLeft
+  FiSearch,
+  FiUsers,
+  FiDollarSign,
+  FiBarChart2,
+  FiLayers,
 } from "react-icons/fi";
 
-const Reports = () => {
-    const { reportsCache, setReportsCache } = useAdmin();
-    const [reportsData, setReportsData] = useState(reportsCache);
-    const [loading, setLoading] = useState(!reportsCache);
+/* MOCK DATA */
+const customers = [
+  { name: "Rahul", total: 1200, billing: 3 },
+  { name: "Anita", total: 2400, billing: 5 },
+  { name: "Kumar", total: 800, billing: 2 },
+];
 
-    useEffect(() => {
-        const fetchReports = async () => {
-            if (!reportsCache) setLoading(true);
-            try {
-                const res = await api.get('/reports');
-                setReportsData(res.data);
-                setReportsCache(res.data);
-            } catch (error) {
-                console.error("Failed to load reports:", error);
-                toast.error("Failed to load analytical reports");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchReports();
-    }, []);
+const sales = [
+  { date: "2026-03-01", total: 1200 },
+  { date: "2026-03-02", total: 1800 },
+  { date: "2026-03-03", total: 900 },
+];
 
-    const getStatIcon = (label) => {
-        switch (label) {
-            case "Gross Profit": return <FiTrendingUp />;
-            case "New Customers": return <FiActivity />;
-            case "Avg. Order Value": return <FiPieChart />;
-            case "Cancel Rate": return <FiBarChart2 />;
-            default: return <FiBarChart2 />;
-        }
-    };
+const categories = [
+  { name: "Rice", total: 2000 },
+  { name: "Oil", total: 1500 },
+  { name: "Snacks", total: 1000 },
+];
 
-    if (loading) {
-        return (
-            <div className="flex flex-col items-center justify-center py-40 gap-4">
-                <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-                <p className="text-gray-400 font-black uppercase tracking-widest text-xs">Compiling Reports Data...</p>
+const ReportPage = () => {
+  const [tab, setTab] = useState("overview");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const totalRevenue = sales.reduce((a, b) => a + b.total, 0);
+  const totalBilling = customers.reduce((a, b) => a + b.billing, 0);
+
+  return (
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 min-h-screen pb-20">
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div></div>
+      </div>
+
+      {/* STATS */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          {
+            label: "Revenue",
+            value: totalRevenue,
+            icon: <FiDollarSign />,
+            color: "text-primary",
+            bg: "bg-primary/10",
+          },
+          {
+            label: "Billing",
+            value: totalBilling,
+            icon: <FiBarChart2 />,
+            color: "text-emerald-600",
+            bg: "bg-emerald-50",
+          },
+          {
+            label: "Customers",
+            value: customers.length,
+            icon: <FiUsers />,
+            color: "text-amber-600",
+            bg: "bg-amber-50",
+          },
+          {
+            label: "Categories",
+            value: categories.length,
+            icon: <FiLayers />,
+            color: "text-rose-600",
+            bg: "bg-rose-50",
+          },
+        ].map((stat, i) => (
+          <div
+            key={i}
+            className="bg-white px-4 py-5 md:p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4"
+          >
+            <div
+              className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-xl flex items-center justify-center`}
+            >
+              {stat.icon}
             </div>
-        );
-    }
-
-    return (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
-            <Toaster position="top-right" />
-            {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-
-                </div>
-                <div className="flex items-center gap-3">
-                    <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-100 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all shadow-sm">
-                        <FiCalendar /> Last 12 Months
-                    </button>
-                    <button className="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-100">
-                        <FiDownload /> Download PDF
-                    </button>
-                </div>
+            <div>
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                {stat.label}
+              </p>
+              <p className="text-xl font-black text-slate-800 mt-1">
+                {stat.label === "Revenue" ? `₹${stat.value}` : stat.value}
+              </p>
             </div>
+          </div>
+        ))}
+      </div>
 
-            {/* Top Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {reportsData?.stats?.map((stat, i) => (
-                    <div key={i} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 text-xl border border-gray-50">
-                                {getStatIcon(stat.label)}
-                            </div>
-                            <span className={`text-xs font-black ${stat.color} bg-gray-50 px-2.5 py-1 rounded-lg border border-gray-50`}>
-                                {stat.trend}
-                            </span>
-                        </div>
-                        <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">{stat.label}</p>
-                        <h3 className="text-2xl font-black text-slate-800 mt-1">{stat.value}</h3>
-                    </div>
-                ))}
-            </div>
-
-            {/* Main Charts Placeholder */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm relative overflow-hidden group">
-                    <div className="flex items-center justify-between mb-8">
-                        <div>
-                            <h3 className="text-xl font-bold text-slate-800">Sales Comparison</h3>
-                            <p className="text-sm text-gray-400 font-medium">Monthly performance vs last year</p>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-2">
-                                <span className="w-3 h-3 bg-primary rounded-full"></span>
-                                <span className="text-xs font-bold text-gray-400">Current</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="w-3 h-3 bg-gray-200 rounded-full"></span>
-                                <span className="text-xs font-bold text-gray-400">Previous</span>
-                            </div>
-                        </div>
-                    </div>
-                    {/* Chart */}
-                    <div className="h-64 flex items-end justify-between gap-4">
-                        {reportsData?.monthlySales?.map((h, i) => {
-                            // Find max value to normalize heights dynamically
-                            const maxVal = Math.max(...(reportsData?.monthlySales || [1]));
-                            const heightPct = maxVal > 0 ? (h / maxVal) * 100 : 0;
-                            // Dummy previous month logic for comparison visually
-                            const prevH = reportsData?.monthlySales[i === 0 ? 11 : i - 1] || 0;
-                            const prevPct = maxVal > 0 ? (prevH / maxVal) * 100 : 0;
-
-                            return (
-                                <div key={i} className="flex-1 flex flex-col items-center gap-2 group-hover:cursor-pointer" title={`Sales: ₹${h}`}>
-                                    <div className="w-full flex items-end gap-1 h-48">
-                                        <div className="flex-1 bg-gray-100 rounded-t-lg transition-all" style={{ height: `${prevPct}%` }}></div>
-                                        <div className="flex-1 bg-primary rounded-t-lg transition-all" style={{ height: `${heightPct}%` }}></div>
-                                    </div>
-                                    <span className="text-[10px] font-bold text-gray-300">M{i + 1}</span>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-
-                <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm">
-                    <h3 className="text-xl font-bold text-slate-800 mb-2">Category Distribution</h3>
-                    <p className="text-sm text-gray-400 font-medium mb-8">Sales percentage by saree types</p>
-
-                    <div className="space-y-6">
-                        {reportsData?.categoryDistribution?.map((cat, i) => (
-                            <div key={i} className="space-y-2">
-                                <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest">
-                                    <span className="text-gray-400">{cat.label}</span>
-                                    <span className="text-slate-700">{cat.percent}%</span>
-                                </div>
-                                <div className="h-2.5 w-full bg-gray-50 rounded-full overflow-hidden border border-gray-100">
-                                    <div className={`${cat.color} h-full rounded-full transition-all duration-1000`} style={{ width: `${cat.percent}%` }}></div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
+      {/* CONTROLS */}
+      <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-4 md:p-6 flex flex-col md:flex-row gap-4 items-center">
+        {/* SEARCH */}
+        <div className="relative flex-1 w-full md:max-w-md group">
+          <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-primary transition-colors" />
+          <input
+            type="text"
+            placeholder="Search reports..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-primary transition-all text-xs font-bold"
+          />
         </div>
-    );
+
+        {/* TABS */}
+        <div className="flex items-center gap-3 overflow-x-auto">
+          {[
+            { key: "overview", label: "Overview" },
+            { key: "customers", label: "Customers" },
+            { key: "sales", label: "Sales" },
+            { key: "category", label: "Category" },
+          ].map((t) => (
+            <button
+              key={t.key}
+              onClick={() => setTab(t.key)}
+              className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border whitespace-nowrap ${
+                tab === t.key
+                  ? "bg-slate-900 text-white border-slate-900"
+                  : "bg-gray-50 text-gray-400 border-gray-100 hover:bg-white"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* CONTENT */}
+      <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          {/* OVERVIEW */}
+          {tab === "overview" && (
+            <div className="p-8 space-y-4">
+              <div className="flex justify-between border-b border-b-gray-400 pb-4">
+                <span className="text-sm font-black text-gray-400 uppercase">
+                  Total Revenue
+                </span>
+                <span className="text-lg font-black text-slate-800">
+                  ₹{totalRevenue}
+                </span>
+              </div>
+
+              <div className="flex justify-between border-b border-b-gray-400 pb-4">
+                <span className="text-sm font-black text-gray-400 uppercase">
+                  Total Billing
+                </span>
+                <span className="text-lg font-black text-slate-800">
+                  {totalBilling}
+                </span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-sm font-black text-gray-400 uppercase">
+                  Customers
+                </span>
+                <span className="text-lg font-black text-slate-800">
+                  {customers.length}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* TABLE */}
+          {tab !== "overview" && (
+            <table className="w-full text-left block md:table">
+              <thead className="hidden md:table-header-group">
+                <tr className="bg-slate-50/50">
+                  <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                    {tab === "customers"
+                      ? "Customer Name"
+                      : tab === "sales"
+                        ? "Date"
+                        : "Category"}
+                  </th>
+                  <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                    {tab === "customers" ? "Billing" : "Details"}
+                  </th>
+                  <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                    Total
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody className="block md:table-row-group p-4 md:p-0">
+                {(tab === "customers"
+                  ? customers
+                  : tab === "sales"
+                    ? sales
+                    : categories
+                )
+                  .filter((item) =>
+                    (item.name || item.date)
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase()),
+                  )
+                  .map((item, i) => (
+                    <tr
+                      key={i}
+                      className="block md:table-row border border-gray-100 md:border-0 rounded-2xl mb-4 md:mb-0"
+                    >
+                      <td className="px-4 py-5 md:px-8 md:py-6 block md:table-cell">
+                        <p className="font-black text-slate-800">
+                          {item.name || item.date}
+                        </p>
+                      </td>
+
+                      <td className="px-4 py-5 md:px-8 md:py-6 block md:table-cell">
+                        <p className="font-bold text-slate-600">
+                          {item.billing || "-"}
+                        </p>
+                      </td>
+
+                      <td className="px-4 py-5 md:px-8 md:py-6 block md:table-cell">
+                        <p className="font-black text-slate-800">
+                          ₹{item.total}
+                        </p>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };
 
-export default Reports;
+export default ReportPage;
