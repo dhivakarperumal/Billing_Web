@@ -10,6 +10,8 @@ import PrivateRoute from "./PrivateRouter/PrivateRouter.jsx";
 import { AdminProvider } from "./PrivateRouter/AdminContext.jsx";
 import { Toaster } from "react-hot-toast";
 import Loader from "./components/Loader.jsx";
+import More from "./Admin/Pages/More/More.jsx";
+import PrinterSettings from "./Admin/Pages/More/PrinterSettings.jsx";
 
 // Lazy Load Main Components
 const Home = React.lazy(() => import("./Home/Home.jsx"));
@@ -79,6 +81,8 @@ const router = createBrowserRouter([
       { path: "videos", element: <VideoManagement /> },
       { path: "reviews", element: <Reviews /> },
       { path: "reports", element: <Reports /> },
+      { path: "more", element: <More /> },
+      { path: "printer", element: <PrinterSettings /> },
       { path: "profile", element: <Profile /> },
     
     ],
