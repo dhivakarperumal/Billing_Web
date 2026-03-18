@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "userId": "BILL0001",
+    "name": "test",
+    "email": "test@test.com",
+    "password": "$2b$10$nnAMufJW3vimoLTDiCjHXO5I.IZ.IbiNhUKxpBtKeLMgrZVWQjCoq",
+    "role": "user",
+    "googleId": null,
+    "created_at": "2026-03-17T12:20:07.000Z"
+  },
+  {
+    "id": 2,
+    "userId": "BILL0002",
+    "name": "test2",
+    "email": "test2@test.com",
+    "password": "$2b$10$IBxf7y7ZT0er47pNDostRuCztReprhP1PNjMHEA2g4sEoiUkf/jXO",
+    "role": "user",
+    "googleId": null,
+    "created_at": "2026-03-17T12:22:26.000Z"
+  },
+  {
+    "id": 3,
+    "userId": "BILL0003",
+    "name": "Dhivakar",
+    "email": "dhivakarp305@gmail.com",
+    "password": "$2b$10$oMa/pfMQ3MvR3HPrjJwDnOaNtj1ArBNPixMHjabSfgRpwrgc3Sadm",
+    "role": "user",
+    "googleId": null,
+    "created_at": "2026-03-17T12:23:52.000Z"
+  },
+  {
+    "id": 4,
+    "userId": "BILL0004",
+    "name": "test3",
+    "email": "test3@test.com",
+    "password": "$2b$10$i.RSI3yRWGhvF9dwFY6XnuxMicZmbQc.tBv2LMJTfoOipTqVRKdgO",
+    "role": "user",
+    "googleId": null,
+    "created_at": "2026-03-17T12:24:33.000Z"
+  }
+]

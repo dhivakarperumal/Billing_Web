@@ -1,84 +1,153 @@
-import api from '../../api';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { Eye, EyeOff } from "lucide-react";
 
-const Register = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'user' });
+function Register() {
   const navigate = useNavigate();
 
-  const handleRegister = async (e) => {
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (form.password !== form.confirmPassword) {
+      return toast.error("Passwords do not match");
+    }
+
     try {
-      await api.post('/auth/register', formData);
-      alert('Registration successful! Please login.');
-      navigate('/login');
-    } catch (err) {
-      alert(err.response?.data?.message || 'Registration failed');
+      await axios.post("http://localhost:5000/api/auth/register", {
+        name: form.username,
+        email: form.email,
+        phone: form.phone,
+        password: form.password,
+      });
+      toast.success("Registration successful! Please login.");
+      navigate("/login");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Registration failed");
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Create your account</h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleRegister}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <input
-                type="text"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Full Name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              />
-            </div>
-            <div>
-              <input
-                type="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              />
-            </div>
-            <div>
-              <input
-                type="password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              />
-            </div>
-            <div>
-              <select
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                value={formData.role}
-                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-              >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-              </select>
-            </div>
-          </div>
+return (
+  <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-primary via-primary-light to-primary-dark px-4">
 
-          <div>
+    <div className="w-[450px] bg-white border border-border shadow-2xl rounded-2xl p-8">
+
+      <h2 className="text-3xl font-bold text-center mb-2 text-primary">
+        Create Account
+      </h2>
+
+      <p className="text-center text-muted mb-6 text-sm">
+        Join our premium saree collection store
+      </p>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+
+        <input
+          name="username"
+          placeholder="Username"
+          onChange={handleChange}
+          className="w-full p-3 rounded-lg bg-white border border-border focus:ring-2 focus:ring-primary-light outline-none"
+          required
+        />
+
+        <input
+          name="email"
+          type="email"
+          placeholder="Email Address"
+          onChange={handleChange}
+          className="w-full p-3 rounded-lg bg-white border border-border focus:ring-2 focus:ring-primary-light outline-none"
+          required
+        />
+
+        <input
+          name="phone"
+          type="text"
+          placeholder="Phone Number"
+          onChange={handleChange}
+          className="w-full p-3 rounded-lg bg-white border border-border focus:ring-2 focus:ring-primary-light outline-none"
+          required
+        />
+
+        <div className="grid grid-cols-2 gap-4">
+
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Password"
+              onChange={handleChange}
+              className="w-full p-3 pr-10 rounded-lg bg-white border border-border focus:ring-2 focus:ring-primary-light outline-none"
+              required
+            />
+
             <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
             >
-              Register
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
-        </form>
-      </div>
+
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              onChange={handleChange}
+              className="w-full p-3 pr-10 rounded-lg bg-white border border-border focus:ring-2 focus:ring-primary-light outline-none"
+              required
+            />
+
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
+            >
+              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+
+        </div>
+
+        <button
+          type="submit"
+          className="w-full py-3 rounded-lg text-white font-semibold bg-primary hover:bg-primary-light hover:scale-[1.02] transition-all duration-300 shadow-lg cursor-pointer"
+        >
+          Register
+        </button>
+
+        <p className="text-center text-sm text-gray-500 mt-4">
+          Already have an account?{" "}
+          <span
+            onClick={() => navigate("/login")}
+            className="text-primary font-semibold hover:underline cursor-pointer"
+          >
+            Sign in
+          </span>
+        </p>
+
+      </form>
+
     </div>
-  );
-};
+  </div>
+);
+}
 
 export default Register;

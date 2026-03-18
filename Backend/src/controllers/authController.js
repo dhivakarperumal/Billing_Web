@@ -32,9 +32,10 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, identifier, password } = req.body;
+    const loginIdentifier = identifier || email;
     try {
-        const [rows] = await db.promise().query("SELECT * FROM users WHERE email = ?", [email]);
+        const [rows] = await db.promise().query("SELECT * FROM users WHERE email = ? OR name = ?", [loginIdentifier, loginIdentifier]);
         if (rows.length === 0) return res.status(404).json({ message: "User not found" });
 
         const user = rows[0];

@@ -1,93 +1,168 @@
-import api from '../../api';
-import { GoogleLogin } from '@react-oauth/google';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useContext } from "react";
+import api from "../../api";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../PrivateRouter/AuthContext";
+import { toast } from "react-hot-toast";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { Eye, EyeOff } from "lucide-react";
+import { Link } from "react-router-dom";
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+function Login() {
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = async (e) => {
+  const [form, setForm] = useState({
+    identifier: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post('/auth/login', { email, password });
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
-      navigate('/');
-    } catch (err) {
-      alert(err.response?.data?.message || 'Login failed');
+      const res = await api.post("/auth/login", form);
+
+      login(res.data.user, res.data.token);
+      toast.success("Login successful!");
+
+      if (res.data.user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      toast.error(error.response?.data?.message || "Login failed");
     }
   };
 
-  const handleGoogleSuccess = async (response) => {
+  const handleSuccess = async (credentialResponse) => {
     try {
-      const res = await api.post('/auth/google-login', { token: response.credential });
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
-      navigate('/');
-    } catch (err) {
-      alert('Google Login failed');
+      const decoded = jwtDecode(credentialResponse.credential);
+
+      const googleUser = {
+        name: decoded.name,
+        email: decoded.email,
+        picture: decoded.picture,
+        googleId: decoded.sub
+      };
+
+      // send to backend
+      const res = await api.post(
+        "/auth/google-login",
+        { token: credentialResponse.credential }
+      );
+
+      login(res.data.user, res.data.token);
+
+      toast.success("Google Login Successful!");
+
+      if (res.data.user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+
+    } catch (error) {
+      console.error("Google Login Error:", error);
+      toast.error(error.response?.data?.message || error.message || "Google Login Failed");
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <input
-                type="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <input
-                type="password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-          </div>
+ return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-primary via-primary-light to-primary-dark px-4">
 
-          <div>
+      <div className="w-[380px] bg-white border border-border shadow-2xl rounded-2xl px-4 py-8">
+
+        <h2 className="text-3xl font-bold text-center mb-2 text-primary">
+          Welcome Back
+        </h2>
+
+        {/* LOGO */}
+        {/* <div className="flex justify-center mb-4">
+          <img
+            src="/logo.png"
+            alt="Logo"
+            className="h-14 object-contain"
+          />
+        </div> */}
+
+        <p className="text-center text-muted mb-6 text-sm">
+          Login to explore our premium saree collection
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+
+          <input
+            name="identifier"
+            type="text"
+            placeholder="Email or Username"
+            onChange={handleChange}
+            className="w-full p-3 rounded-lg bg-white border border-border focus:ring-2 focus:ring-primary-light outline-none"
+            required
+          />
+
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Password"
+              onChange={handleChange}
+              className="w-full p-3 pr-10 rounded-lg bg-white border border-border focus:ring-2 focus:ring-primary-light outline-none"
+              required
+            />
+
             <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
             >
-              Sign in
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 rounded-lg text-white font-semibold bg-primary hover:bg-primary-light hover:scale-[1.02] transition-all duration-300 shadow-lg cursor-pointer"
+          >
+            Login
+          </button>
+
+          {/* OR Divider */}
+          <div className="flex items-center gap-3 my-4">
+            <div className="flex-1 h-[1px] bg-gray-300"></div>
+            <span className="text-sm text-gray-500 font-medium">OR</span>
+            <div className="flex-1 h-[1px] bg-gray-300"></div>
+          </div>
+
+          {/* Google Login */}
+          <div className="flex justify-center">
+            <GoogleLogin
+              onSuccess={handleSuccess}
+              onError={() => console.log("Login Failed")}
+            />
+          </div>
+
+          {/* Register Link */}
+          <p className="text-center text-sm text-gray-500 mt-4">
+            Don’t have an account?{" "}
+            <Link
+              to="/register"
+              className="text-primary font-semibold hover:underline"
+            >
+              Sign Up
+            </Link>
+          </p>
+
         </form>
-
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
-            </div>
-          </div>
-
-          <div className="mt-6 flex justify-center">
-            <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => alert('Login Failed')} />
-          </div>
-        </div>
       </div>
     </div>
   );
-};
+}
 
 export default Login;
