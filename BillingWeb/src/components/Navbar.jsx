@@ -100,20 +100,11 @@ const navClass = ({ isActive }) =>
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            {/* <img
-              src={logo}
-              alt="Saree Palace"
-              className="h-10 md:h-18 object-contain"
-            /> */}
-
-            <div className="capitalize">
-              <p className="text-primary text-lg md:text-xl font-bold">
-                Saree
-              </p>
-              <p className="text-primary-light text-sm md:text-base font-semibold">
-                World
-              </p>
-            </div>
+            <img
+              src="/logo.png"
+              alt="Logo"
+              className="h-10 md:h-12 object-contain"
+            />
           </Link>
 
           {/* Desktop Links */}

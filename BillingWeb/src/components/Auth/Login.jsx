@@ -77,27 +77,21 @@ function Login() {
  return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-primary via-primary-light to-primary-dark px-4">
 
-      <div className="w-[380px] bg-white border border-border shadow-2xl rounded-2xl px-4 py-8">
+      <div className="w-[550px] bg-white border border-border shadow-2xl rounded-2xl px-4 py-8">
 
         <h2 className="text-3xl font-bold text-center mb-2 text-primary">
           Welcome Back
         </h2>
 
         {/* LOGO */}
-        {/* <div className="flex justify-center mb-4">
-          <img
-            src="/logo.png"
-            alt="Logo"
-            className="h-14 object-contain"
-          />
-        </div> */}
+        
 
         <p className="text-center text-muted mb-6 text-sm">
           Login to explore our premium saree collection
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
+          <label htmlFor="">Username</label>
           <input
             name="identifier"
             type="text"
@@ -108,6 +102,7 @@ function Login() {
           />
 
           <div className="relative">
+            <label htmlFor="">Password</label>
             <input
               type={showPassword ? "text" : "password"}
               name="password"

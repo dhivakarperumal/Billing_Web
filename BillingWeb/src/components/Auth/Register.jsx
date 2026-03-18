@@ -46,7 +46,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 return (
   <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-primary via-primary-light to-primary-dark px-4">
 
-    <div className="w-[450px] bg-white border border-border shadow-2xl rounded-2xl p-8">
+    <div className="w-[550px] bg-white border border-border shadow-2xl rounded-2xl p-8">
 
       <h2 className="text-3xl font-bold text-center mb-2 text-primary">
         Create Account
