@@ -3,6 +3,9 @@ import express from "express";
 import cors from "cors";
 
 import authRouter from "./src/routers/authRouter.js";
+import categoryRouter from "./src/routers/categoryRouter.js";
+import productRouter from "./src/routers/productRouter.js";
+import orderRouter from "./src/routers/orderRouter.js";
 
 const app = express();
 
@@ -11,6 +14,10 @@ app.use(express.json());
 
 // Auth Routes
 app.use("/api/auth", authRouter);
+// Feature Routes
+app.use("/api/categories", categoryRouter);
+app.use("/api/products", productRouter);
+app.use("/api/orders", orderRouter);
 
 // Test Route
 app.get("/", (req, res) => {

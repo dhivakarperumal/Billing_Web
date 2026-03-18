@@ -1,21 +1,28 @@
+import dotenv from "dotenv";
+dotenv.config();
 import mysql from "mysql2";
-import "./env.js";
 
-// Remove the local dotenv.config() call as it's handled by env.js
+const config = {
+  host: process.env.DB_HOST,   // GoDaddy host
+  port: process.env.DB_PORT || 3306,
+  user: process.env.DB_USER,                  // cPanel DB user
+  password: process.env.DB_PASSWORD,          // DB password
+  database: process.env.DB_NAME,              // cPanel_dbname
+  waitForConnections: true,
+  connectionLimit: 10,
+  maxIdle: 10, // max idle connections, the default value is the same as `connectionLimit`
+  idleTimeout: 60000, // idle connections timeout, in milliseconds, the default value 60000
+  queueLimit: 0,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 10000,
+};
 
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+console.log("DB CONFIG:", {
+  host: config.host,
+  database: config.database,
+  user: config.user,
 });
 
-db.connect((err) => {
-  if (err) {
-    console.log("Database connection error:", err);
-  } else {
-    console.log("MySQL Connected");
-  }
-});
+const pool = mysql.createPool(config);
 
-export default db;
+export default pool;

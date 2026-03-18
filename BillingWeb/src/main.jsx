@@ -20,7 +20,25 @@ const Register = React.lazy(() => import("./components/Auth/Register.jsx"));
 // Lazy Load Admin Components
 const AdminPanel = React.lazy(() => import("./Admin/AdminPanel.jsx"));
 const Dashboard = React.lazy(() => import("./Admin/Dashboard.jsx"));
-
+const AllProducts = React.lazy(() => import("./Admin/Pages/AllProducts.jsx"));
+const AddProducts = React.lazy(() => import("./Admin/Pages/AddProducts.jsx"));
+const Category = React.lazy(() => import("./Admin/Products/Category.jsx"));
+const AddCategory = React.lazy(() => import("./Admin/Products/AddCategory.jsx"));
+const StockDetails = React.lazy(() => import("./Admin/Pages/StockDetails.jsx"));
+const AddStock = React.lazy(() => import("./Admin/Pages/AddStock.jsx"));
+const Orders = React.lazy(() => import("./Admin/Pages/Orders.jsx"));
+const CreateOrder = React.lazy(() => import("./Admin/Pages/CreateOrder.jsx"));
+const OrderDetail = React.lazy(() => import("./Admin/Pages/OrderDetail.jsx"));
+const Users = React.lazy(() => import("./Admin/Pages/Users.jsx"));
+const Dealers = React.lazy(() => import("./Admin/Pages/Dealers.jsx"));
+const AddDealer = React.lazy(() => import("./Admin/Pages/AddDealer.jsx"));
+const AddInvoice = React.lazy(() => import("./Admin/Pages/AddInvoice.jsx"));
+const BannerManagement = React.lazy(() => import("./Admin/Pages/BannerManagement.jsx"));
+const VideoManagement = React.lazy(() => import("./Admin/Pages/VideoManagement.jsx"));
+const Reviews = React.lazy(() => import("./Admin/Pages/Reviews.jsx"));
+const Reports = React.lazy(() => import("./Admin/Pages/Reports.jsx"));
+const Profile = React.lazy(() => import("./Admin/Pages/Profile.jsx"));
+const ProductDetail = React.lazy(() => import("./Admin/Pages/ProductDetail.jsx"));
 
 const router = createBrowserRouter([
   {
@@ -47,7 +65,30 @@ const router = createBrowserRouter([
   
     children: [
       { index: true, element: <Dashboard /> },
-      
+      { path: "products/all", element: <AllProducts /> },
+      { path: "products/add", element: <AddProducts /> },
+      { path: "products/edit/:id", element: <AddProducts /> },
+      { path: "products/detail/:id", element: <ProductDetail /> },
+      { path: "products/category", element: <Category /> },
+      { path: "products/addcategory", element: <AddCategory /> },
+      { path: "products/category/edit/:id", element: <AddCategory /> },
+      { path: "products/stock", element: <StockDetails /> },
+      { path: "products/stock/add", element: <AddStock /> },
+      { path: "orders/all", element: <Orders filter="all" /> },
+      { path: "orders/new", element: <Orders filter="Order Placed" /> },
+      { path: "orders/delivery", element: <Orders filter="Delivered" /> },
+      { path: "orders/cancelled", element: <Orders filter="Cancelled" /> },
+      { path: "orders/create", element: <CreateOrder /> },
+      { path: "orders/:id", element: <OrderDetail /> },
+      { path: "users/all", element: <Users /> },
+      { path: "dealers", element: <Dealers /> },
+      { path: "dealers/add", element: <AddDealer /> },
+      { path: "invoices/add", element: <AddInvoice /> },
+      { path: "banners", element: <BannerManagement /> },
+      { path: "videos", element: <VideoManagement /> },
+      { path: "reviews", element: <Reviews /> },
+      { path: "reports", element: <Reports /> },
+      { path: "profile", element: <Profile /> },
     
     ],
   },

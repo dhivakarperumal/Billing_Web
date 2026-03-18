@@ -277,7 +277,7 @@ const Header = ({ onMenuClick }) => {
 
   return (
     <header className="sticky top-0 z-30 
-      bg-gradient-to-r from-white via-white to-primary/10/30 backdrop-blur-md
+      bg-gray-900
       border-b border-slate-200/60
       shadow-[0_4px_30px_rgba(0,0,0,0.04)]">
 
@@ -297,8 +297,8 @@ const Header = ({ onMenuClick }) => {
           <div className="hidden sm:flex items-center gap-3">
            
             <div className="flex flex-col">
-              <h1 className="text-xl sm:text-2xl font-black 
-                text-slate-800 tracking-tight truncate leading-none">
+              <h1 className="text-xl sm:text-2xl font-bold 
+                text-white tracking-tight truncate leading-none">
                 {getPageTitle()}
               </h1>
               <p className="hidden sm:block text-[10px] text-primary font-bold uppercase tracking-[0.2em] mt-1 opacity-70">
