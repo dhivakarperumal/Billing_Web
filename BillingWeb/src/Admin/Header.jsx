@@ -655,43 +655,9 @@ const Header = ({ onMenuClick }) => {
             )}
           </div>
 
-          <div className="h-8 w-[1px] bg-slate-800 mx-1 hidden md:block opacity-30"></div>
+          
 
-          {/* QUICK PERFORMANCE STATS */}
-          <div className="hidden lg:flex items-center gap-4 px-4 h-12 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md">
-             <div className="flex flex-col items-start pr-4 border-r border-white/10">
-                <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest leading-none mb-1">Today Bills</p>
-                <p className="text-sm font-black text-white leading-none tracking-tighter">
-                  {notifications.today?.length || 0} <span className="text-[10px] text-primary">Invoices</span>
-                </p>
-             </div>
-             <div className="flex flex-col items-start">
-                <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest leading-none mb-1">Today Revenue</p>
-                <p className="text-sm font-black text-emerald-400 leading-none tracking-tighter">
-                  ₹{notifications.today?.reduce((sum, o) => sum + Number(o.total_amount || 0), 0).toLocaleString('en-IN')}
-                </p>
-             </div>
-          </div>
-
-          {/* QUICK ACTIONS */}
-          <div className="hidden md:flex items-center gap-2">
-            <button 
-              onClick={() => navigate('/admin/billing')}
-              className="p-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-lg shadow-rose-900/20 active:scale-95 transition-all flex items-center gap-2 border border-rose-500/50"
-              title="New Bill"
-            >
-              <ShoppingBag size={18} />
-              <span className="text-[10px] font-black uppercase tracking-widest hidden xl:inline">Create Bill</span>
-            </button>
-            <button 
-              onClick={() => navigate('/admin/products/all')}
-              className="p-3 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl active:scale-95 transition-all flex items-center gap-2"
-              title="Stock View"
-            >
-              <Package size={18} />
-              <span className="text-[10px] font-black uppercase tracking-widest hidden xl:inline">Inventory</span>
-            </button>
-          </div>
+         
 
           {/* PROFILE */}
           <div className="relative" ref={profileRef}>

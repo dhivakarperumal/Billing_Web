@@ -240,6 +240,23 @@ const CreateBilling = () => {
         toast.success(`Broadly added ${selectedItems.length} items`);
     };
 
+    const getProductImage = (product) => {
+        try {
+            let imgUrl = null;
+            const images = typeof product.images === 'string' ? JSON.parse(product.images) : (product.images || []);
+            if (Array.isArray(images) && images.length > 0) imgUrl = images[0];
+            
+            if (!imgUrl) return `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name || 'P')}&background=random`;
+            if (imgUrl.startsWith('http') || imgUrl.startsWith('data:')) return imgUrl;
+            
+            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+            const cleanPath = imgUrl.startsWith('/') ? imgUrl : `/${imgUrl}`;
+            return `${backendUrl}${cleanPath}`;
+        } catch (e) {
+            return `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name || 'P')}&background=random`;
+        }
+    };
+
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 p-2 md:p-6 bg-slate-50 min-h-screen">
             <input ref={barcodeInputRef} type="text" className="opacity-0 fixed pointer-events-none" onKeyDown={handleBarcodeScan} autoFocus />
@@ -384,7 +401,7 @@ const CreateBilling = () => {
                                                 >
                                                     <div className="flex items-center gap-3">
                                                         <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center p-1 overflow-hidden border border-gray-100">
-                                                            <img src={p.images?.[0] || 'https://ui-avatars.com/api/?name=' + p.name} alt="" className="w-full h-full object-contain" />
+                                                            <img src={getProductImage(p)} alt="" className="w-full h-full object-contain" />
                                                         </div>
                                                         <div>
                                                             <p className="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition-colors uppercase">{p.name}</p>
@@ -419,15 +436,7 @@ const CreateBilling = () => {
                                         )}
                                         <div className="aspect-square bg-white rounded-xl mb-2 overflow-hidden flex items-center justify-center p-2">
                                             <img
-                                                src={
-                                                    (() => {
-                                                        const src = p.images?.[0];
-                                                        if (!src) return `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=random&color=fff`;
-                                                        if (src.startsWith('http') || src.startsWith('data:')) return src;
-                                                        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-                                                        return `${backendUrl}${src.startsWith('/') ? src : `/${src}`}`;
-                                                    })()
-                                                }
+                                                src={getProductImage(p)}
                                                 alt={p.name}
                                                 className="w-full h-full object-contain"
                                             />

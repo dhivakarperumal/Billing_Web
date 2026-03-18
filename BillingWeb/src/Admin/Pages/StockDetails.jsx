@@ -90,6 +90,23 @@ const StockDetails = () => {
         return product.total_stock ?? product.stock ?? 0;
     };
 
+    const getProductImage = (product) => {
+        try {
+            let imgUrl = null;
+            const images = typeof product.images === 'string' ? JSON.parse(product.images) : (product.images || []);
+            if (Array.isArray(images) && images.length > 0) imgUrl = images[0];
+
+            if (!imgUrl) return `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name || 'P')}&background=random`;
+            if (imgUrl.startsWith('http') || imgUrl.startsWith('data:')) return imgUrl;
+
+            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+            const cleanPath = imgUrl.startsWith('/') ? imgUrl : `/${imgUrl}`;
+            return `${backendUrl}${cleanPath}`;
+        } catch (e) {
+            return `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name || 'P')}&background=random`;
+        }
+    };
+
     const deriveStatus = (stock) => {
         if (stock <= 0) return "Out of Stock";
         if (stock < 10) return "Low Stock";
@@ -281,7 +298,7 @@ const StockDetails = () => {
                                                     <div className="flex items-center gap-4">
                                                         <div className="w-14 h-14 rounded-2xl bg-gray-50 border border-gray-100 overflow-hidden shrink-0 shadow-sm p-1">
                                                             <img
-                                                                src={(item.images && item.images.length > 0) ? item.images[0] : `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=random`}
+                                                                src={getProductImage(item)}
                                                                 alt={item.name}
                                                                 className="w-full h-full object-contain"
                                                             />
