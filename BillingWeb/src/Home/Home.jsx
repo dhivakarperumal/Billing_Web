@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import AddProducts from '../components/Products/AddProducts';
 
 const Home = () => { 
 
     return(
-        <div>hi</div>
+        <div>
+            <AddProducts />
+        </div>
     )
 }
 
