@@ -45,7 +45,11 @@ const CreateBilling = () => {
                     api.get("/products"),
                     api.get("/categories")
                 ]);
-                setProducts(productRes.data || []);
+                
+                const productsData = productRes.data;
+                const productsArray = Array.isArray(productsData) ? productsData : (productsData.products || []);
+                
+                setProducts(productsArray);
                 setCategories(categoryRes.data || []);
             } catch (error) {
                 console.error("Error fetching data:", error);

@@ -95,13 +95,33 @@ export const getProducts = async (req, res) => {
         const [lowStockRows] = await db.promise().query("SELECT COUNT(*) as count FROM products WHERE total_stock < 10 AND total_stock > 0");
         const [outOfStockRows] = await db.promise().query("SELECT COUNT(*) as count FROM products WHERE total_stock = 0");
 
-        const data = products.map(p => ({
-            ...p,
-            images: typeof p.images === 'string' ? JSON.parse(p.images) : (p.images || []),
-            variants: typeof p.variants === 'string' ? JSON.parse(p.variants) : (p.variants || []),
-            expiry: typeof p.expiry === 'string' ? JSON.parse(p.expiry) : (p.expiry || {}),
-            supplier: typeof p.supplier === 'string' ? JSON.parse(p.supplier) : (p.supplier || {})
-        }));
+        const data = products.map(p => {
+            let parsedImages = [];
+            try {
+                if (typeof p.images === 'string') {
+                    // Check if it's a JSON array
+                    if (p.images.startsWith('[') && p.images.endsWith(']')) {
+                        parsedImages = JSON.parse(p.images);
+                    } else {
+                        // It's a single URL string
+                        parsedImages = [p.images];
+                    }
+                } else {
+                    parsedImages = p.images || [];
+                }
+            } catch (e) {
+                console.error("Image Parse Error:", e, p.images);
+                parsedImages = [];
+            }
+
+            return {
+                ...p,
+                images: parsedImages,
+                variants: typeof p.variants === 'string' ? JSON.parse(p.variants) : (p.variants || []),
+                expiry: typeof p.expiry === 'string' ? JSON.parse(p.expiry) : (p.expiry || {}),
+                supplier: typeof p.supplier === 'string' ? JSON.parse(p.supplier) : (p.supplier || {})
+            };
+        });
 
         res.status(200).json({
             products: data,
@@ -129,7 +149,19 @@ export const getProductById = async (req, res) => {
         if (rows.length === 0) return res.status(404).json({ message: "Product not found" });
 
         const prod = rows[0];
-        prod.images = typeof prod.images === 'string' ? JSON.parse(prod.images) : (prod.images || []);
+        try {
+            if (typeof prod.images === 'string') {
+                if (prod.images.startsWith('[') && prod.images.endsWith(']')) {
+                    prod.images = JSON.parse(prod.images);
+                } else {
+                    prod.images = [prod.images];
+                }
+            } else {
+                prod.images = prod.images || [];
+            }
+        } catch (e) {
+            prod.images = [];
+        }
         prod.variants = typeof prod.variants === 'string' ? JSON.parse(prod.variants) : (prod.variants || []);
         prod.expiry = typeof prod.expiry === 'string' ? JSON.parse(prod.expiry) : (prod.expiry || {});
         prod.supplier = typeof prod.supplier === 'string' ? JSON.parse(prod.supplier) : (prod.supplier || {});

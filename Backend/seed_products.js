@@ -323,10 +323,8 @@ const seedProducts = async () => {
         const expiryJson = JSON.stringify(item.expiry);
         const supplierJson = JSON.stringify(item.supplier);
         
-        // Placeholder images
-        const images = JSON.stringify([
-            `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=random&color=fff&size=512`
-        ]);
+        // Placeholder images (store as single string instead of array for cleaner DB view)
+        const images = `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=random&color=fff&size=512`;
 
         console.log(`📡 Adding product: ${item.name} (${product_code})...`);
 
