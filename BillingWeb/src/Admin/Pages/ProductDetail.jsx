@@ -113,7 +113,19 @@ const ProductDetail = () => {
                     <div className="bg-white p-3 sm:p-4 rounded-[2rem] sm:rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden group">
                         <div className="aspect-[3/4] rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden bg-gray-50">
                             {displayImages.length > 0 ? (
-                                <img src={displayImages[activeImage] || displayImages[0]} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                                <img 
+                                    src={
+                                        (() => {
+                                            const src = displayImages[activeImage];
+                                            if (!src) return `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}&background=random&color=fff`;
+                                            if (src.startsWith('http') || src.startsWith('data:')) return src;
+                                            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+                                            return `${backendUrl}${src.startsWith('/') ? src : `/${src}`}`;
+                                        })()
+                                    } 
+                                    alt={product.name} 
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" 
+                                />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center text-gray-300">No images</div>
                             )}
@@ -127,7 +139,19 @@ const ProductDetail = () => {
                                     onClick={() => setActiveImage(i)}
                                     className={`aspect-square rounded-xl sm:rounded-2xl overflow-hidden border-2 transition-all shadow-sm ${activeImage === i ? 'border-rose-600 scale-95 ring-2 ring-rose-100' : 'border-white hover:border-rose-100 opacity-60 hover:opacity-100'}`}
                                 >
-                                    <img src={img} alt="thumb" className="w-full h-full object-cover" />
+                                    <img 
+                                        src={
+                                            (() => {
+                                                const src = img;
+                                                if (!src) return `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}`;
+                                                if (src.startsWith('http') || src.startsWith('data:')) return src;
+                                                const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+                                                return `${backendUrl}${src.startsWith('/') ? src : `/${src}`}`;
+                                            })()
+                                        } 
+                                        alt="thumb" 
+                                        className="w-full h-full object-cover" 
+                                    />
                                 </button>
                             ))}
                         </div>

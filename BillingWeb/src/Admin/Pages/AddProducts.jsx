@@ -448,7 +448,17 @@ const AddProducts = () => {
                                 <div className="grid grid-cols-3 gap-3">
                                     {formData.media.previews.map((src, i) => (
                                         <div key={i} className="relative group rounded-xl overflow-hidden aspect-square border border-gray-100 shadow-sm">
-                                            <img src={src} className="h-full w-full object-cover" />
+                                            <img 
+                                                src={
+                                                    (() => {
+                                                        if (!src) return `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name || 'P')}&background=random&color=fff`;
+                                                        if (src.startsWith('data:image') || src.startsWith('http')) return src;
+                                                        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+                                                        return `${backendUrl}${src.startsWith('/') ? src : `/${src}`}`;
+                                                    })()
+                                                } 
+                                                className="h-full w-full object-cover" 
+                                            />
                                             <button
                                                 type="button"
                                                 onClick={() => removeImage(i)}
