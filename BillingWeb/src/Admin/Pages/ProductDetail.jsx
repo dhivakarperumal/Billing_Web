@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import api from "../../api";
 import { toast } from "react-hot-toast";
-import { QRCodeCanvas } from "qrcode.react";
-import JsBarcode from "jsbarcode";
+// import { QRCodeCanvas } from "qrcode.react";
+// import JsBarcode from "jsbarcode";
 import {
     FiArrowLeft,
     FiEdit,
@@ -41,21 +41,21 @@ const ProductDetail = () => {
     }, [id]);
 
     useEffect(() => {
-        if (barcodeRef.current && product?.product_code) {
-            try {
-                JsBarcode(barcodeRef.current, product.product_code, {
-                    format: "CODE128",
-                    lineColor: "#1e293b",
-                    width: 2,
-                    height: 50,
-                    displayValue: true,
-                    fontSize: 14,
-                    margin: 10
-                });
-            } catch (err) {
-                console.error("Barcode generation error:", err);
-            }
-        }
+        // if (barcodeRef.current && product?.product_code) {
+        //     try {
+        //         JsBarcode(barcodeRef.current, product.product_code, {
+        //             format: "CODE128",
+        //             lineColor: "#1e293b",
+        //             width: 2,
+        //             height: 50,
+        //             displayValue: true,
+        //             fontSize: 14,
+        //             margin: 10
+        //         });
+        //     } catch (err) {
+        //         console.error("Barcode generation error:", err);
+        //     }
+        // }
     }, [product?.product_code, loading]);
 
     const handleDelete = async () => {
@@ -217,13 +217,13 @@ const ProductDetail = () => {
                             </div>
                             <div className="flex flex-col items-center justify-center gap-4 bg-gray-50/50 p-6 rounded-[2rem] border border-dashed border-gray-200">
                                 <div className="p-4 bg-white rounded-3xl shadow-sm border border-gray-100">
-                                    <QRCodeCanvas
+                                    {/* <QRCodeCanvas
                                         value={window.location.href}
                                         size={120}
                                         level={"H"}
                                         includeMargin={false}
                                         className="rounded-lg"
-                                    />
+                                    /> */}
                                 </div>
                                 <div className="text-center">
                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-tight">Digital Authenticity</p>
