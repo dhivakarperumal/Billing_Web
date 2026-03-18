@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import imageCompression from "browser-image-compression";
+import { useParams, useNavigate } from "react-router-dom";
+import JsBarcode from "jsbarcode";
 import {
     FiPackage,
     FiTag,
@@ -14,15 +16,22 @@ import {
     FiCheckCircle,
     FiInfo,
     FiTrendingUp,
-    FiBox
+    FiBox,
+    FiMaximize2
 } from "react-icons/fi";
 
 const AddProducts = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const isEdit = !!id;
+    const barcodeRef = useRef(null);
+
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
 
     const [formData, setFormData] = useState({
+        product_code: "",
         name: "",
         description: "",
         rating: "",
@@ -42,18 +51,100 @@ const AddProducts = () => {
         media: { images: [], previews: [] },
     });
 
+    // Fetch Next ID for New Products
+    useEffect(() => {
+        if (!isEdit) {
+            const fetchNextId = async () => {
+                try {
+                    const res = await axios.get("http://localhost:5000/api/products/next-id");
+                    setFormData(prev => ({ ...prev, product_code: res.data.nextId }));
+                } catch (err) {
+                    console.error("Error fetching next ID:", err);
+                }
+            };
+            fetchNextId();
+        }
+    }, [isEdit]);
+
     // Fetch Categories
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const res = await axios.get("http://localhost:5000/api/categories");
                 setCategories(res.data);
+                
+                if (isEdit) {
+                    fetchProductData(res.data);
+                }
             } catch (err) {
                 console.error("Error fetching categories:", err);
             }
         };
         fetchCategories();
-    }, []);
+    }, [id]);
+
+    const fetchProductData = async (allCategories) => {
+        setLoading(true);
+        try {
+            const res = await axios.get(`http://localhost:5000/api/products/${id}`);
+            const product = res.data;
+
+            setFormData({
+                product_code: product.product_code || "",
+                name: product.name || "",
+                description: product.description || "",
+                rating: product.rating || "",
+                category: product.category || "",
+                subCategory: product.subcategory || product.subCategory || "", // Handle both names
+                status: product.status || "Active",
+                total_stock: product.total_stock || "0",
+                pricing: {
+                    mrp: product.mrp || "",
+                    discount: product.discount || "",
+                    sellingPrice: product.offer_price || ""
+                },
+                variants: (product.variants && product.variants.length > 0) ? product.variants : [
+                    { quantity: "", unit: "", mrp: "", discount: "", sellingPrice: "", stock: "" }
+                ],
+                expiry: product.expiry || { mfgDate: "", expDate: "", batchNo: "" },
+                supplier: product.supplier || { name: "", contact: "" },
+                media: {
+                    images: product.images || [],
+                    previews: product.images || []
+                }
+            });
+
+            if (product.category && allCategories) {
+                const cat = allCategories.find(c => c.name === product.category);
+                setSelectedCategory(cat);
+            }
+
+        } catch (err) {
+            console.error("Error fetching product:", err);
+            toast.error("Failed to load product data");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Update Barcode
+    useEffect(() => {
+        if (barcodeRef.current && formData.product_code) {
+            try {
+                JsBarcode(barcodeRef.current, formData.product_code, {
+                    format: "CODE128",
+                    lineColor: "#1e293b",
+                    width: 2,
+                    height: 50,
+                    displayValue: true,
+                    fontSize: 14,
+                    margin: 10
+                });
+            } catch (err) {
+                console.error("Barcode generation error:", err);
+            }
+        }
+    }, [formData.product_code]);
 
     // Update Total Stock
     useEffect(() => {
@@ -99,7 +190,6 @@ const AddProducts = () => {
         if (field === "quantity") {
             const currentStock = updated[i].stock;
             const prevWeight = formData.variants[i].quantity;
-            // If stock is empty/0 OR it was synced with the previous weight, update it to the new weight
             if (currentStock === "" || currentStock === "0" || currentStock === prevWeight) {
                 updated[i].stock = value;
             }
@@ -135,16 +225,15 @@ const AddProducts = () => {
 
     const handleImageUpload = async (e) => {
         const files = Array.from(e.target.files).slice(0, 5);
-
-        const compressedImages = [];
-        const previews = [];
+        const compressedImages = [...formData.media.images];
+        const previews = [...formData.media.previews];
 
         setLoading(true);
 
         for (let file of files) {
             try {
                 const options = {
-                    maxSizeMB: 0.05, // Aim for ~200KB per image max
+                    maxSizeMB: 0.05, 
                     maxWidthOrHeight: 1000,
                     useWebWorker: true
                 };
@@ -186,6 +275,7 @@ const AddProducts = () => {
         setLoading(true);
         try {
             const payload = {
+                product_code: formData.product_code,
                 name: formData.name,
                 description: formData.description,
                 rating: formData.rating,
@@ -198,15 +288,20 @@ const AddProducts = () => {
                 variants: formData.variants,
                 expiry: formData.expiry,
                 supplier: formData.supplier,
-                images: formData.media.images, // Send the compressed base64 array only once
+                images: formData.media.images, 
             };
 
-            const res = await axios.post("http://localhost:5000/api/products", payload);
-            toast.success("Product added successfully!");
-            // Reset form or redirect
+            if (isEdit) {
+                await axios.put(`http://localhost:5000/api/products/${id}`, payload);
+                toast.success("Product updated successfully!");
+            } else {
+                await axios.post("http://localhost:5000/api/products", payload);
+                toast.success("Product added successfully!");
+            }
+            navigate("/admin/products/all");
         } catch (err) {
             console.error(err);
-            toast.error(err.response?.data?.message || "Failed to add product");
+            toast.error(err.response?.data?.message || "Failed to save product");
         } finally {
             setLoading(false);
         }
@@ -221,15 +316,18 @@ const AddProducts = () => {
                     <div>
                         <h1 className="text-3xl font-black text-slate-800 flex items-center gap-3">
                             <span className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl">
-                                <FiPlus size={24} />
+                                {isEdit ? <FiBox size={24} /> : <FiPlus size={24} />}
                             </span>
-                            Add New Product
+                            {isEdit ? "Edit Product" : "Add New Product"}
                         </h1>
-                        <p className="text-gray-400 mt-1 font-medium ml-14">Expand your inventory with new awesome items.</p>
+                        <p className="text-gray-400 mt-1 font-medium ml-14">
+                            {isEdit ? "Modify existing inventory details." : "Expand your inventory with new awesome items."}
+                        </p>
                     </div>
                     <div className="flex gap-3 ml-14 md:ml-0">
                         <button
                             type="button"
+                            onClick={() => navigate("/admin/products/all")}
                             className="px-6 py-3 rounded-xl border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 transition-all"
                         >
                             Cancel
@@ -242,7 +340,7 @@ const AddProducts = () => {
                             {loading ? "Saving..." : (
                                 <>
                                     <FiCheckCircle />
-                                    Publish Product
+                                    {isEdit ? "Update Product" : "Publish Product"}
                                 </>
                             )}
                         </button>
@@ -256,8 +354,15 @@ const AddProducts = () => {
 
                         <FormSection title="Core Details" icon={<FiInfo className="text-blue-500" />}>
                             <div className="space-y-6">
-                                <div className="grid grid-cols-1 gap-6">
+                                <div className="grid md:grid-cols-2 gap-6">
                                     <FormInput label="Product Name" name="name" value={formData.name} onChange={handleChange} placeholder="e.g. Organic Brown Rice" required />
+                                    <FormInput label="Product Code / Barcode" name="product_code" value={formData.product_code} onChange={handleChange} placeholder="PB001" required />
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Generated Barcode Preview</label>
+                                    <div className="bg-white p-2 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-center min-h-[80px]">
+                                        <svg ref={barcodeRef}></svg>
+                                    </div>
                                 </div>
                                 <FormTextArea label="Description" name="description" value={formData.description} onChange={handleChange} placeholder="Describe your product in detail..." />
 
@@ -290,7 +395,7 @@ const AddProducts = () => {
                             </div>
                             <div className="mt-6 grid md:grid-cols-2 gap-6">
                                 <FormInput label="Total Stock Available" name="total_stock" value={formData.total_stock} readOnly placeholder="0" className="bg-gray-50 font-bold text-indigo-600" />
-                                <FormSelect label="Status" name="status" value={formData.status} onChange={handleChange} options={["Active", "Inactive"]} />
+                                <FormSelect label="Status" name="status" value={formData.status} onChange={handleChange} options={["Active", "Inactive", "Low Stock", "Out of Stock"]} />
                             </div>
                         </FormSection>
 
@@ -346,13 +451,7 @@ const AddProducts = () => {
                                             <img src={src} className="h-full w-full object-cover" />
                                             <button
                                                 type="button"
-                                                onClick={() => setFormData(prev => {
-                                                    const newImages = [...prev.media.images];
-                                                    const newPreviews = [...prev.media.previews];
-                                                    newImages.splice(i, 1);
-                                                    newPreviews.splice(i, 1);
-                                                    return { ...prev, media: { images: newImages, previews: newPreviews } };
-                                                })}
+                                                onClick={() => removeImage(i)}
                                                 className="absolute top-1 right-1 p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all"
                                             >
                                                 <FiTrash2 size={12} />
