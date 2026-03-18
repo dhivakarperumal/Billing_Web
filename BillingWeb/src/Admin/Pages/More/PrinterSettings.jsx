@@ -11,6 +11,10 @@ const PrinterSettings = () => {
     showLogo: true,
     logo: null, // ✅ NEW
 
+    upiId: "",
+    showQR: false,
+    qrGenerated: false,
+
     fontSize: "14",
     align: "center",
   });
@@ -20,6 +24,24 @@ const PrinterSettings = () => {
     setSettings({
       ...settings,
       [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  const handleGenerateQR = () => {
+    if (!settings.upiId) {
+      alert("Enter UPI ID first");
+      return;
+    }
+
+    setSettings({ ...settings, qrGenerated: true });
+  };
+
+  const handleRemoveUPI = () => {
+    setSettings({
+      ...settings,
+      upiId: "",
+      qrGenerated: false,
+      showQR: false,
     });
   };
 
@@ -103,6 +125,63 @@ const PrinterSettings = () => {
             />
           </div>
 
+          {/* UPI SETTINGS */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+              UPI ID
+            </label>
+
+            <input
+              name="upiId"
+              value={settings.upiId}
+              onChange={handleChange}
+              placeholder="example@upi"
+              className="w-full px-4 py-3 bg-gray-50 rounded-2xl border"
+            />
+
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={handleGenerateQR}
+                className="flex-1 py-2 bg-primary text-white rounded-xl text-xs font-black uppercase"
+              >
+                Generate QR
+              </button>
+
+              <button
+                type="button"
+                onClick={handleRemoveUPI}
+                className="flex-1 py-2 bg-red-500 text-white rounded-xl text-xs font-black uppercase"
+              >
+                Remove
+              </button>
+            </div>
+            {/* LEFT SIDE QR PREVIEW */}
+            {settings.qrGenerated && settings.upiId && (
+              <div className="mt-4 p-4 bg-gray-50 rounded-2xl border flex flex-col items-center">
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=upi://pay?pa=${settings.upiId}&pn=${settings.shopName}`}
+                  alt="UPI QR"
+                  className="mb-2"
+                />
+                <p className="text-[10px] font-bold text-gray-500">
+                  Generated QR (Preview)
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-bold">Show UPI QR</span>
+            <input
+              type="checkbox"
+              name="showQR"
+              checked={settings.showQR}
+              onChange={handleChange}
+              disabled={!settings.qrGenerated} // ✅ important
+            />
+          </div>
+
           <select
             name="fontSize"
             value={settings.fontSize}
@@ -131,7 +210,7 @@ const PrinterSettings = () => {
         </div>
 
         {/* ================= RIGHT PANEL (LIVE PREVIEW) ================= */}
-        <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm p-6 flex justify-center">
+        <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm p-10 flex justify-center h-fit self-start">
           {/* THERMAL BILL */}
           <div
             className="bg-white border border-gray-200 p-4 w-[260px] text-black"
@@ -166,6 +245,21 @@ const PrinterSettings = () => {
             <p>Total: ₹300</p>
 
             <hr className="my-2" />
+
+            {settings.showQR && settings.qrGenerated && settings.upiId && (
+              <>
+                <hr className="my-2" />
+
+                <div className="flex flex-col items-center text-center">
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=upi://pay?pa=${settings.upiId}&pn=${settings.shopName}`}
+                    alt="UPI QR"
+                    className="mb-2"
+                  />
+                  <p className="text-[10px]">Scan & Pay via UPI</p>
+                </div>
+              </>
+            )}
 
             <p>{settings.footer}</p>
           </div>
