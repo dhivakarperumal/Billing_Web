@@ -13,6 +13,7 @@ import Loader from "./components/Loader.jsx";
 import More from "./Admin/Pages/More/More.jsx";
 import PrinterSettings from "./Admin/Pages/More/PrinterSettings.jsx";
 import PrinterConfig from "./Admin/Pages/More/PrinterConfig.jsx";
+import GSTSettings from "./Admin/Pages/More/GstSettings.jsx";
 
 // Lazy Load Main Components
 const Home = React.lazy(() => import("./Home/Home.jsx"));
@@ -88,6 +89,7 @@ const router = createBrowserRouter([
       { path: "more", element: <More /> },
       { path: "printer", element: <PrinterConfig /> },
       { path: "printer-settings", element: <PrinterSettings /> },
+      { path: "gst-settings", element: <GSTSettings /> },
       { path: "profile", element: <Profile /> },
     
     ],
