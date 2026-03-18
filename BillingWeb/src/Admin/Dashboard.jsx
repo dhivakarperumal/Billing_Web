@@ -141,26 +141,30 @@ const Dashboard = () => {
     
 
       {/* QUICK ACTIONS */}
-      <div className="flex flex-wrap items-center gap-4 mb-2">
-         <button 
-           onClick={() => navigate('/admin/billing/create')}
-           className="flex items-center gap-3 px-6 py-4 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-rose-200 active:scale-95"
-         >
-           <FiShoppingBag className="text-lg" /> New Bill
-         </button>
-         <button 
-           onClick={() => navigate('/admin/products/all')}
-           className="flex items-center gap-3 px-6 py-4 bg-white border border-gray-100 text-slate-700 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-sm hover:shadow-md active:scale-95"
-         >
-           <FiPackage className="text-lg text-rose-500" /> Inventory
-         </button>
-         <button 
-           onClick={() => navigate('/admin/products/add')}
-           className="flex items-center gap-3 px-6 py-4 bg-white border border-gray-100 text-slate-700 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-sm hover:shadow-md active:scale-95"
-         >
-           <FiBox className="text-lg text-rose-500" /> Add Product
-         </button>
-      </div>
+     <div className="flex items-center justify-end gap-4 mb-4 p-4 bg-gradient-to-r from-rose-50 to-white border border-gray-100 rounded-2xl shadow-sm">
+
+  <button 
+    onClick={() => navigate('/admin/billing/create')}
+    className="flex items-center gap-3 px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg shadow-rose-200 active:scale-95"
+  >
+    <FiShoppingBag className="text-lg" /> New Bill
+  </button>
+
+  <button 
+    onClick={() => navigate('/admin/products/all')}
+    className="flex items-center gap-3 px-6 py-3 bg-white border border-gray-200 text-slate-700 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm hover:shadow-md active:scale-95"
+  >
+    <FiPackage className="text-lg text-rose-500" /> Inventory
+  </button>
+
+  <button 
+    onClick={() => navigate('/admin/products/add')}
+    className="flex items-center gap-3 px-6 py-3 bg-white border border-gray-200 text-slate-700 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm hover:shadow-md active:scale-95"
+  >
+    <FiBox className="text-lg text-rose-500" /> Add Product
+  </button>
+
+</div>
 
       {/* STATS GRID */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
