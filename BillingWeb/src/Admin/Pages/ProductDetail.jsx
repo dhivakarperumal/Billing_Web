@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import api from "../../api";
 import { toast } from "react-hot-toast";
-// import { QRCodeCanvas } from "qrcode.react";
-// import JsBarcode from "jsbarcode";
+import { QRCodeCanvas } from "qrcode.react";
+import JsBarcode from "jsbarcode";
 import {
     FiArrowLeft,
     FiEdit,
@@ -41,21 +41,21 @@ const ProductDetail = () => {
     }, [id]);
 
     useEffect(() => {
-        // if (barcodeRef.current && product?.product_code) {
-        //     try {
-        //         JsBarcode(barcodeRef.current, product.product_code, {
-        //             format: "CODE128",
-        //             lineColor: "#1e293b",
-        //             width: 2,
-        //             height: 50,
-        //             displayValue: true,
-        //             fontSize: 14,
-        //             margin: 10
-        //         });
-        //     } catch (err) {
-        //         console.error("Barcode generation error:", err);
-        //     }
-        // }
+        if (barcodeRef.current && product?.product_code) {
+            try {
+                JsBarcode(barcodeRef.current, product.product_code, {
+                    format: "CODE128",
+                    lineColor: "#1e293b",
+                    width: 2,
+                    height: 50,
+                    displayValue: true,
+                    fontSize: 14,
+                    margin: 10
+                });
+            } catch (err) {
+                console.error("Barcode generation error:", err);
+            }
+        }
     }, [product?.product_code, loading]);
 
     const handleDelete = async () => {
@@ -71,8 +71,8 @@ const ProductDetail = () => {
 
     if (loading) return (
         <div className="flex flex-col items-center justify-center py-20">
-            <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
-            <p className="text-gray-500 font-bold">Loading product details...</p>
+            <div className="w-12 h-12 border-4 border-rose-100 border-t-rose-600 rounded-full animate-spin mb-4"></div>
+            <p className="text-gray-500 font-bold font-black text-[10px] uppercase tracking-widest">Loading product details...</p>
         </div>
     );
 
@@ -113,7 +113,19 @@ const ProductDetail = () => {
                     <div className="bg-white p-3 sm:p-4 rounded-[2rem] sm:rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden group">
                         <div className="aspect-[3/4] rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden bg-gray-50">
                             {displayImages.length > 0 ? (
-                                <img src={displayImages[activeImage] || displayImages[0]} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                                <img 
+                                    src={
+                                        (() => {
+                                            const src = displayImages[activeImage];
+                                            if (!src) return `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}&background=random&color=fff`;
+                                            if (src.startsWith('http') || src.startsWith('data:')) return src;
+                                            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+                                            return `${backendUrl}${src.startsWith('/') ? src : `/${src}`}`;
+                                        })()
+                                    } 
+                                    alt={product.name} 
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" 
+                                />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center text-gray-300">No images</div>
                             )}
@@ -125,9 +137,21 @@ const ProductDetail = () => {
                                 <button
                                     key={i}
                                     onClick={() => setActiveImage(i)}
-                                    className={`aspect-square rounded-xl sm:rounded-2xl overflow-hidden border-2 transition-all shadow-sm ${activeImage === i ? 'border-primary scale-95 ring-2 ring-primary/10' : 'border-white hover:border-blue-200 opacity-60 hover:opacity-100'}`}
+                                    className={`aspect-square rounded-xl sm:rounded-2xl overflow-hidden border-2 transition-all shadow-sm ${activeImage === i ? 'border-rose-600 scale-95 ring-2 ring-rose-100' : 'border-white hover:border-rose-100 opacity-60 hover:opacity-100'}`}
                                 >
-                                    <img src={img} alt="thumb" className="w-full h-full object-cover" />
+                                    <img 
+                                        src={
+                                            (() => {
+                                                const src = img;
+                                                if (!src) return `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}`;
+                                                if (src.startsWith('http') || src.startsWith('data:')) return src;
+                                                const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+                                                return `${backendUrl}${src.startsWith('/') ? src : `/${src}`}`;
+                                            })()
+                                        } 
+                                        alt="thumb" 
+                                        className="w-full h-full object-cover" 
+                                    />
                                 </button>
                             ))}
                         </div>
@@ -140,7 +164,7 @@ const ProductDetail = () => {
                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 pb-6 sm:pb-8 border-b border-gray-50">
                             <div className="space-y-4 max-w-xl text-slate-800">
                                 <div className="flex items-center gap-2 flex-wrap">
-                                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest border border-blue-100">
+                                    <span className="px-3 py-1 bg-rose-50 text-rose-600 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest border border-rose-100">
                                         {product.category}
                                     </span>
                                     <div className="flex items-center gap-1 text-amber-500 font-bold text-xs sm:text-sm">
@@ -154,7 +178,7 @@ const ProductDetail = () => {
                                 <p className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Pricing Detail</p>
                                 <div className="flex items-center justify-center gap-2">
                                     <span className="text-gray-300 font-bold line-through text-xs sm:text-sm">₹{parseFloat(product.mrp || 0).toLocaleString()}</span>
-                                    <p className="text-2xl sm:text-3xl font-black text-primary">₹{parseFloat(product.offer_price || 0).toLocaleString()}</p>
+                                    <p className="text-2xl sm:text-3xl font-black text-rose-600">₹{parseFloat(product.offer_price || 0).toLocaleString()}</p>
                                 </div>
                                 <div className="mt-4 pt-4 border-t border-gray-200">
                                     <p className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">Current Inventory</p>
@@ -185,11 +209,11 @@ const ProductDetail = () => {
                                         <div
                                             key={idx}
                                             onClick={() => { setActiveVariant(idx); setActiveImage(0); }}
-                                            className={`flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer ${activeVariant === idx ? 'bg-primary/10 border-blue-200 ring-2 ring-primary/10/50' : 'bg-gray-50 border-gray-100 hover:border-blue-100'}`}
+                                            className={`flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer ${activeVariant === idx ? 'bg-rose-50 border-rose-200 ring-2 ring-rose-50' : 'bg-gray-50 border-gray-100 hover:border-rose-100'}`}
                                         >
                                             <div className="flex items-center gap-4 text-slate-800">
                                                 <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-inner border border-gray-100">
-                                                    <FiBox className="text-primary" />
+                                                    <FiBox className="text-rose-600" />
                                                 </div>
                                                 <div>
                                                     <p className="text-sm font-black text-slate-700 uppercase tracking-tight">{v.quantity} {v.unit}</p>
@@ -199,7 +223,7 @@ const ProductDetail = () => {
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-xs font-black text-primary">
+                                                <p className="text-xs font-black text-rose-600">
                                                     {v.stock} Units
                                                 </p>
                                             </div>
@@ -213,21 +237,21 @@ const ProductDetail = () => {
                         <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-6">
                             <div className="flex items-center justify-between">
                                 <h3 className="font-bold text-slate-800 uppercase tracking-widest text-xs">Product Passport</h3>
-                                <BsQrCode className="text-primary" size={18} />
+                                <BsQrCode className="text-rose-600" size={18} />
                             </div>
                             <div className="flex flex-col items-center justify-center gap-4 bg-gray-50/50 p-6 rounded-[2rem] border border-dashed border-gray-200">
                                 <div className="p-4 bg-white rounded-3xl shadow-sm border border-gray-100">
-                                    {/* <QRCodeCanvas
+                                    <QRCodeCanvas
                                         value={window.location.href}
                                         size={120}
                                         level={"H"}
                                         includeMargin={false}
                                         className="rounded-lg"
-                                    /> */}
+                                    />
                                 </div>
                                 <div className="text-center">
                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-tight">Digital Authenticity</p>
-                                    <p className="text-[9px] font-bold text-primary uppercase mt-1 tracking-tighter">Scan to verify creation</p>
+                                    <p className="text-[9px] font-bold text-rose-600 uppercase mt-1 tracking-tighter">Scan to verify creation</p>
                                 </div>
                             </div>
                         </div>

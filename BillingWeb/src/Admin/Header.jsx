@@ -56,10 +56,11 @@ const Header = ({ onMenuClick }) => {
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState({ products: [], orders: [] });
   const [searchLoading, setSearchLoading] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [allOrders, setAllOrders] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const searchWrapperRef = useRef(null);
 
   // Low stock state
@@ -145,31 +146,37 @@ const Header = ({ onMenuClick }) => {
     }
   };
 
-  // Pre-fetch orders for search on mount
+  // Pre-fetch data for search on mount
   useEffect(() => {
-    const loadAllOrders = async () => {
+    const loadData = async () => {
       try {
-        const res = await api.get("/orders");
-        setAllOrders(Array.isArray(res.data) ? res.data : []);
+        const [ordersRes, productsRes] = await Promise.all([
+          api.get("/orders"),
+          api.get("/products", { params: { limit: 1000 } })
+        ]);
+        setAllOrders(Array.isArray(ordersRes.data) ? ordersRes.data : []);
+        setAllProducts(Array.isArray(productsRes.data) ? productsRes.data : (productsRes.data.products || []));
       } catch (e) {
-        console.error("Failed to preload orders for search", e);
+        console.error("Failed to preload data for search", e);
       }
     };
-    loadAllOrders();
-  }, []);
+    loadData();
+  }, [location.pathname]); // Refresh on navigation to keep data fresh
 
-  // Live search filter
+  // Live search filter (Products + Orders)
   const handleSearchInput = (e) => {
     const q = e.target.value;
     setSearchQuery(q);
     if (!q.trim()) {
-      setSearchResults([]);
+      setSearchResults({ products: [], orders: [] });
       setShowSearchResults(false);
       return;
     }
     setSearchLoading(true);
     const lower = q.toLowerCase().trim();
-    const matched = allOrders.filter(o => {
+    
+    // Search Orders
+    const matchedOrders = allOrders.filter(o => {
       const orderId = `ORD-0${o.id}`;
       const name = (o.customer_name || "").toLowerCase();
       const phone = (o.customer_phone || "").toLowerCase();
@@ -179,8 +186,17 @@ const Header = ({ onMenuClick }) => {
         name.includes(lower) ||
         phone.includes(lower)
       );
-    }).slice(0, 6);
-    setSearchResults(matched);
+    }).slice(0, 5);
+
+    // Search Products
+    const matchedProducts = allProducts.filter(p => {
+      const name = (p.name || "").toLowerCase();
+      const code = (p.product_code || "").toLowerCase();
+      const cat = (p.category || "").toLowerCase();
+      return name.includes(lower) || code.includes(lower) || cat.includes(lower);
+    }).slice(0, 5);
+
+    setSearchResults({ products: matchedProducts, orders: matchedOrders });
     setShowSearchResults(true);
     setSearchLoading(false);
   };
@@ -297,8 +313,8 @@ const Header = ({ onMenuClick }) => {
           <div className="hidden sm:flex items-center gap-3">
            
             <div className="flex flex-col">
-              <h1 className="text-xl sm:text-2xl font-bold 
-                text-white tracking-tight truncate leading-none">
+              <h1 className="text-xl sm:text-2xl font-black 
+                text-white tracking-tighter truncate leading-none italic">
                 {getPageTitle()}
               </h1>
               <p className="hidden sm:block text-[10px] text-primary font-bold uppercase tracking-[0.2em] mt-1 opacity-70">
@@ -333,50 +349,85 @@ const Header = ({ onMenuClick }) => {
 
                 {/* Search Results Dropdown */}
                 {showSearchResults && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-2xl shadow-2xl z-[200] overflow-hidden">
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-2xl shadow-2xl z-[500] overflow-hidden">
                     {searchLoading ? (
-                      <div className="px-4 py-3 text-xs text-slate-400 font-bold">Searching...</div>
-                    ) : searchResults.length > 0 ? (
-                      <div className="divide-y divide-slate-50 max-h-[320px] overflow-y-auto">
-                        <div className="px-4 py-2 bg-slate-50">
-                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{searchResults.length} Result{searchResults.length > 1 ? 's' : ''} found</p>
-                        </div>
-                        {searchResults.map(order => (
-                          <button
-                            key={order.id}
-                            onClick={() => handleSearchResultClick(order.id)}
-                            className="w-full px-4 py-3 flex items-center gap-3 hover:bg-primary/10/50 transition-all text-left group"
-                          >
-                            {/* Avatar */}
-                            <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center text-white text-xs font-black shrink-0 shadow">
-                              {(order.customer_name || "?").charAt(0).toUpperCase()}
+                      <div className="px-4 py-3 text-xs text-slate-400 font-bold italic">Scanning Repository...</div>
+                    ) : (searchResults.orders.length > 0 || searchResults.products.length > 0) ? (
+                      <div className="divide-y divide-slate-50 max-h-[440px] overflow-y-auto custom-scrollbar">
+                        
+                        {/* PRODUCT RESULTS */}
+                        {searchResults.products.length > 0 && (
+                          <>
+                            <div className="px-4 py-2 bg-slate-50/80 sticky top-0 z-10">
+                              <p className="text-[9px] font-black text-rose-600 uppercase tracking-widest flex items-center gap-2">
+                                <Package size={10} /> Inventory Matches
+                              </p>
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center justify-between gap-2">
-                                <p className="text-xs font-black text-slate-800 truncate">{order.customer_name || "Unknown"}</p>
-                                <span className="text-[9px] font-black text-primary bg-primary/10 px-1.5 py-0.5 rounded shrink-0">ORD-0{order.id}</span>
-                              </div>
-                              <div className="flex items-center gap-2 mt-0.5">
-                                <span className="text-[10px] text-slate-400 font-bold truncate">{order.customer_phone || "No phone"}</span>
-                                <span className="text-[9px] text-slate-300">•</span>
-                                <span className="text-[10px] font-black text-emerald-600">₹{Number(order.total_amount).toLocaleString('en-IN')}</span>
-                              </div>
+                            {searchResults.products.map(p => (
+                              <button
+                                key={`p-${p.id}`}
+                                onClick={() => { navigate(`/admin/products/detail/${p.id}`); setShowSearchResults(false); setShowSearch(false); setSearchQuery(""); }}
+                                className="w-full px-4 py-3 flex items-center gap-3 hover:bg-rose-50/50 transition-all text-left group"
+                              >
+                                <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden shrink-0">
+                                  <img 
+                                    src={(p.images?.[0]) || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=random`} 
+                                    alt="" className="w-full h-full object-cover" 
+                                  />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-xs font-black text-slate-800 truncate">{p.name}</p>
+                                  <div className="flex items-center gap-2 mt-0.5">
+                                    <span className="text-[9px] font-black text-slate-400 uppercase">{p.category}</span>
+                                    <span className="text-[9px] text-slate-300">•</span>
+                                    <span className="text-[10px] font-black text-rose-600">₹{Number(p.offer_price || p.price).toLocaleString()}</span>
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
+                          </>
+                        )}
+
+                        {/* ORDER/BILL RESULTS */}
+                        {searchResults.orders.length > 0 && (
+                          <>
+                            <div className="px-4 py-2 bg-slate-50/80 sticky top-0 z-10">
+                              <p className="text-[9px] font-black text-primary uppercase tracking-widest flex items-center gap-2">
+                                <ShoppingBag size={10} /> Bill Records
+                              </p>
                             </div>
-                            <div>
-                              <span className={`text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider ${order.status === 'Order Placed' ? 'bg-blue-100 text-blue-700' :
-                                order.status === 'Delivered' ? 'bg-emerald-100 text-emerald-700' :
-                                  order.status === 'Cancelled' ? 'bg-red-100 text-red-700' :
-                                    'bg-amber-100 text-amber-700'
-                                }`}>{order.status}</span>
-                            </div>
-                          </button>
-                        ))}
+                            {searchResults.orders.map(order => (
+                              <button
+                                key={`o-${order.id}`}
+                                onClick={() => handleSearchResultClick(order.id)}
+                                className="w-full px-4 py-3 flex items-center gap-3 hover:bg-primary/10/50 transition-all text-left group"
+                              >
+                                <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center text-white text-xs font-black shrink-0 shadow">
+                                  {(order.customer_name || "?").charAt(0).toUpperCase()}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center justify-between gap-2">
+                                    <p className="text-xs font-black text-slate-800 truncate">{order.customer_name || "Unknown"}</p>
+                                    <span className="text-[9px] font-black text-primary bg-primary/10 px-1.5 py-0.5 rounded shrink-0">ORD-0{order.id}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 mt-0.5">
+                                    <span className="text-[10px] text-slate-400 font-bold truncate">{order.customer_phone || "No phone"}</span>
+                                    <span className="text-[9px] text-slate-300">•</span>
+                                    <span className="text-[10px] font-black text-emerald-600">₹{Number(order.total_amount).toLocaleString('en-IN')}</span>
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
+                          </>
+                        )}
                       </div>
                     ) : (
-                      <div className="px-4 py-6 text-center">
-                        <Search className="w-6 h-6 text-slate-200 mx-auto mb-2" />
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">No orders found</p>
-                        <p className="text-[9px] text-slate-300 mt-1">Try name, phone or order ID</p>
+                      <div className="px-4 py-8 text-center bg-white">
+                        <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3 text-gray-200">
+                          <Search size={24} />
+                        </div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Repository Clear</p>
+                        <p className="text-[9px] text-slate-300 mt-1 italic">No products or bills match your search.</p>
                       </div>
                     )}
                   </div>
@@ -602,6 +653,44 @@ const Header = ({ onMenuClick }) => {
                   )}
                 </div>
             )}
+          </div>
+
+          <div className="h-8 w-[1px] bg-slate-800 mx-1 hidden md:block opacity-30"></div>
+
+          {/* QUICK PERFORMANCE STATS */}
+          <div className="hidden lg:flex items-center gap-4 px-4 h-12 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md">
+             <div className="flex flex-col items-start pr-4 border-r border-white/10">
+                <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest leading-none mb-1">Today Bills</p>
+                <p className="text-sm font-black text-white leading-none tracking-tighter">
+                  {notifications.today?.length || 0} <span className="text-[10px] text-primary">Invoices</span>
+                </p>
+             </div>
+             <div className="flex flex-col items-start">
+                <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest leading-none mb-1">Today Revenue</p>
+                <p className="text-sm font-black text-emerald-400 leading-none tracking-tighter">
+                  ₹{notifications.today?.reduce((sum, o) => sum + Number(o.total_amount || 0), 0).toLocaleString('en-IN')}
+                </p>
+             </div>
+          </div>
+
+          {/* QUICK ACTIONS */}
+          <div className="hidden md:flex items-center gap-2">
+            <button 
+              onClick={() => navigate('/admin/billing')}
+              className="p-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-lg shadow-rose-900/20 active:scale-95 transition-all flex items-center gap-2 border border-rose-500/50"
+              title="New Bill"
+            >
+              <ShoppingBag size={18} />
+              <span className="text-[10px] font-black uppercase tracking-widest hidden xl:inline">Create Bill</span>
+            </button>
+            <button 
+              onClick={() => navigate('/admin/products/all')}
+              className="p-3 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl active:scale-95 transition-all flex items-center gap-2"
+              title="Stock View"
+            >
+              <Package size={18} />
+              <span className="text-[10px] font-black uppercase tracking-widest hidden xl:inline">Inventory</span>
+            </button>
           </div>
 
           {/* PROFILE */}

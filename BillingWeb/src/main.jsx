@@ -40,12 +40,14 @@ const Reviews = React.lazy(() => import("./Admin/Pages/Reviews.jsx"));
 const Reports = React.lazy(() => import("./Admin/Pages/Reports.jsx"));
 const Profile = React.lazy(() => import("./Admin/Pages/Profile.jsx"));
 const ProductDetail = React.lazy(() => import("./Admin/Pages/ProductDetail.jsx"));
+const CreateBilling = React.lazy(() => import("./Admin/Pages/CreateBilling.jsx"));
+const ErrorPage = React.lazy(() => import("./Admin/Pages/ErrorPage.jsx"));
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-
+    errorElement: <ErrorPage />,
     children: [
       { path: "/", element: <Home /> },
       
@@ -79,6 +81,7 @@ const router = createBrowserRouter([
       { path: "dealers", element: <Dealers /> },
       { path: "dealers/add", element: <AddDealer /> },
       { path: "invoices/add", element: <AddInvoice /> },
+      { path: "billing/create", element: <CreateBilling /> },
       { path: "banners", element: <BannerManagement /> },
       { path: "videos", element: <VideoManagement /> },
       { path: "reviews", element: <Reviews /> },

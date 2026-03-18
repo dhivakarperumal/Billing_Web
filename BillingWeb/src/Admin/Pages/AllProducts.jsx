@@ -14,11 +14,15 @@ import {
     FiBox,
     FiGrid,
     FiList,
-    FiChevronRight,
-    FiPackage,
     FiLayout,
-    FiDatabase
+    FiDatabase,
+    FiPrinter,
+    FiDownload,
+    FiUpload,
+    FiChevronRight,
+    FiPackage
 } from "react-icons/fi";
+import JsBarcode from "jsbarcode";
 
 const AllProducts = () => {
     const navigate = useNavigate();
@@ -111,6 +115,125 @@ const AllProducts = () => {
         } catch (error) {
             console.error("Error fetching products:", error);
             setProducts([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // EXPORT FUNCTIONALITY
+    const handleExport = () => {
+        try {
+            const exportData = JSON.stringify(products, null, 2);
+            const blob = new Blob([exportData], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `inventory_export_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            toast.success("Inventory exported successfully!");
+        } catch (err) {
+            toast.error("Export failed!");
+        }
+    };
+
+    // IMPORT FUNCTIONALITY
+    const handleImport = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            try {
+                const data = JSON.parse(event.target.result);
+                if (!Array.isArray(data)) throw new Error("Invalid format");
+                
+                setLoading(true);
+                let successCount = 0;
+                for (const item of data) {
+                    try {
+                        if (!item.name) continue;
+                        await api.post("/products", item);
+                        successCount++;
+                    } catch (e) {
+                        console.error("Individual item import fail", e);
+                    }
+                }
+                toast.success(`Broadly imported ${successCount} products!`);
+                fetchProducts();
+            } catch (err) {
+                toast.error("Import failed! Ensure JSON format is valid.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    // PRINT BARCODES (4 COLUMNS - FETCH ALL)
+    const handlePrintBarcodes = async () => {
+        setLoading(true);
+        try {
+            const response = await api.get("/products", { params: { limit: 1000 } });
+            const allProducts = Array.isArray(response.data) ? response.data : (response.data.products || []);
+            
+            if (allProducts.length === 0) return toast.error("No products to print!");
+
+            const printWindow = window.open('', '_blank');
+            const barcodeHtml = allProducts.map(p => `
+                <div style="width: 23%; display: inline-block; padding: 10px; border: 1px solid #eee; margin: 1%; text-align: center; box-sizing: border-box; break-inside: avoid; background: white;">
+                    <p style="font-size: 10px; font-weight: bold; margin: 0 0 5px 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p.name}</p>
+                    <svg id="barcode-${p.id}"></svg>
+                    <p style="font-size: 8px; margin: 5px 0 0 0; color: #666;">${p.product_code || `PRD-${p.id}`}</p>
+                    <p style="font-size: 10px; font-weight: bold; margin: 2px 0 0 0;">₹${p.offer_price || p.price || 0}</p>
+                </div>
+            `).join('');
+
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Master Inventory Barcodes</title>
+                        <style>
+                            body { font-family: sans-serif; margin: 20px; background: #f9f9f9; }
+                            @media print {
+                                body { margin: 0; background: white; }
+                                .no-print { display: none; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div style="display: flex; flex-wrap: wrap; width: 100%;">
+                            ${barcodeHtml}
+                        </div>
+                        <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+                        <script>
+                            window.onload = function() {
+                                ${allProducts.map(p => `
+                                    try {
+                                        JsBarcode("#barcode-${p.id}", "${p.product_code || `PRD-${p.id}`}", { 
+                                            width: 1.2, 
+                                            height: 45, 
+                                            fontSize: 0, 
+                                            margin: 0,
+                                            displayValue: false
+                                        });
+                                    } catch(e) { console.error("Barcode fail ${p.id}", e); }
+                                `).join('\n')}
+                                setTimeout(() => { 
+                                    window.print(); 
+                                    window.close(); 
+                                }, 1500);
+                            };
+                        </script>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            toast.success("Barcode master sheet generated!");
+        } catch (err) {
+            console.error("Master print fail:", err);
+            toast.error("Failed to generate master sheet!");
         } finally {
             setLoading(false);
         }
@@ -220,20 +343,44 @@ const AllProducts = () => {
                     <div className="flex bg-gray-100 p-1 rounded-xl border border-gray-200 shadow-inner">
                         <button
                             onClick={() => setViewMode("table")}
-                            className={`p-2 rounded-lg transition-all ${viewMode === "table" ? "bg-white text-primary shadow-sm" : "text-gray-400 hover:text-slate-600"}`}
+                            className={`p-2 rounded-lg transition-all ${viewMode === "table" ? "bg-white text-rose-600 shadow-sm" : "text-gray-400 hover:text-slate-600"}`}
                         >
                             <FiList size={18} />
                         </button>
                         <button
                             onClick={() => setViewMode("grid")}
-                            className={`p-2 rounded-lg transition-all ${viewMode === "grid" ? "bg-white text-primary shadow-sm" : "text-gray-400 hover:text-slate-600"}`}
+                            className={`p-2 rounded-lg transition-all ${viewMode === "grid" ? "bg-white text-rose-600 shadow-sm" : "text-gray-400 hover:text-slate-600"}`}
                         >
                             <FiGrid size={18} />
                         </button>
                     </div>
+
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={handlePrintBarcodes}
+                            className="p-4 bg-white border border-gray-200 text-slate-600 rounded-xl hover:bg-slate-50 transition-all shadow-sm flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"
+                            title="Print Labels (4-Column Grid)"
+                        >
+                            <FiPrinter size={16} /> <span className="hidden md:inline">Print Labels</span>
+                        </button>
+
+                        <button
+                            onClick={handleExport}
+                            className="p-4 bg-white border border-gray-200 text-slate-600 rounded-xl hover:bg-slate-50 transition-all shadow-sm flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"
+                            title="Export Data (.json)"
+                        >
+                            <FiDownload size={16} /> <span className="hidden md:inline">Export</span>
+                        </button>
+
+                        <label className="p-4 bg-white border border-gray-200 text-slate-600 rounded-xl hover:bg-slate-50 transition-all shadow-sm flex items-center gap-2 text-[10px] font-black uppercase tracking-widest cursor-pointer" title="Import Data (.json)">
+                            <FiUpload size={16} /> <span className="hidden md:inline">Import</span>
+                            <input type="file" className="hidden" accept=".json" onChange={handleImport} />
+                        </label>
+                    </div>
+
                     <button
                         onClick={() => navigate("/admin/products/add")}
-                        className="flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white px-6 py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-xl active:scale-95 whitespace-nowrap"
+                        className="flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-6 py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-xl shadow-rose-100 active:scale-95 whitespace-nowrap"
                     >
                         <FiPlus /> New Product
                     </button>
@@ -250,7 +397,7 @@ const AllProducts = () => {
                     {/* Quick Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
-                            { label: "Products", value: stats.total, icon: <FiBox />, color: "text-primary", bg: "bg-primary/10" },
+                            { label: "Products", value: stats.total, icon: <FiBox />, color: "text-rose-600", bg: "bg-rose-50" },
                             { label: "Active", value: stats.active, icon: <FiCheckCircle />, color: "text-emerald-600", bg: "bg-emerald-50" },
                             { label: "Low Stock", value: stats.lowStock, icon: <FiAlertCircle />, color: "text-amber-600", bg: "bg-amber-50" },
                             { label: "Out of Stock", value: stats.outOfStock, icon: <FiXCircle />, color: "text-rose-600", bg: "bg-rose-50" },
@@ -328,7 +475,7 @@ const AllProducts = () => {
                                                             <div className="min-w-0 flex-1 md:flex-none">
                                                                 <p className="text-sm font-black text-slate-800 break-words whitespace-normal leading-tight md:truncate md:whitespace-nowrap md:max-w-[200px] lg:max-w-xs">{product.name}</p>
                                                                 <div className="flex flex-wrap md:flex-nowrap items-center justify-start gap-2 mt-1.5">
-                                                                    <span className="text-[9px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded border border-blue-100">
+                                                                    <span className="text-[9px] font-black uppercase tracking-widest text-rose-600 bg-rose-100 px-2 py-0.5 rounded border border-rose-200">
                                                                         {product.product_code || `PRD-${product.id}`}
                                                                     </span>
                                                                     <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 italic">
@@ -374,7 +521,7 @@ const AllProducts = () => {
                                                         <div className="flex items-center justify-start md:justify-end gap-3">
                                                             <Link
                                                                 to={`/admin/products/detail/${product.id}`}
-                                                                className="p-3 border border-gray-200 text-gray-500 rounded-xl hover:bg-primary hover:text-white transition-all shadow-sm md:shadow-none"
+                                                                className="p-3 border border-gray-200 text-gray-500 rounded-xl hover:bg-rose-600 hover:text-white transition-all shadow-sm md:shadow-none"
                                                                 title="View Product"
                                                             >
                                                                 <FiEye size={18} />
@@ -434,7 +581,7 @@ const AllProducts = () => {
                                     <div className="p-6 space-y-4">
                                         <div className="flex justify-between items-start">
                                             <div className="min-w-0">
-                                                <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1 leading-none">{product.category}</p>
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-rose-600 mb-1 leading-none">{product.category}</p>
                                                 <h4 className="text-sm font-black text-slate-800 truncate leading-tight mt-1">{product.name}</h4>
                                             </div>
                                             <div className="text-right">
@@ -545,7 +692,7 @@ const AllProducts = () => {
                             <button
                                 type="submit"
                                 disabled={updatingStock}
-                                className="w-full py-5 bg-primary hover:bg-primary text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-xl shadow-primary/20 flex items-center justify-center gap-3"
+                                className="w-full py-5 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-xl shadow-rose-100 flex items-center justify-center gap-3"
                             >
                                 {updatingStock ? <div className="w-4 h-4 border-2 border-t-white rounded-full animate-spin"></div> : "Sync Stock Record"}
                             </button>
@@ -607,14 +754,14 @@ const AllProducts = () => {
                                 <button
                                     onClick={(e) => handleRapidAdd(e, true)}
                                     disabled={rapidSaving}
-                                    className="w-full py-5 bg-white border-2 border-blue-100 hover:bg-primary/10 text-primary rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 flex items-center justify-center gap-3"
+                                    className="w-full py-5 bg-white border-2 border-rose-100 hover:bg-rose-50 text-rose-600 rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 flex items-center justify-center gap-3"
                                 >
                                     List & Add Another
                                 </button>
                                 <button
                                     onClick={(e) => handleRapidAdd(e, false)}
                                     disabled={rapidSaving}
-                                    className="w-full py-5 bg-primary hover:bg-primary text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-xl shadow-primary/20 flex items-center justify-center gap-3"
+                                    className="w-full py-5 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-xl shadow-rose-100 flex items-center justify-center gap-3"
                                 >
                                     {rapidSaving ? <div className="w-4 h-4 border-2 border-t-white rounded-full animate-spin"></div> : "Save & Close"}
                                 </button>

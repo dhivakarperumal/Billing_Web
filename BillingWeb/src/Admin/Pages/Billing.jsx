@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
     FiDownload,
     FiFilter,
@@ -6,7 +7,8 @@ import {
     FiMoreVertical,
     FiCreditCard,
     FiFileText,
-    FiTrendingUp
+    FiTrendingUp,
+    FiPlus
 } from "react-icons/fi";
 import { FaRupeeSign } from "react-icons/fa";
 
@@ -40,9 +42,9 @@ const Billing = () => {
                     <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-100 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all shadow-sm">
                         <FiFileText /> Generate Report
                     </button>
-                    <button className="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-100">
-                        <FiCreditCard /> Withdrawal
-                    </button>
+                    <Link to="/admin/billing/create" className="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-100">
+                        <FiPlus /> Create New Bill
+                    </Link>
                 </div>
             </div>
 
