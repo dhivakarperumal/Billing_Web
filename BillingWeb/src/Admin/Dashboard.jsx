@@ -96,12 +96,6 @@ const stats = [
     color: "bg-purple-100 text-purple-600",
   },
   {
-    title: "Low Stock Items",
-    value: 30,
-    icon: <FiAlertTriangle />,
-    color: "bg-yellow-100 text-yellow-600",
-  },
-  {
     title: "Total Bills",
     value: 34,
     icon: <FiFileText />,
@@ -227,12 +221,12 @@ const Dashboard = () => {
       {/* CHART + REVENUE */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* REVENUE GRAPH */}
-        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-6">
+        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-3">
           <h2 className="text-sm font-black text-slate-800 mb-4">
             Shipment Statistic
           </h2>
 
-          <div className="h-64 w-full">
+          <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={revenueData} barSize={20}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -260,28 +254,56 @@ const Dashboard = () => {
 
         {/* PIE CHART */}
         <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-6">
-          <h2 className="text-sm font-black text-slate-800 mb-4">
-            Category Distribution
-          </h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-sm font-black text-slate-800">
+              Category Distribution
+            </h2>
 
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={categoryData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  dataKey="value"
-                  label
-                >
-                  {categoryData.map((entry, index) => (
-                    <Cell key={index} fill={COLORS[index]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+              Inventory Split
+            </span>
+          </div>
+
+          <div className="flex items-center justify-center">
+            {/* DONUT CHART */}
+            <div className="h-80 w-full md:w-2/3 relative">
+              {" "}
+              {/* 🔥 increased size */}
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={categoryData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={80} // 🔥 bigger hole
+                    outerRadius={120} // 🔥 bigger circle
+                    paddingAngle={4}
+                    dataKey="value"
+                  >
+                    {categoryData.map((entry, index) => (
+                      <Cell
+                        key={index}
+                        fill={COLORS[index]}
+                        className="hover:opacity-80 transition-all"
+                      />
+                    ))}
+                  </Pie>
+
+                  <Tooltip
+                    formatter={(value, name) => [`${value}`, `${name}`]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              {/* CENTER TEXT */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <p className="text-sm text-gray-400 font-bold uppercase">
+                  Total
+                </p>
+                <h2 className="text-2xl font-black text-slate-800">
+                  {categoryData.reduce((a, b) => a + b.value, 0)}
+                </h2>
+              </div>
+            </div>
           </div>
         </div>
       </div>
