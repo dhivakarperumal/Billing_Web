@@ -1,17 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useAdmin } from "../../PrivateRouter/AdminContext";
 import api from "../../api";
 import { toast, Toaster } from "react-hot-toast";
 import {
-    FiBox,
-    FiAlertCircle,
-    FiTrendingDown,
-    FiPackage,
-    FiFilter,
-    FiSearch,
-    FiSave,
-    FiPlus,
-    FiX
+    FiBox, FiAlertCircle, FiTrendingDown, FiPackage, FiFilter, 
+    FiSearch, FiSave, FiPlus, FiX, FiArrowLeft, FiActivity, FiRefreshCw
 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
@@ -44,8 +37,6 @@ const StockDetails = () => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [fetchingDetail, setFetchingDetail] = useState(false);
 
-
-
     const fetchProducts = async () => {
         const params = {
             page: currentPage,
@@ -59,9 +50,13 @@ const StockDetails = () => {
             const response = await api.get("/products", { params });
             const data = response.data;
             let finalData = {};
- 
+
             if (Array.isArray(data)) {
-                finalData = { products: data, pagination: { total: data.length, totalPages: 1 }, stats: { total: 0, active: 0, lowStock: 0, outOfStock: 0 }};
+                finalData = { 
+                    products: data, 
+                    pagination: { total: data.length, totalPages: 1 }, 
+                    stats: { total: data.length, active: 0, lowStock: 0, outOfStock: 0 }
+                };
             } else {
                 finalData = {
                     products: Array.isArray(data.products) ? data.products : [],
@@ -92,16 +87,7 @@ const StockDetails = () => {
     };
 
     const getStockLevel = (product) => {
-        const stock = product.total_stock ?? product.stock ?? 0;
-        return stock;
-    };
-
-    const getStatusStyle = (status) => {
-        let normalizedStatus = status ? status.toLowerCase() : "";
-        if (normalizedStatus.includes("out of stock")) return "bg-red-100 text-red-700";
-        if (normalizedStatus.includes("low stock")) return "bg-amber-100 text-amber-700";
-        if (normalizedStatus.includes("active") || normalizedStatus.includes("in stock")) return "bg-emerald-100 text-emerald-700";
-        return "bg-gray-100 text-gray-700";
+        return product.total_stock ?? product.stock ?? 0;
     };
 
     const deriveStatus = (stock) => {
@@ -110,24 +96,12 @@ const StockDetails = () => {
         return "In Stock";
     };
 
-    const totalPages = pagination.totalPages;
-    const currentItems = products;
-
-    // Reset page 1 on search
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchTerm]);
-
-    const outOfStockCount = stats.outOfStock;
-    const lowStockCount = stats.lowStock;
-
     const totalInventoryValue = products.reduce((acc, p) => {
         const stock = getStockLevel(p);
-        const price = parseFloat(p.offer_price || p.discount_price || p.price || p.mrp || 0);
+        const price = parseFloat(p.offer_price || p.price || 0);
         return acc + (stock * price);
     }, 0);
 
-    // Modal Handlers
     const openUpdateModal = async (product) => {
         setIsModalOpen(true);
         setSelectedProduct(product);
@@ -136,7 +110,6 @@ const StockDetails = () => {
         setFetchingDetail(true);
 
         try {
-            // Fetch full product details to ensure we have complete variant objects
             const res = await api.get(`/products/${product.id}`);
             const fullP = res.data;
             let vars = [];
@@ -152,12 +125,6 @@ const StockDetails = () => {
         } finally {
             setFetchingDetail(false);
         }
-    };
-
-    const closeUpdateModal = () => {
-        setIsModalOpen(false);
-        setSelectedProduct(null);
-        setUpdatedVariants([]);
     };
 
     const handleVariantStockChange = (vIndex, size, value) => {
@@ -185,7 +152,7 @@ const StockDetails = () => {
                 newTotalStock = parseInt(manualTotalStock) || 0;
             }
 
-            const status = newTotalStock <= 0 ? "Out of Stock" : newTotalStock < 10 ? "Low Stock" : "Active";
+            const status = deriveStatus(newTotalStock);
 
             const payload = {
                 ...selectedProduct,
@@ -195,189 +162,187 @@ const StockDetails = () => {
             };
 
             await api.put(`/products/${selectedProduct.id}`, payload);
-
-            setProducts(products.map(p =>
-                p.id === selectedProduct.id
-                    ? { ...p, total_stock: newTotalStock, variants: vars, status: status }
-                    : p
-            ));
-
             toast.success("Stock updated successfully");
-            closeUpdateModal();
+            fetchProducts();
+            setIsModalOpen(false);
         } catch (error) {
-            console.error("Failed to update stock:", error);
             toast.error("Failed to update stock");
         } finally {
             setIsUpdating(false);
         }
     };
 
-
-
     return (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 p-2 md:p-6 bg-slate-50 min-h-screen">
             <Toaster position="top-right" />
+            
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-
+                <div className="flex items-center gap-4">
+                    <button onClick={() => navigate(-1)} className="p-3 bg-white border border-gray-200 rounded-2xl text-gray-400 hover:text-rose-600 transition-all shadow-sm"><FiArrowLeft size={20} /></button>
+                    <div>
+                        <h1 className="text-2xl font-black text-slate-800">Inventory Status</h1>
+                        <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-1">Real-time Stock Management</p>
+                    </div>
                 </div>
-                <button
-                    onClick={() => navigate('/admin/products/stock/add')}
-                    className="flex items-center justify-center gap-2 bg-slate-900 border-2 border-slate-900 hover:bg-slate-800 text-white px-6 py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-lg active:scale-95"
-                >
-                    <FiPlus /> Boutique Stock Inward
-                </button>
+                <div className="flex items-center gap-3">
+                    <button onClick={handleSync} className={`p-3 bg-white border border-rose-100 rounded-2xl text-rose-500 hover:bg-rose-50 transition-all flex items-center gap-2 ${isSyncing ? 'animate-spin' : ''}`}>
+                        <FiRefreshCw size={18} />
+                    </button>
+                    <button onClick={() => navigate('/admin/products/stock/add')} className="flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl shadow-rose-100 transition-all active:scale-95">
+                        <FiPlus size={16} /> <span>New Stock Entry</span>
+                    </button>
+                </div>
             </div>
 
-            {/* Stock Alerts Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="bg-white p-6 rounded-[2rem] border-2 border-amber-100 shadow-sm flex items-center gap-4">
-                    <div className="w-12 h-12 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center text-xl shadow-sm">
-                        <FiAlertCircle />
-                    </div>
+            {/* Quick Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center justify-between group hover:border-indigo-200 transition-all">
                     <div>
-                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Low Stock Alerts</p>
-                        <p className="text-2xl font-black text-slate-800">{lowStockCount} items</p>
+                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2 leading-none">Total Value</p>
+                        <h2 className="text-2xl font-black text-slate-800 leading-none italic">₹{totalInventoryValue.toLocaleString()}</h2>
+                    </div>
+                    <div className="w-12 h-12 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                        <FiActivity />
                     </div>
                 </div>
-                <div className="bg-white p-6 rounded-[2rem] border-2 border-red-100 shadow-sm flex items-center gap-4">
-                    <div className="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center text-xl shadow-sm">
-                        <FiTrendingDown />
-                    </div>
+                <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center justify-between group hover:border-emerald-200 transition-all">
                     <div>
-                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Out of Stock</p>
-                        <p className="text-2xl font-black text-slate-800">{outOfStockCount} items</p>
+                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2 leading-none">Healthy Items</p>
+                        <h2 className="text-2xl font-black text-slate-800 leading-none">{stats.total - stats.lowStock - stats.outOfStock} items</h2>
                     </div>
-                </div>
-                <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
-                    <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center text-xl shadow-sm">
+                    <div className="w-12 h-12 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
                         <FiPackage />
                     </div>
+                </div>
+                <div className="bg-white p-6 rounded-[2rem] border border-amber-100 shadow-sm flex items-center justify-between group hover:bg-amber-50/50 transition-all">
                     <div>
-                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Inventory Value</p>
-                        <p className="text-2xl font-black text-slate-800">₹{totalInventoryValue.toLocaleString()}</p>
+                        <p className="text-[9px] font-black text-amber-400 uppercase tracking-[0.2em] mb-2 leading-none">Low Stock</p>
+                        <h2 className="text-2xl font-black text-slate-800 leading-none">{stats.lowStock} items</h2>
+                    </div>
+                    <div className="w-12 h-12 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center text-xl animate-pulse">
+                        <FiAlertCircle />
+                    </div>
+                </div>
+                <div className="bg-white p-6 rounded-[2rem] border border-red-100 shadow-sm flex items-center justify-between group hover:bg-red-50 transition-all">
+                    <div>
+                        <p className="text-[9px] font-black text-red-400 uppercase tracking-[0.2em] mb-2 leading-none">Out Of Stock</p>
+                        <h2 className="text-2xl font-black text-slate-800 leading-none">{stats.outOfStock} items</h2>
+                    </div>
+                    <div className="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center text-xl group-hover:shake transition-all">
+                        <FiTrendingDown />
                     </div>
                 </div>
             </div>
 
-            {/* Inventory Table */}
-            <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden text-slate-800">
+            {/* Main Table */}
+            <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden text-slate-800">
                 <div className="p-8 border-b border-gray-50 flex items-center justify-between">
-                    <h3 className="text-xl font-bold text-slate-800">Stock Levels</h3>
-                    <div className="flex items-center gap-3">
-                        <div className="relative hidden md:block">
-                            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                            <input
-                                type="text"
-                                placeholder="Search sku or name..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-12 pr-4 py-2 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:bg-white focus:border-primary transition-all text-sm w-64 text-slate-800"
-                            />
-                        </div>
-
+                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2"><FiBox className="text-indigo-500" /> Stock Listing</h3>
+                    <div className="relative">
+                        <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Filter by name or code..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-12 pr-4 py-3 bg-gray-50 border-2 border-transparent focus:border-rose-100 rounded-2xl outline-none focus:bg-white transition-all text-[11px] font-black uppercase tracking-widest w-72"
+                        />
                     </div>
                 </div>
 
-                <div className="overflow-x-auto text-slate-800">
+                <div className="overflow-x-auto min-h-[400px]">
                     {loading ? (
-                        <div className="flex flex-col items-center justify-center py-20">
-                            <div className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
-                            <p className="text-gray-500 font-bold text-sm">Loading stock details...</p>
+                        <div className="flex flex-col items-center justify-center py-40">
+                            <div className="w-10 h-10 border-4 border-rose-100 border-t-rose-600 rounded-full animate-spin mb-4"></div>
+                            <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest animate-pulse">Fetching inventory details...</p>
                         </div>
                     ) : (
-                        <table className="w-full text-left border-collapse block md:table">
-                            <thead className="hidden md:table-header-group">
-                                <tr className="bg-gray-50/50">
-                                    <th className="px-8 py-4 text-xs font-black text-gray-400 uppercase tracking-widest leading-none">Product</th>
-                                    <th className="px-8 py-4 text-xs font-black text-gray-400 uppercase tracking-widest leading-none">Category</th>
-                                    <th className="px-8 py-4 text-xs font-black text-gray-400 uppercase tracking-widest leading-none">Current Stock</th>
-                                    <th className="px-8 py-4 text-xs font-black text-gray-400 uppercase tracking-widest leading-none">Status</th>
-                                    <th className="px-8 py-4 text-xs font-black text-gray-400 uppercase tracking-widest leading-none text-right">Actions</th>
+                        <table className="w-full text-left">
+                            <thead className="bg-slate-50 text-gray-400 text-[9px] font-black uppercase tracking-widest leading-none">
+                                <tr>
+                                    <th className="px-8 py-5">Product Details</th>
+                                    <th className="px-8 py-5">Category</th>
+                                    <th className="px-8 py-5">Inventory Depth</th>
+                                    <th className="px-8 py-5">Status</th>
+                                    <th className="px-8 py-5 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="block md:table-row-group divide-y divide-gray-50 px-3 py-4 md:p-0">
-                                {currentItems.length > 0 ? (
-                                    currentItems.map((item) => {
+                            <tbody className="divide-y divide-gray-50">
+                                {products.length > 0 ? (
+                                    products.map((item) => {
                                         const stock = getStockLevel(item);
-                                        const status = item.status && item.status !== "Active" ? item.status : deriveStatus(stock);
-                                        const minStock = 10; // Threshold for warning
+                                        const status = deriveStatus(stock);
+                                        const minStock = 10;
 
                                         return (
-                                            <tr key={item.id} className="hover:bg-primary/10/20 transition-colors group block md:table-row bg-white md:bg-transparent border border-gray-100 md:border-0 rounded-2xl md:rounded-none mb-4 md:mb-0 shadow-sm md:shadow-none">
-                                                <td className="px-4 py-5 md:px-8 md:py-6 block md:table-cell border-b border-gray-50 md:border-b-0">
-                                                    <div className="flex flex-col md:block w-full gap-3 md:gap-0">
-                                                        <span className="md:hidden text-[11px] font-black text-gray-400 uppercase tracking-widest">Product</span>
-                                                        <div className="flex items-center gap-4 text-left w-full min-w-0">
-                                                            <div className="w-12 h-12 rounded-lg bg-gray-50 border border-gray-100 overflow-hidden shrink-0 shadow-sm">
-                                                                <img
-                                                                    src={(item.variants && item.variants.length > 0 && item.variants[0].images?.length > 0) ? item.variants[0].images[0] : (item.images && item.images.length > 0) ? item.images[0] : `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=random`}
-                                                                    alt={item.name}
-                                                                    className="w-full h-full object-cover"
-                                                                />
-                                                            </div>
-                                                            <div className="min-w-0 flex-1 md:flex-none">
-                                                                <p className="font-bold text-slate-800 text-sm break-words whitespace-normal leading-tight md:truncate md:whitespace-nowrap md:max-w-[200px] lg:max-w-xs">{item.name}</p>
-                                                                <p className="text-[10px] text-gray-400 font-bold uppercase mt-1">
-                                                                    {item.product_code || `#SKU-${1000 + item.id}`}
-                                                                </p>
-                                                            </div>
+                                            <tr key={item.id} className="hover:bg-indigo-50/30 transition-colors group">
+                                                <td className="px-8 py-5">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-14 h-14 rounded-2xl bg-gray-50 border border-gray-100 overflow-hidden shrink-0 shadow-sm p-1">
+                                                            <img
+                                                                src={(item.images && item.images.length > 0) ? item.images[0] : `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=random`}
+                                                                alt={item.name}
+                                                                className="w-full h-full object-contain"
+                                                            />
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-4 py-5 md:px-8 md:py-6 text-sm font-bold text-gray-500 block md:table-cell border-b border-gray-50 md:border-b-0">
-                                                    <div className="flex flex-col md:block w-full gap-3 md:gap-0">
-                                                        <span className="md:hidden text-[11px] font-black text-gray-400 uppercase tracking-widest">Category</span>
-                                                        <span className="text-left block">{item.category}</span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-4 py-5 md:px-8 md:py-6 block md:table-cell border-b border-gray-50 md:border-b-0">
-                                                    <div className="flex flex-col md:block w-full gap-3 md:gap-0">
-                                                        <span className="md:hidden text-[11px] font-black text-gray-400 uppercase tracking-widest">Current Stock</span>
-                                                        <div className="flex items-center gap-4 justify-start">
-                                                            <span className="font-black text-slate-700 w-8 text-left">{stock}</span>
-                                                            <div className="flex-1 w-[120px] md:w-auto md:max-w-[100px] h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                                                <div
-                                                                    className={`h-full transition-all duration-1000 ${stock <= 0 ? 'bg-red-500' : stock < minStock ? 'bg-amber-400' : 'bg-emerald-500'}`}
-                                                                    style={{ width: `${Math.min((stock / 50) * 100, 100)}%` }}
-                                                                ></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-4 py-5 md:px-8 md:py-6 block md:table-cell border-b border-gray-50 md:border-b-0">
-                                                    <div className="flex flex-col md:block w-full gap-3 md:gap-0">
-                                                        <span className="md:hidden text-[11px] font-black text-gray-400 uppercase tracking-widest">Status</span>
                                                         <div>
-                                                            <span className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest inline-flex items-center gap-1.5 ${getStatusStyle(status)}`}>
-                                                                {status === "Out of Stock" && <FiTrendingDown className="w-3 h-3" />}
-                                                                {status === "Low Stock" && <FiAlertCircle className="w-3 h-3" />}
-                                                                {status}
-                                                            </span>
+                                                            <p className="font-black text-slate-800 text-[13px] uppercase tracking-tight">{item.name}</p>
+                                                            <p className="text-[9px] text-gray-400 font-bold uppercase mt-1 tracking-widest flex items-center gap-2">
+                                                                <span className="bg-gray-100 px-1.5 py-0.5 rounded"># {item.product_code || item.id}</span>
+                                                                {item.brand && <span className="opacity-60">{item.brand}</span>}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-5 md:px-8 md:py-6 text-left md:text-right block md:table-cell">
-                                                    <div className="flex flex-col md:block w-full gap-3 md:gap-0">
-                                                        <span className="md:hidden text-[11px] font-black text-gray-400 uppercase tracking-widest">Actions</span>
-                                                        <div className="flex items-center justify-start md:justify-end gap-3 w-full">
-                                                            <button
-                                                                onClick={() => openUpdateModal(item)}
-                                                                className="inline-block px-5 py-3.5 bg-primary/10 hover:bg-primary hover:text-white rounded-xl text-[11px] font-black uppercase tracking-widest text-primary transition-all shadow-sm active:scale-95 md:shadow-none w-full md:w-auto text-center"
-                                                            >
-                                                                Quick Update
-                                                            </button>
+                                                <td className="px-8 py-5">
+                                                    <span className="text-[10px] font-black uppercase text-gray-500 bg-gray-50 border border-gray-100 px-2 py-1 rounded-lg">{item.category}</span>
+                                                </td>
+                                                <td className="px-8 py-5">
+                                                    <div className="w-full max-w-[140px] space-y-2">
+                                                        <div className="flex items-center justify-between text-[11px] font-black italic">
+                                                            <span className={stock <= 0 ? 'text-red-500' : stock < minStock ? 'text-amber-500' : 'text-emerald-500'}>{stock} Units</span>
+                                                        </div>
+                                                        <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+                                                            <div
+                                                                className={`h-full transition-all duration-1000 ${stock <= 0 ? 'bg-red-500' : stock < minStock ? 'bg-amber-400' : 'bg-emerald-500'}`}
+                                                                style={{ width: `${Math.min((stock / 100) * 100, 100)}%` }}
+                                                            ></div>
                                                         </div>
                                                     </div>
+                                                </td>
+                                                <td className="px-8 py-5">
+                                                    <span className={`px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest inline-flex items-center gap-2 border ${
+                                                        status === "Out of Stock" ? 'bg-red-50 text-red-600 border-red-100' : 
+                                                        status === "Low Stock" ? 'bg-amber-50 text-amber-600 border-amber-100' : 
+                                                        'bg-emerald-50 text-emerald-600 border-emerald-100'
+                                                    }`}>
+                                                        <div className={`w-1.5 h-1.5 rounded-full ${
+                                                            status === "Out of Stock" ? 'bg-red-500' : 
+                                                            status === "Low Stock" ? 'bg-amber-500' : 
+                                                            'bg-emerald-500'
+                                                        }`}></div>
+                                                        {status}
+                                                    </span>
+                                                </td>
+                                                <td className="px-8 py-5 text-right">
+                                                    <button
+                                                        onClick={() => openUpdateModal(item)}
+                                                        className="p-3.5 bg-rose-50 text-rose-600 rounded-2xl hover:bg-rose-600 hover:text-white transition-all shadow-sm group-hover:shadow-md"
+                                                    >
+                                                        <FiActivity size={16} />
+                                                    </button>
                                                 </td>
                                             </tr>
                                         );
                                     })
                                 ) : (
-                                    <tr className="block md:table-row">
-                                        <td colSpan="5" className="px-8 py-10 text-center text-gray-400 font-bold block md:table-cell">
-                                            No stock data found.
+                                    <tr>
+                                        <td colSpan="5" className="px-8 py-32 text-center">
+                                            <div className="flex flex-col items-center gap-4">
+                                                <div className="w-16 h-16 bg-gray-50 text-gray-200 rounded-full flex items-center justify-center text-3xl"><FiBox /></div>
+                                                <p className="text-gray-400 font-bold uppercase text-[10px] tracking-widest">No matching stock found</p>
+                                            </div>
                                         </td>
                                     </tr>
                                 )}
@@ -386,35 +351,33 @@ const StockDetails = () => {
                     )}
                 </div>
 
-                {/* Pagination UI */}
-                {totalPages > 1 && (
-                    <div className="p-8 border-t border-gray-50 flex items-center justify-between bg-gray-50/30">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                            Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, pagination.total)} of {pagination.total} Stock Records
+                {/* Pagination */}
+                {pagination.totalPages > 1 && (
+                    <div className="p-8 bg-slate-900 flex items-center justify-between text-white">
+                        <p className="text-[10px] font-black uppercase tracking-widest opacity-60">
+                            Page {currentPage} of {pagination.totalPages} <span className="mx-2">|</span> {pagination.total} Total Records
                         </p>
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                 disabled={currentPage === 1}
-                                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-primary disabled:opacity-30 transition-all border border-transparent hover:border-gray-100 rounded-lg"
+                                className="px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:text-rose-400 disabled:opacity-20 transition-all font-black italic"
                             >
-                                Previous
+                                Prev
                             </button>
-                            <div className="flex items-center gap-1 overflow-x-auto max-w-[150px] sm:max-w-none hide-scrollbar">
-                                {[...Array(totalPages)].map((_, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={() => setCurrentPage(i + 1)}
-                                        className={`min-w-[32px] h-8 rounded-lg text-[10px] font-black transition-all ${currentPage === i + 1 ? "bg-slate-900 text-white shadow-lg" : "text-gray-400 hover:bg-gray-100"}`}
-                                    >
-                                        {i + 1}
-                                    </button>
-                                ))}
-                            </div>
+                            {Array.from({ length: pagination.totalPages }, (_, i) => (
+                                <button
+                                    key={i + 1}
+                                    onClick={() => setCurrentPage(i + 1)}
+                                    className={`w-8 h-8 rounded-lg text-[10px] font-black transition-all ${currentPage === i + 1 ? 'bg-white text-slate-900 shadow-xl scale-110' : 'text-white hover:bg-white/10'}`}
+                                >
+                                    {i + 1}
+                                </button>
+                            )).slice(0, 5)}
                             <button
-                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                disabled={currentPage === totalPages}
-                                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-primary disabled:opacity-30 transition-all border border-transparent hover:border-gray-100 rounded-lg"
+                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, pagination.totalPages))}
+                                disabled={currentPage === pagination.totalPages}
+                                className="px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:text-rose-400 disabled:opacity-20 transition-all font-black italic"
                             >
                                 Next
                             </button>
@@ -423,114 +386,93 @@ const StockDetails = () => {
                 )}
             </div>
 
-            {/* Quick Stock Update Modal */}
+            {/* Quick Modal Update */}
             {isModalOpen && selectedProduct && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white rounded-[2rem] w-full max-w-lg shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-slate-800">
-                        <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
+                    <div className="bg-white rounded-[3rem] w-full max-w-lg shadow-2xl relative overflow-hidden animate-in zoom-in-95 duration-200 text-slate-800 border-4 border-white">
+                        <div className="p-8 border-b flex justify-between items-center bg-gray-50/50">
                             <div>
-                                <h3 className="text-lg font-black text-slate-800">Quick Stock Update</h3>
-                                <p className="text-xs font-bold text-gray-500 mt-1">{selectedProduct.name}</p>
+                                <h3 className="font-black text-slate-800 text-lg uppercase tracking-tight">Update Inventory</h3>
+                                <p className="text-[10px] text-gray-400 font-black tracking-widest uppercase mt-1">{selectedProduct.name}</p>
                             </div>
-                            <button onClick={closeUpdateModal} className="p-2 bg-white rounded-xl text-gray-400 hover:text-slate-800 hover:bg-gray-100 transition-colors shadow-sm">
+                            <button onClick={() => setIsModalOpen(false)} className="bg-white p-3 rounded-2xl shadow-sm text-gray-400 hover:text-red-500 transition-colors">
                                 <FiX size={20} />
                             </button>
                         </div>
 
-                        <div className="p-6 max-h-[60vh] overflow-y-auto">
+                        <div className="p-8 space-y-8 max-h-[60vh] overflow-y-auto custom-scrollbar">
                             {fetchingDetail ? (
-                                <div className="py-10 flex flex-col items-center justify-center">
-                                    <div className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-3"></div>
-                                    <p className="text-xs font-bold text-gray-400">Loading variants...</p>
+                                <div className="py-20 flex flex-col items-center justify-center gap-3">
+                                    <div className="w-8 h-8 border-4 border-rose-100 border-t-rose-600 rounded-full animate-spin"></div>
+                                    <p className="text-[9px] font-black uppercase tracking-widest text-gray-400">Loading Configuration...</p>
                                 </div>
                             ) : (
-                                <div className="space-y-6">
-                                    {updatedVariants.length > 0 && updatedVariants.some(v => v.sizesStock && Object.keys(v.sizesStock).length > 0) ? (
-                                        // Variant Based Stock
-                                        <div className="space-y-4">
+                                <>
+                                    {updatedVariants.length > 0 && updatedVariants.some(v => v.sizesStock) ? (
+                                        <div className="space-y-6">
                                             {updatedVariants.map((variant, vIndex) => (
-                                                <div key={vIndex} className="bg-gray-50/50 p-4 rounded-2xl border border-gray-100">
-                                                    <div className="flex items-center gap-3 mb-4">
-                                                        <div className="w-6 h-6 rounded-full shadow-sm border border-gray-200" style={{ backgroundColor: variant.color }}></div>
-                                                        <span className="text-sm font-black text-slate-800">{variant.colorName || 'Default Shade'}</span>
+                                                <div key={vIndex} className="bg-slate-50 p-6 rounded-[2rem] border border-gray-100">
+                                                    <div className="flex items-center gap-3 mb-6">
+                                                        <div className="w-6 h-6 rounded-full border-2 border-white shadow-sm" style={{ backgroundColor: variant.color }}></div>
+                                                        <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest">{variant.colorName || 'Option Shade'}</span>
                                                     </div>
 
-                                                    {variant.sizesStock && Object.keys(variant.sizesStock).length > 0 ? (
-                                                        <div className="grid grid-cols-2 gap-3">
-                                                            {Object.entries(variant.sizesStock).map(([size, currentQty]) => (
-                                                                <div key={size} className="bg-white border border-gray-200 p-3 rounded-xl">
-                                                                    <div className="flex items-center justify-between mb-1">
-                                                                        <label className="text-[10px] font-black text-gray-400 uppercase">{size}</label>
-                                                                        <span className="text-[9px] font-black bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">Curr: {currentQty}</span>
-                                                                    </div>
-                                                                    <input
-                                                                        type="number"
-                                                                        min="0"
-                                                                        value={variant.sizesStock?.[size] ?? currentQty}
-                                                                        onChange={(e) => handleVariantStockChange(vIndex, size, e.target.value)}
-                                                                        className="w-full text-base font-black text-slate-800 outline-none placeholder:text-gray-300 bg-transparent border-b border-gray-100 focus:border-primary-light transition-colors pb-1"
-                                                                        placeholder="0"
-                                                                    />
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        {variant.sizesStock && Object.entries(variant.sizesStock).map(([size, currentQty]) => (
+                                                            <div key={size} className="bg-white p-3.5 rounded-2xl border border-gray-100 focus-within:border-rose-400 transition-all shadow-sm">
+                                                                <div className="flex justify-between items-center mb-1">
+                                                                    <label className="text-[9px] font-black text-gray-400 uppercase">{size}</label>
+                                                                    <span className="text-[8px] font-black text-rose-500">Stock: {currentQty}</span>
                                                                 </div>
-                                                            ))}
-                                                        </div>
-                                                    ) : (
-                                                        <p className="text-xs text-gray-400 font-medium">No sizes configured for this variant.</p>
-                                                    )}
+                                                                <input
+                                                                    type="number"
+                                                                    min="0"
+                                                                    value={variant.sizesStock?.[size] ?? 0}
+                                                                    onChange={(e) => handleVariantStockChange(vIndex, size, e.target.value)}
+                                                                    className="w-full text-lg font-black text-slate-800 outline-none bg-transparent"
+                                                                    placeholder="0"
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             ))}
-                                            <p className="text-xs text-gray-400 font-medium text-center bg-primary/10/50 p-3 rounded-xl text-primary">
-                                                Total stock will be auto-calculated from variants.
-                                            </p>
                                         </div>
                                     ) : (
-                                        // Manual Total Stock
-                                        <div className="bg-gray-50/50 p-6 rounded-2xl border border-gray-100">
-                                            <label className="text-xs font-black text-gray-500 uppercase tracking-widest block mb-3">Total Available Stock</label>
-                                            <div className="relative">
-                                                <FiBox className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
+                                        <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white">
+                                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-4 italic opacity-50">Manual Total Stock</label>
+                                            <div className="flex items-center gap-4">
+                                                <FiBox className="text-3xl text-rose-500" />
                                                 <input
                                                     type="number"
                                                     min="0"
                                                     value={manualTotalStock}
                                                     onChange={(e) => setManualTotalStock(e.target.value)}
-                                                    className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-xl outline-none focus:border-primary transition-all text-xl font-black text-slate-800 shadow-sm"
+                                                    className="bg-transparent text-5xl font-black text-white w-full outline-none italic transition-all focus:scale-105"
+                                                    autoFocus
                                                 />
                                             </div>
-                                            <p className="text-[10px] text-gray-400 font-bold mt-2 ml-1">Update the master stock count directly.</p>
                                         </div>
                                     )}
-                                </div>
+                                </>
                             )}
                         </div>
 
-                        <div className="p-6 border-t border-gray-100 bg-gray-50/50 flex items-center justify-end gap-3">
-                            <button
-                                onClick={closeUpdateModal}
-                                disabled={isUpdating}
-                                className="px-6 py-2.5 rounded-xl text-sm font-bold text-gray-500 hover:bg-gray-200 transition-colors"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleSaveStock}
+                        <div className="p-8 border-t bg-gray-50/50 flex gap-4">
+                            <button onClick={() => setIsModalOpen(false)} className="flex-1 py-4 text-[11px] font-black uppercase text-gray-400 hover:text-gray-800 transition-colors">Discard</button>
+                            <button 
+                                onClick={handleSaveStock} 
                                 disabled={isUpdating || fetchingDetail}
-                                className="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-blue-700 text-white rounded-xl text-sm font-black transition-all shadow-lg active:scale-95 disabled:opacity-50"
+                                className="flex-2 w-2/3 bg-rose-600 hover:bg-rose-700 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-rose-100 disabled:opacity-50 transition-all flex items-center justify-center gap-3"
                             >
-                                {isUpdating ? (
-                                    <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> Saving...</>
-                                ) : (
-                                    <><FiSave /> Save Details</>
-                                )}
+                                {isUpdating ? <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div> : <><FiSave /> Save Changes</>}
                             </button>
                         </div>
                     </div>
                 </div>
             )}
-
         </div>
     );
 };
 
 export default StockDetails;
-

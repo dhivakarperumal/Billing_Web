@@ -144,21 +144,7 @@ const pieData = [
 const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 space-y-6">
-      {/* HEADER */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-black text-slate-800">Dashboard</h1>
-          <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">
-            Overview of your business
-          </p>
-        </div>
-
-        {/* Highlight Card */}
-        <div className="hidden md:block bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-4 rounded-2xl shadow-xl">
-          <p className="text-xs uppercase opacity-80">Today Revenue</p>
-          <h2 className="text-xl font-black">₹ 50</h2>
-        </div>
-      </div>
+    
 
       {/* STATS GRID */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

@@ -42,6 +42,14 @@ const navItems = [
 
   
 
+  {
+    label: "Billing",
+    icon: ShoppingCart,
+    children: [
+      { path: "/admin/billing/create", label: "Create Bill", icon: PlusCircle },
+    ],
+  },
+
   { path: "/admin/users/all", label: "Customers", icon: Users },
   {
     label: "Dealers",

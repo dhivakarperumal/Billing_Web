@@ -225,31 +225,30 @@ const AddProducts = () => {
 
     const handleImageUpload = async (e) => {
         const files = Array.from(e.target.files).slice(0, 5);
-        const compressedImages = [...formData.media.images];
-        const previews = [...formData.media.previews];
+        const compressedImages = [];
+        const previews = [];
 
         setLoading(true);
 
         for (let file of files) {
             try {
                 const options = {
-                    maxSizeMB: 0.05, 
-                    maxWidthOrHeight: 1000,
-                    useWebWorker: true
+                    maxSizeMB: 5, // Max 5MB
+                    maxWidthOrHeight: 1920,
+                    useWebWorker: true,
                 };
 
                 const compressedFile = await imageCompression(file, options);
+
+                // Convert to base64
                 const base64 = await imageCompression.getDataUrlFromFile(compressedFile);
 
                 compressedImages.push(base64);
                 previews.push(base64);
-
             } catch (error) {
                 console.error("Image compression error:", error);
             }
         }
-
-        setLoading(false);
 
         setFormData((prev) => ({
             ...prev,
@@ -258,6 +257,7 @@ const AddProducts = () => {
                 previews,
             },
         }));
+        setLoading(false);
     };
 
     const removeImage = (index) => {
@@ -315,7 +315,7 @@ const AddProducts = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm">
                     <div>
                         <h1 className="text-3xl font-black text-slate-800 flex items-center gap-3">
-                            <span className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl">
+                            <span className="p-3 bg-rose-50 text-rose-600 rounded-2xl">
                                 {isEdit ? <FiBox size={24} /> : <FiPlus size={24} />}
                             </span>
                             {isEdit ? "Edit Product" : "Add New Product"}
@@ -335,7 +335,7 @@ const AddProducts = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-100 transition-all flex items-center gap-2 disabled:opacity-50"
+                            className="px-8 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold shadow-lg shadow-rose-100 transition-all flex items-center gap-2 disabled:opacity-50"
                         >
                             {loading ? "Saving..." : (
                                 <>
@@ -394,7 +394,7 @@ const AddProducts = () => {
                                 <FormInput label="Offer Price" name="sellingPrice" value={formData.pricing.sellingPrice} readOnly placeholder="0.00" icon="₹" className="bg-gray-50" />
                             </div>
                             <div className="mt-6 grid md:grid-cols-2 gap-6">
-                                <FormInput label="Total Stock Available" name="total_stock" value={formData.total_stock} readOnly placeholder="0" className="bg-gray-50 font-bold text-indigo-600" />
+                                <FormInput label="Total Stock Available" name="total_stock" value={formData.total_stock} readOnly placeholder="0" className="bg-gray-50 font-bold text-rose-600" />
                                 <FormSelect label="Status" name="status" value={formData.status} onChange={handleChange} options={["Active", "Inactive", "Low Stock", "Out of Stock"]} />
                             </div>
                         </FormSection>
@@ -402,7 +402,7 @@ const AddProducts = () => {
                         <FormSection title="Product Variants" icon={<FiBox className="text-purple-500" />}>
                             <div className="space-y-4">
                                 {formData.variants.map((v, i) => (
-                                    <div key={i} className="group relative bg-[#F8F9FF] p-5 rounded-2xl border border-indigo-50 grid md:grid-cols-7 gap-4 items-end">
+                                    <div key={i} className="group relative bg-[#F8F9FF] p-5 rounded-2xl border border-rose-50 grid md:grid-cols-7 gap-4 items-end">
                                         <FormInput label="Weight" value={v.quantity} onChange={(e) => handleVariantChange(i, "quantity", e.target.value)} placeholder="e.g. 500" />
                                         <FormInput label="Unit" value={v.unit} onChange={(e) => handleVariantChange(i, "unit", e.target.value)} placeholder="kg / g / pcs" />
                                         <FormInput label="MRP" value={v.mrp} onChange={(e) => handleVariantChange(i, "mrp", e.target.value)} placeholder="0" />
@@ -425,7 +425,7 @@ const AddProducts = () => {
                                 <button
                                     type="button"
                                     onClick={addVariant}
-                                    className="w-full py-4 border-2 border-dashed border-indigo-100 rounded-2xl text-indigo-500 font-bold hover:bg-indigo-50 hover:border-indigo-200 transition-all flex items-center justify-center gap-2"
+                                    className="w-full py-4 border-2 border-dashed border-rose-100 rounded-2xl text-rose-500 font-bold hover:bg-rose-50 hover:border-rose-200 transition-all flex items-center justify-center gap-2"
                                 >
                                     <FiPlus /> Add more variants (Size, Weight, Pack)
                                 </button>
@@ -521,7 +521,7 @@ const FormInput = ({ label, icon, ...props }) => (
             )}
             <input
                 {...props}
-                className={`w-full ${icon ? 'pl-8' : 'px-5'} py-4 bg-[#F8F9FF] border-2 border-transparent rounded-[1.25rem] focus:border-indigo-100 focus:bg-white focus:outline-none text-sm font-semibold text-slate-700 transition-all placeholder:text-gray-300 ${props.className || ''}`}
+                className={`w-full ${icon ? 'pl-8' : 'px-5'} py-4 bg-[#F8F9FF] border-2 border-transparent rounded-[1.25rem] focus:border-rose-100 focus:bg-white focus:outline-none text-sm font-semibold text-slate-700 transition-all placeholder:text-gray-300 ${props.className || ''}`}
             />
         </div>
     </div>
@@ -535,7 +535,7 @@ const FormTextArea = ({ label, ...props }) => (
         <textarea
             {...props}
             rows="4"
-            className="w-full px-5 py-4 bg-[#F8F9FF] border-2 border-transparent rounded-[1.25rem] focus:border-indigo-100 focus:bg-white focus:outline-none text-sm font-semibold text-slate-700 transition-all placeholder:text-gray-300"
+            className="w-full px-5 py-4 bg-[#F8F9FF] border-2 border-transparent rounded-[1.25rem] focus:border-rose-100 focus:bg-white focus:outline-none text-sm font-semibold text-slate-700 transition-all placeholder:text-gray-300"
         />
     </div>
 );
@@ -547,7 +547,7 @@ const FormSelect = ({ label, options, ...props }) => (
         </label>
         <select
             {...props}
-            className="w-full px-5 py-4 bg-[#F8F9FF] border-2 border-transparent rounded-[1.25rem] focus:border-indigo-100 focus:bg-white focus:outline-none text-sm font-semibold text-slate-700 transition-all appearance-none cursor-pointer"
+            className="w-full px-5 py-4 bg-[#F8F9FF] border-2 border-transparent rounded-[1.25rem] focus:border-rose-100 focus:bg-white focus:outline-none text-sm font-semibold text-slate-700 transition-all appearance-none cursor-pointer"
         >
             <option value="">Choose Options</option>
             {options.map((opt, i) => (

@@ -6,6 +6,7 @@ import authRouter from "./src/routers/authRouter.js";
 import categoryRouter from "./src/routers/categoryRouter.js";
 import productRouter from "./src/routers/productRouter.js";
 import dashboardRouter from "./src/routers/dashboardRouter.js";
+import orderRouter from "./src/routers/orderRouter.js";
 
 import path from "path";
 import { fileURLToPath } from "url";
@@ -35,6 +36,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/products", productRouter);
 app.use("/api/dashboard", dashboardRouter);
+app.use("/api/orders", orderRouter);
 
 
 // Test Route
