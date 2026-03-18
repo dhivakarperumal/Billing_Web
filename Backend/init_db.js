@@ -42,12 +42,16 @@ async function initDB() {
       product_code VARCHAR(50) UNIQUE,
       name VARCHAR(255) NOT NULL,
       category VARCHAR(255),
+      subcategory VARCHAR(255),
       mrp DECIMAL(10,2),
       offer_price DECIMAL(10,2),
       total_stock INT DEFAULT 0,
       status ENUM('Active', 'Inactive') DEFAULT 'Active',
       images LONGTEXT,
       variants LONGTEXT,
+      expiry LONGTEXT,
+      supplier LONGTEXT,
+      rating DECIMAL(3,2),
       description TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )

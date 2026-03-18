@@ -7,14 +7,31 @@ import categoryRouter from "./src/routers/categoryRouter.js";
 import productRouter from "./src/routers/productRouter.js";
 import dashboardRouter from "./src/routers/dashboardRouter.js";
 
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 
 app.use(cors());
-app.use(express.json());
 
-// Auth Routes
+// Limit Logger
+app.use((req, res, next) => {
+    if (req.headers['content-length']) {
+        const sizeInMb = (parseInt(req.headers['content-length']) / (1024 * 1024)).toFixed(2);
+        console.log(`[DEBUG] Incoming Request: ${req.method} ${req.url} - Size: ${sizeInMb}MB`);
+    }
+    next();
+});
+
+app.use(express.json({ limit: 524288000 })); // 500MB in bytes
+app.use(express.urlencoded({ limit: 524288000, extended: true }));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+
 app.use("/api/auth", authRouter);
-// Feature Routes
 app.use("/api/categories", categoryRouter);
 app.use("/api/products", productRouter);
 app.use("/api/dashboard", dashboardRouter);
