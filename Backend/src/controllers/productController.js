@@ -142,9 +142,11 @@ export const getProductById = async (req, res) => {
 };
 
 export const createProduct = async (req, res) => {
-    let { name, category, subCategory, mrp, offer_price, total_stock, status, variants, description, expiry, supplier, rating, images } = req.body;
+    let { product_code, name, category, subCategory, mrp, offer_price, total_stock, status, variants, description, expiry, supplier, rating, images } = req.body;
     try {
-        const product_code = await generateProductCode();
+        if (!product_code) {
+            product_code = await generateProductCode();
+        }
 
         // Process uploaded base64 images
         let imagesJson = "[]";
@@ -179,21 +181,37 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
     const { id } = req.params;
-    const { name, category, subCategory, mrp, offer_price, total_stock, status, images, variants, description, expiry, supplier, rating } = req.body;
+    let { product_code, name, category, subCategory, mrp, offer_price, total_stock, status, images, variants, description, expiry, supplier, rating } = req.body;
     try {
-        const imagesJson = JSON.stringify(images || []);
+        // Separate existing images from new base64 strings
+        const existingImages = (images || []).filter(img => !img.startsWith('data:image'));
+        const newBase64Images = (images || []).filter(img => img.startsWith('data:image'));
+
+        // Process new base64 images
+        const newImagePaths = await processImages(newBase64Images);
+        
+        // Combine existing URLs with new file paths
+        const finalImagePaths = [...existingImages, ...newImagePaths];
+        const imagesJson = JSON.stringify(finalImagePaths);
+
         const variantsJson = JSON.stringify(variants || []);
         const expiryJson = JSON.stringify(expiry || {});
         const supplierJson = JSON.stringify(supplier || {});
 
+        // Convert numbers from strings
+        const numMrp = Number(mrp) || 0;
+        const numOffer = Number(offer_price) || 0;
+        const numStock = Number(total_stock) || 0;
+        const numRating = Number(rating) || 0;
+
         await db.promise().query(
-            "UPDATE products SET name = ?, category = ?, subcategory = ?, mrp = ?, offer_price = ?, total_stock = ?, status = ?, images = ?, variants = ?, expiry = ?, supplier = ?, rating = ?, description = ? WHERE id = ?",
-            [name, category, subCategory, mrp, offer_price, total_stock, status, imagesJson, variantsJson, expiryJson, supplierJson, rating, description, id]
+            "UPDATE products SET product_code = ?, name = ?, category = ?, subcategory = ?, mrp = ?, offer_price = ?, total_stock = ?, status = ?, images = ?, variants = ?, expiry = ?, supplier = ?, rating = ?, description = ? WHERE id = ?",
+            [product_code, name || "", category || "", subCategory || "", numMrp, numOffer, numStock, (status || "Active"), imagesJson, variantsJson, expiryJson, supplierJson, numRating, description || "", id]
         );
 
-        res.status(200).json({ message: "Product updated successfully" });
+        res.status(200).json({ message: "Product updated successfully", images: finalImagePaths });
     } catch (error) {
-        console.error(error);
+        console.error("Update Product Error:", error);
         res.status(500).json({ message: "Failed to update product", error: error.message });
     }
 };

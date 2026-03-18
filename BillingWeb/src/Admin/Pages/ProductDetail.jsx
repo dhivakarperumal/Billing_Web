@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import api from "../../api";
 import { toast } from "react-hot-toast";
 import { QRCodeCanvas } from "qrcode.react";
+import JsBarcode from "jsbarcode";
 import {
     FiArrowLeft,
     FiEdit,
@@ -18,6 +19,7 @@ import { BsQrCode } from "react-icons/bs";
 const ProductDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const barcodeRef = useRef(null);
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [activeVariant, setActiveVariant] = useState(0);
@@ -29,7 +31,7 @@ const ProductDetail = () => {
             setProduct(response.data);
             setLoading(false);
         } catch (error) {
-            toast.error("Failed to load boutique creation.");
+            toast.error("Failed to load product details.");
             navigate("/admin/products/all");
         }
     };
@@ -38,11 +40,29 @@ const ProductDetail = () => {
         fetchProduct();
     }, [id]);
 
+    useEffect(() => {
+        if (barcodeRef.current && product?.product_code) {
+            try {
+                JsBarcode(barcodeRef.current, product.product_code, {
+                    format: "CODE128",
+                    lineColor: "#1e293b",
+                    width: 2,
+                    height: 50,
+                    displayValue: true,
+                    fontSize: 14,
+                    margin: 10
+                });
+            } catch (err) {
+                console.error("Barcode generation error:", err);
+            }
+        }
+    }, [product?.product_code, loading]);
+
     const handleDelete = async () => {
-        if (!window.confirm("Delete this masterpiece?")) return;
+        if (!window.confirm("Delete this product?")) return;
         try {
             await api.delete(`/products/${id}`);
-            toast.success("Creation removed.");
+            toast.success("Product removed.");
             navigate("/admin/products/all");
         } catch (error) {
             toast.error("Removal failed.");
@@ -52,7 +72,7 @@ const ProductDetail = () => {
     if (loading) return (
         <div className="flex flex-col items-center justify-center py-20">
             <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
-            <p className="text-gray-500 font-bold">Revealing the craft...</p>
+            <p className="text-gray-500 font-bold">Loading product details...</p>
         </div>
     );
 
@@ -74,7 +94,7 @@ const ProductDetail = () => {
                                 {product.status}
                             </span>
                         </div>
-                        <p className="text-sm text-gray-500 font-medium mt-1">Product ID: {product.product_code || `SP${product.id}`} • Artisan Collection</p>
+                        <p className="text-sm text-gray-500 font-medium mt-1">Product ID: {product.product_code || `PRD-${product.id}`}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -124,47 +144,32 @@ const ProductDetail = () => {
                                         {product.category}
                                     </span>
                                     <div className="flex items-center gap-1 text-amber-500 font-bold text-xs sm:text-sm">
-                                        ★ {product.rating} <span className="text-gray-300 font-medium">Boutique Standard</span>
+                                        ★ {product.rating} <span className="text-gray-300 font-medium font-black text-xs uppercase tracking-widest">Global Rating</span>
                                     </div>
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-800 uppercase tracking-widest text-[10px] sm:text-xs">Description</h3>
                                 <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-medium">{product.description || "No description provided."}</p>
                             </div>
                             <div className="bg-gray-50 p-6 rounded-[2rem] border border-gray-100 text-center min-w-[180px] sm:min-w-[200px] shadow-inner">
-                                <p className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Commercials</p>
+                                <p className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Pricing Detail</p>
                                 <div className="flex items-center justify-center gap-2">
                                     <span className="text-gray-300 font-bold line-through text-xs sm:text-sm">₹{parseFloat(product.mrp || 0).toLocaleString()}</span>
                                     <p className="text-2xl sm:text-3xl font-black text-primary">₹{parseFloat(product.offer_price || 0).toLocaleString()}</p>
                                 </div>
                                 <div className="mt-4 pt-4 border-t border-gray-200">
-                                    <p className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">Global Inventory</p>
+                                    <p className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">Current Inventory</p>
                                     <p className="text-lg sm:text-xl font-black text-slate-800 mt-1">{product.total_stock || 0} Units</p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Specs Grid */}
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 pt-6 sm:pt-8">
-                            {[
-                                { label: "Fabric", value: product.material },
-                                { label: "Artisan Work", value: product.work_type },
-                                { label: "Care", value: product.wash_care },
-                                { label: "Saree Length", value: product.saree_length },
-                                { label: "Blouse Length", value: product.blouse_length },
-                                { label: "Top / Lehenga Length", value: product.top_length },
-                                { label: "Bottom Length", value: product.bottom_length },
-                                { label: "Dupatta Length", value: product.dupatta_length },
-                                { label: "Gown Length", value: product.gown_length },
-                                { label: "Sleeve Type", value: product.sleeve_type },
-                                { label: "Neck Type", value: product.neck_type },
-                                { label: "Fit Type", value: product.fit_type },
-                                { label: "Zari Tone", value: product.zari_color },
-                            ].filter(s => s.value && s.value.toString().trim() !== "").map((spec, i) => (
-                                <div key={i} className="space-y-1 p-3 sm:p-4 bg-gray-50/50 rounded-2xl border border-gray-100/50 hover:bg-white hover:shadow-sm transition-all cursor-default">
-                                    <p className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">{spec.label}</p>
-                                    <p className="text-xs sm:text-sm font-bold text-slate-700">{spec.value}</p>
-                                </div>
-                            ))}
+                        {/* Barcode Display */}
+                        <div className="mt-8 pt-8 border-t border-gray-50">
+                            <h3 className="font-bold text-slate-800 uppercase tracking-widest text-[10px] sm:text-xs mb-4">Product Identifier</h3>
+                            <div className="bg-gray-50/50 p-6 rounded-[2rem] border border-dashed border-gray-200 flex flex-col items-center justify-center gap-3">
+                                <svg ref={barcodeRef} className="max-w-full"></svg>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Optical Identity Marker</p>
+                            </div>
                         </div>
                     </div>
 
@@ -173,7 +178,7 @@ const ProductDetail = () => {
                         {product.variants?.length > 0 && (
                             <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-6">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="font-bold text-slate-800 uppercase tracking-widest text-xs">Available Shades</h3>
+                                    <h3 className="font-bold text-slate-800 uppercase tracking-widest text-xs">SKU Variants</h3>
                                 </div>
                                 <div className="grid grid-cols-1 gap-4">
                                     {product.variants.map((v, idx) => (
@@ -183,17 +188,19 @@ const ProductDetail = () => {
                                             className={`flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer ${activeVariant === idx ? 'bg-primary/10 border-blue-200 ring-2 ring-primary/10/50' : 'bg-gray-50 border-gray-100 hover:border-blue-100'}`}
                                         >
                                             <div className="flex items-center gap-4 text-slate-800">
-                                                <div className="w-10 h-10 rounded-xl shadow-inner border-2 border-white" style={{ backgroundColor: v.color }}></div>
+                                                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-inner border border-gray-100">
+                                                    <FiBox className="text-primary" />
+                                                </div>
                                                 <div>
-                                                    <p className="text-sm font-black text-slate-700 uppercase tracking-tight">{v.colorName || "Artisan Shade"}</p>
+                                                    <p className="text-sm font-black text-slate-700 uppercase tracking-tight">{v.quantity} {v.unit}</p>
                                                     <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">
-                                                        {v.selectedSizes?.join(", ") || "No Sizes"}
+                                                        Selling Price: ₹{v.sellingPrice}
                                                     </p>
                                                 </div>
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-xs font-black text-primary">
-                                                    {Object.values(v.sizesStock || {}).reduce((a, b) => a + (parseInt(b) || 0), 0)} Units
+                                                    {v.stock} Units
                                                 </p>
                                             </div>
                                         </div>
@@ -224,8 +231,6 @@ const ProductDetail = () => {
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
