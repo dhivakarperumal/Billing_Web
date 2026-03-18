@@ -193,7 +193,7 @@ const Reviews = () => {
         <div>
           <div className="hidden sm:flex items-center gap-3">
             <div className="bg-white px-5 py-3 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                 <MessageSquare className="w-5 h-5" />
               </div>
               <div>
@@ -227,7 +227,7 @@ const Reviews = () => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-blue-600 shadow-xl shadow-slate-900/10 transition-all active:scale-95"
+            className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-primary shadow-xl shadow-slate-900/10 transition-all active:scale-95"
           >
             <Plus className="w-4 h-6" /> Add Review
           </button>
@@ -255,13 +255,13 @@ const Reviews = () => {
         </div>
 
         <div className="xl:col-span-4 relative group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-primary transition-colors" />
           <input
             type="text"
             placeholder="Search reviews, products or users..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-full min-h-[56px] bg-white border border-slate-100 rounded-2xl pl-11 pr-4 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/30 transition-all placeholder:text-slate-300"
+            className="w-full h-full min-h-[56px] bg-white border border-slate-100 rounded-2xl pl-11 pr-4 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/30 transition-all placeholder:text-slate-300"
           />
         </div>
 
@@ -286,7 +286,7 @@ const Reviews = () => {
       {loading ? (
         <div className="min-h-[400px] flex flex-col items-center justify-center gap-4 bg-white/50 rounded-[2.5rem] border border-dashed border-slate-200">
           <div className="relative">
-            <div className="w-12 h-12 rounded-full border-4 border-slate-100 border-t-blue-600 animate-spin"></div>
+            <div className="w-12 h-12 rounded-full border-4 border-slate-100 border-t-primary animate-spin"></div>
           </div>
           <p className="text-slate-400 font-black text-xs uppercase tracking-widest animate-pulse">Synchronizing Feedback...</p>
         </div>
@@ -299,7 +299,7 @@ const Reviews = () => {
           <p className="text-slate-400 text-sm font-medium">Try adjusting your filters or search query</p>
           <button
             onClick={() => { setFilter("All"); setSelectedRating(null); setSearchQuery(""); }}
-            className="mt-4 px-6 py-3 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-600 transition-colors"
+            className="mt-4 px-6 py-3 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-primary transition-colors"
           >
             Clear All Filters
           </button>
@@ -352,7 +352,7 @@ const Reviews = () => {
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
                   <div className="flex items-center justify-between gap-2 overflow-hidden">
                     <div className="flex items-center gap-2 min-w-0">
-                      <Package className="w-3.5 h-3.5 text-blue-500" />
+                      <Package className="w-3.5 h-3.5 text-primary" />
                       <p className="text-[10px] font-black text-slate-700 truncate">
                         {item.product_name || "Product Deleted"}
                       </p>
@@ -379,8 +379,8 @@ const Reviews = () => {
                 )}
 
                 {item.admin_reply && (
-                  <div className="p-4 rounded-xl bg-blue-50/50 border border-blue-100/50 relative">
-                    <p className="text-[9px] font-black text-blue-600 uppercase tracking-widest mb-1">Official Reply</p>
+                  <div className="p-4 rounded-xl bg-primary/10/50 border border-blue-100/50 relative">
+                    <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-1">Official Reply</p>
                     <p className="text-[11px] font-medium text-slate-500 italic leading-snug line-clamp-2">
                       {item.admin_reply}
                     </p>
@@ -415,7 +415,7 @@ const Reviews = () => {
                     className={`p-2.5 rounded-xl border transition-all shadow-sm
                       ${activeReplyId === item.id
                         ? "bg-slate-900 text-white border-slate-900"
-                        : "bg-white text-blue-600 border-blue-100 hover:bg-blue-600 hover:text-white"}`}
+                        : "bg-white text-primary border-blue-100 hover:bg-primary hover:text-white"}`}
                   >
                     <Reply className="w-4 h-4" />
                   </button>
@@ -443,12 +443,12 @@ const Reviews = () => {
                     placeholder="Type response..."
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
-                    className="flex-1 w-full p-4 rounded-2xl border border-slate-100 bg-slate-50 focus:outline-none focus:border-blue-500 text-xs font-semibold text-slate-700 resize-none mb-4"
+                    className="flex-1 w-full p-4 rounded-2xl border border-slate-100 bg-slate-50 focus:outline-none focus:border-primary text-xs font-semibold text-slate-700 resize-none mb-4"
                   />
                   <button
                     onClick={() => handleReply(item.id)}
                     disabled={!replyText.trim()}
-                    className="w-full py-3 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="w-full py-3 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     <Send className="w-3 h-3" /> Send Reply
                   </button>
@@ -486,7 +486,7 @@ const Reviews = () => {
                     required
                     value={newReview.product_id}
                     onChange={(e) => setNewReview({ ...newReview, product_id: e.target.value })}
-                    className="w-full p-4 rounded-2xl border border-slate-100 bg-slate-50 focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 text-sm font-semibold transition-all"
+                    className="w-full p-4 rounded-2xl border border-slate-100 bg-slate-50 focus:outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary text-sm font-semibold transition-all"
                   >
                     <option value="">Select a Product</option>
                     {products.map(p => (
@@ -503,7 +503,7 @@ const Reviews = () => {
                     placeholder="e.g. Rahul Sharma"
                     value={newReview.user_name}
                     onChange={(e) => setNewReview({ ...newReview, user_name: e.target.value })}
-                    className="w-full p-4 rounded-2xl border border-slate-100 bg-slate-50 focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 text-sm font-semibold transition-all"
+                    className="w-full p-4 rounded-2xl border border-slate-100 bg-slate-50 focus:outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary text-sm font-semibold transition-all"
                   />
                 </div>
               </div>
@@ -516,7 +516,7 @@ const Reviews = () => {
                     placeholder="email@example.com"
                     value={newReview.user_email}
                     onChange={(e) => setNewReview({ ...newReview, user_email: e.target.value })}
-                    className="w-full p-4 rounded-2xl border border-slate-100 bg-slate-50 focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 text-sm font-semibold transition-all"
+                    className="w-full p-4 rounded-2xl border border-slate-100 bg-slate-50 focus:outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary text-sm font-semibold transition-all"
                   />
                 </div>
 
@@ -548,7 +548,7 @@ const Reviews = () => {
                   placeholder="Write the customer's feedback here..."
                   value={newReview.comment}
                   onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
-                  className="w-full p-5 rounded-2xl border border-slate-100 bg-slate-50 focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 text-sm font-semibold transition-all resize-none"
+                  className="w-full p-5 rounded-2xl border border-slate-100 bg-slate-50 focus:outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary text-sm font-semibold transition-all resize-none"
                 ></textarea>
               </div>
 
@@ -561,7 +561,7 @@ const Reviews = () => {
                     onChange={handleImageUpload}
                     className="absolute inset-0 opacity-0 cursor-pointer z-10"
                   />
-                  <div className="w-full p-8 border-2 border-dashed border-slate-200 rounded-[2rem] flex flex-col items-center justify-center gap-3 bg-slate-50 group-hover:bg-blue-50/30 group-hover:border-blue-200 transition-all">
+                  <div className="w-full p-8 border-2 border-dashed border-slate-200 rounded-[2rem] flex flex-col items-center justify-center gap-3 bg-slate-50 group-hover:bg-primary/10/30 group-hover:border-blue-200 transition-all">
                     {newReview.review_image ? (
                       <div className="relative">
                         <img src={newReview.review_image} className="w-32 h-32 rounded-2xl object-cover shadow-xl" />
@@ -601,7 +601,7 @@ const Reviews = () => {
               <button
                 onClick={handleSubmitNewReview}
                 disabled={submitting}
-                className="flex items-center gap-2 px-8 py-3 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 shadow-xl shadow-blue-600/20 transition-all active:scale-95 disabled:opacity-50"
+                className="flex items-center gap-2 px-8 py-3 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 shadow-xl shadow-primary/20 transition-all active:scale-95 disabled:opacity-50"
               >
                 {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                 {submitting ? "Creating..." : "Create Review"}

@@ -251,7 +251,7 @@ const StockDetails = () => {
                     </div>
                 </div>
                 <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
-                    <div className="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-xl shadow-sm">
+                    <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center text-xl shadow-sm">
                         <FiPackage />
                     </div>
                     <div>
@@ -273,7 +273,7 @@ const StockDetails = () => {
                                 placeholder="Search sku or name..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-12 pr-4 py-2 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:bg-white focus:border-blue-500 transition-all text-sm w-64 text-slate-800"
+                                className="pl-12 pr-4 py-2 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:bg-white focus:border-primary transition-all text-sm w-64 text-slate-800"
                             />
                         </div>
 
@@ -283,7 +283,7 @@ const StockDetails = () => {
                 <div className="overflow-x-auto text-slate-800">
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-20">
-                            <div className="w-8 h-8 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-4"></div>
+                            <div className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
                             <p className="text-gray-500 font-bold text-sm">Loading stock details...</p>
                         </div>
                     ) : (
@@ -305,7 +305,7 @@ const StockDetails = () => {
                                         const minStock = 10; // Threshold for warning
 
                                         return (
-                                            <tr key={item.id} className="hover:bg-blue-50/20 transition-colors group block md:table-row bg-white md:bg-transparent border border-gray-100 md:border-0 rounded-2xl md:rounded-none mb-4 md:mb-0 shadow-sm md:shadow-none">
+                                            <tr key={item.id} className="hover:bg-primary/10/20 transition-colors group block md:table-row bg-white md:bg-transparent border border-gray-100 md:border-0 rounded-2xl md:rounded-none mb-4 md:mb-0 shadow-sm md:shadow-none">
                                                 <td className="px-4 py-5 md:px-8 md:py-6 block md:table-cell border-b border-gray-50 md:border-b-0">
                                                     <div className="flex flex-col md:block w-full gap-3 md:gap-0">
                                                         <span className="md:hidden text-[11px] font-black text-gray-400 uppercase tracking-widest">Product</span>
@@ -364,7 +364,7 @@ const StockDetails = () => {
                                                         <div className="flex items-center justify-start md:justify-end gap-3 w-full">
                                                             <button
                                                                 onClick={() => openUpdateModal(item)}
-                                                                className="inline-block px-5 py-3.5 bg-blue-50 hover:bg-blue-600 hover:text-white rounded-xl text-[11px] font-black uppercase tracking-widest text-blue-600 transition-all shadow-sm active:scale-95 md:shadow-none w-full md:w-auto text-center"
+                                                                className="inline-block px-5 py-3.5 bg-primary/10 hover:bg-primary hover:text-white rounded-xl text-[11px] font-black uppercase tracking-widest text-primary transition-all shadow-sm active:scale-95 md:shadow-none w-full md:w-auto text-center"
                                                             >
                                                                 Quick Update
                                                             </button>
@@ -396,7 +396,7 @@ const StockDetails = () => {
                             <button
                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                 disabled={currentPage === 1}
-                                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-blue-600 disabled:opacity-30 transition-all border border-transparent hover:border-gray-100 rounded-lg"
+                                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-primary disabled:opacity-30 transition-all border border-transparent hover:border-gray-100 rounded-lg"
                             >
                                 Previous
                             </button>
@@ -414,7 +414,7 @@ const StockDetails = () => {
                             <button
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                 disabled={currentPage === totalPages}
-                                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-blue-600 disabled:opacity-30 transition-all border border-transparent hover:border-gray-100 rounded-lg"
+                                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-primary disabled:opacity-30 transition-all border border-transparent hover:border-gray-100 rounded-lg"
                             >
                                 Next
                             </button>
@@ -440,7 +440,7 @@ const StockDetails = () => {
                         <div className="p-6 max-h-[60vh] overflow-y-auto">
                             {fetchingDetail ? (
                                 <div className="py-10 flex flex-col items-center justify-center">
-                                    <div className="w-8 h-8 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-3"></div>
+                                    <div className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-3"></div>
                                     <p className="text-xs font-bold text-gray-400">Loading variants...</p>
                                 </div>
                             ) : (
@@ -468,7 +468,7 @@ const StockDetails = () => {
                                                                         min="0"
                                                                         value={variant.sizesStock?.[size] ?? currentQty}
                                                                         onChange={(e) => handleVariantStockChange(vIndex, size, e.target.value)}
-                                                                        className="w-full text-base font-black text-slate-800 outline-none placeholder:text-gray-300 bg-transparent border-b border-gray-100 focus:border-blue-400 transition-colors pb-1"
+                                                                        className="w-full text-base font-black text-slate-800 outline-none placeholder:text-gray-300 bg-transparent border-b border-gray-100 focus:border-primary-light transition-colors pb-1"
                                                                         placeholder="0"
                                                                     />
                                                                 </div>
@@ -479,7 +479,7 @@ const StockDetails = () => {
                                                     )}
                                                 </div>
                                             ))}
-                                            <p className="text-xs text-gray-400 font-medium text-center bg-blue-50/50 p-3 rounded-xl text-blue-600">
+                                            <p className="text-xs text-gray-400 font-medium text-center bg-primary/10/50 p-3 rounded-xl text-primary">
                                                 Total stock will be auto-calculated from variants.
                                             </p>
                                         </div>
@@ -488,13 +488,13 @@ const StockDetails = () => {
                                         <div className="bg-gray-50/50 p-6 rounded-2xl border border-gray-100">
                                             <label className="text-xs font-black text-gray-500 uppercase tracking-widest block mb-3">Total Available Stock</label>
                                             <div className="relative">
-                                                <FiBox className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500" />
+                                                <FiBox className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
                                                 <input
                                                     type="number"
                                                     min="0"
                                                     value={manualTotalStock}
                                                     onChange={(e) => setManualTotalStock(e.target.value)}
-                                                    className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-all text-xl font-black text-slate-800 shadow-sm"
+                                                    className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-xl outline-none focus:border-primary transition-all text-xl font-black text-slate-800 shadow-sm"
                                                 />
                                             </div>
                                             <p className="text-[10px] text-gray-400 font-bold mt-2 ml-1">Update the master stock count directly.</p>
@@ -515,7 +515,7 @@ const StockDetails = () => {
                             <button
                                 onClick={handleSaveStock}
                                 disabled={isUpdating || fetchingDetail}
-                                className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-black transition-all shadow-lg active:scale-95 disabled:opacity-50"
+                                className="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-blue-700 text-white rounded-xl text-sm font-black transition-all shadow-lg active:scale-95 disabled:opacity-50"
                             >
                                 {isUpdating ? (
                                     <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> Saving...</>

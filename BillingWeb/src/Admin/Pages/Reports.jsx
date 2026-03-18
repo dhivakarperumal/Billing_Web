@@ -48,7 +48,7 @@ const Reports = () => {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-40 gap-4">
-                <div className="w-12 h-12 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>
+                <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
                 <p className="text-gray-400 font-black uppercase tracking-widest text-xs">Compiling Reports Data...</p>
             </div>
         );
@@ -66,7 +66,7 @@ const Reports = () => {
                     <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-100 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all shadow-sm">
                         <FiCalendar /> Last 12 Months
                     </button>
-                    <button className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-100">
+                    <button className="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-100">
                         <FiDownload /> Download PDF
                     </button>
                 </div>
@@ -100,7 +100,7 @@ const Reports = () => {
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2">
-                                <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
+                                <span className="w-3 h-3 bg-primary rounded-full"></span>
                                 <span className="text-xs font-bold text-gray-400">Current</span>
                             </div>
                             <div className="flex items-center gap-2">
@@ -123,7 +123,7 @@ const Reports = () => {
                                 <div key={i} className="flex-1 flex flex-col items-center gap-2 group-hover:cursor-pointer" title={`Sales: ₹${h}`}>
                                     <div className="w-full flex items-end gap-1 h-48">
                                         <div className="flex-1 bg-gray-100 rounded-t-lg transition-all" style={{ height: `${prevPct}%` }}></div>
-                                        <div className="flex-1 bg-blue-500 rounded-t-lg transition-all" style={{ height: `${heightPct}%` }}></div>
+                                        <div className="flex-1 bg-primary rounded-t-lg transition-all" style={{ height: `${heightPct}%` }}></div>
                                     </div>
                                     <span className="text-[10px] font-bold text-gray-300">M{i + 1}</span>
                                 </div>

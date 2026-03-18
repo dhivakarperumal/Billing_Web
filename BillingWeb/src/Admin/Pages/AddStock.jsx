@@ -126,7 +126,7 @@ const AddStock = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-2">
                 <div className="flex items-center gap-3 sm:gap-4">
-                    <button onClick={() => navigate(-1)} className="p-3 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-blue-600 transition-all shadow-sm active:scale-95 shadow-blue-500/5">
+                    <button onClick={() => navigate(-1)} className="p-3 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-primary transition-all shadow-sm active:scale-95 shadow-primary/5">
                         <FiArrowLeft size={20} />
                     </button>
                     <div>
@@ -150,7 +150,7 @@ const AddStock = () => {
                                 value={search}
                                 onChange={handleSearchChange}
                                 placeholder="Search by name or SKU..."
-                                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-transparent rounded-[1rem] outline-none focus:bg-white focus:border-blue-500/30 transition-all text-sm font-bold text-slate-800 shadow-inner"
+                                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-transparent rounded-[1rem] outline-none focus:bg-white focus:border-primary/30 transition-all text-sm font-bold text-slate-800 shadow-inner"
                             />
                         </div>
 
@@ -160,7 +160,7 @@ const AddStock = () => {
                                     <button
                                         key={prod.id}
                                         onClick={() => handleSelectProduct(prod)}
-                                        className="w-full text-left p-3 rounded-xl bg-gray-50 hover:bg-blue-50 border border-transparent hover:border-blue-100 transition-all flex items-center gap-3 group"
+                                        className="w-full text-left p-3 rounded-xl bg-gray-50 hover:bg-primary/10 border border-transparent hover:border-blue-100 transition-all flex items-center gap-3 group"
                                     >
                                         <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-200">
                                             <img
@@ -173,7 +173,7 @@ const AddStock = () => {
                                             <p className="text-sm font-black text-slate-800 truncate">{prod.name}</p>
                                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{prod.product_code || `#SKU-${1000 + prod.id}`}</p>
                                         </div>
-                                        <div className="opacity-0 group-hover:opacity-100 text-blue-500 transition-opacity">
+                                        <div className="opacity-0 group-hover:opacity-100 text-primary transition-opacity">
                                             <FiPlus />
                                         </div>
                                     </button>
@@ -184,11 +184,11 @@ const AddStock = () => {
                             </div>
                         )}
                         {selectedProduct && (
-                            <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-between">
+                            <div className="p-3 bg-primary/10 border border-blue-100 rounded-xl flex items-center justify-between">
                                 <div className="flex items-center gap-2 text-blue-700 font-bold text-sm">
                                     <FiCheck /> Product Selected
                                 </div>
-                                <button onClick={() => setSelectedProduct(null)} className="text-[10px] font-black uppercase text-blue-500 hover:text-blue-700 bg-white px-2 py-1 rounded-lg">
+                                <button onClick={() => setSelectedProduct(null)} className="text-[10px] font-black uppercase text-primary hover:text-blue-700 bg-white px-2 py-1 rounded-lg">
                                     Change
                                 </button>
                             </div>
@@ -200,7 +200,7 @@ const AddStock = () => {
                 <div className="lg:col-span-2 space-y-6">
                     {selectedProduct ? (
                         <div className="bg-white p-6 sm:p-10 rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden group">
-                            <div className="absolute -top-10 -right-10 p-8 opacity-[0.03] text-blue-600">
+                            <div className="absolute -top-10 -right-10 p-8 opacity-[0.03] text-primary">
                                 <FiLayers size={200} />
                             </div>
 
@@ -218,7 +218,7 @@ const AddStock = () => {
                                         <div className="flex items-center gap-3 mt-1">
                                             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{selectedProduct.product_code || `#SKU-${1000 + selectedProduct.id}`}</span>
                                             <span className="w-1.5 h-1.5 rounded-full bg-gray-200"></span>
-                                            <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest bg-blue-50 px-2 py-0.5 rounded-md">Total Current: {selectedProduct.total_stock || 0}</span>
+                                            <span className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-md">Total Current: {selectedProduct.total_stock || 0}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -257,7 +257,7 @@ const AddStock = () => {
                                                                                 type="text"
                                                                                 value={stockAdditions[key] || ""}
                                                                                 onChange={(e) => handleAdditionChange(key, e.target.value)}
-                                                                                className="w-full pl-8 pr-3 py-2.5 bg-white border border-blue-100 focus:border-blue-500 outline-none rounded-lg text-lg font-black text-blue-600 shadow-inner transition-all placeholder:text-gray-300"
+                                                                                className="w-full pl-8 pr-3 py-2.5 bg-white border border-blue-100 focus:border-primary outline-none rounded-lg text-lg font-black text-primary shadow-inner transition-all placeholder:text-gray-300"
                                                                                 placeholder="0"
                                                                             />
                                                                         </div>
@@ -289,13 +289,13 @@ const AddStock = () => {
                                                 )}
                                             </div>
                                             <div className="relative">
-                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500 font-black text-xl">+</div>
+                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary font-black text-xl">+</div>
                                                 <input
                                                     type="text"
                                                     value={manualTotalStockAdd}
                                                     onChange={(e) => setManualTotalStockAdd(e.target.value.replace(/[^0-9]/g, ''))}
                                                     placeholder="0"
-                                                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-blue-100 rounded-[1rem] outline-none focus:bg-white focus:border-blue-500 transition-all text-2xl font-black text-blue-600 shadow-inner"
+                                                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-blue-100 rounded-[1rem] outline-none focus:bg-white focus:border-primary transition-all text-2xl font-black text-primary shadow-inner"
                                                 />
                                             </div>
                                         </div>

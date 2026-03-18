@@ -131,7 +131,7 @@ const Dashboard = () => {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-24 gap-4 h-[60vh]">
-                <div className="w-10 h-10 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>
+                <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
                 <p className="text-gray-300 font-black uppercase tracking-[0.2em] text-[10px]">Loading Dashboard...</p>
             </div>
         )
@@ -153,7 +153,7 @@ const Dashboard = () => {
 
             {/* Quick Productivity Actions */}
             <div className="bg-slate-900 rounded-[2.5rem] p-8 border border-white/5 shadow-2xl relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
 
                 <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="space-y-1">
@@ -163,7 +163,7 @@ const Dashboard = () => {
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                         <button
                             onClick={() => setIsProdModalOpen(true)}
-                            className="bg-white hover:bg-blue-50 text-slate-900 px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 shadow-xl flex items-center justify-center gap-2 group/btn"
+                            className="bg-white hover:bg-primary/10 text-slate-900 px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 shadow-xl flex items-center justify-center gap-2 group/btn"
                         >
                             <FiBox className="group-hover:rotate-12 transition-transform" /> Add Product
                         </button>
@@ -214,7 +214,7 @@ const Dashboard = () => {
                         </div>
                         <div className="flex bg-gray-50 p-1 rounded-xl border border-gray-100">
                             {['Month', 'Year'].map((t) => (
-                                <button key={t} className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${t === 'Month' ? 'bg-white text-blue-600 shadow-sm shadow-blue-100' : 'text-gray-400 hover:text-slate-800'}`}>
+                                <button key={t} className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${t === 'Month' ? 'bg-white text-primary shadow-sm shadow-blue-100' : 'text-gray-400 hover:text-slate-800'}`}>
                                     {t}
                                 </button>
                             ))}
@@ -232,7 +232,7 @@ const Dashboard = () => {
                                  return (
                                      <div key={i} className={`flex-1 h-full flex items-end group relative`}>
                                          <div
-                                             className={`w-full bg-gradient-to-t from-blue-500 to-indigo-400 rounded-t-lg sm:rounded-t-xl transition-all duration-1000 group-hover:brightness-110 group-hover:shadow-lg group-hover:shadow-blue-100 cursor-pointer`}
+                                             className={`w-full bg-gradient-to-t from-primary to-indigo-400 rounded-t-lg sm:rounded-t-xl transition-all duration-1000 group-hover:brightness-110 group-hover:shadow-lg group-hover:shadow-blue-100 cursor-pointer`}
                                              style={{ height: `${Math.max(5, h)}%` }} // Minimum height for 0 values
                                          >
                                              <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded font-black opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20">
@@ -292,7 +292,7 @@ const Dashboard = () => {
                             {dashboardData.categoryAnalytics?.slice(0, 2).map((cat, i) => (
                                 <div key={i} className="space-y-1">
                                     <div className="flex items-center gap-2">
-                                        <span className={`w-2.5 h-2.5 ${i === 0 ? 'bg-blue-500' : 'bg-indigo-400'} rounded-full`}></span>
+                                        <span className={`w-2.5 h-2.5 ${i === 0 ? 'bg-primary' : 'bg-indigo-400'} rounded-full`}></span>
                                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest truncate max-w-[80px]">{cat.name}</p>
                                     </div>
                                     <p className="text-lg font-black text-slate-700">{cat.pct}%</p>
@@ -325,7 +325,7 @@ const Dashboard = () => {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <h4 className="text-sm font-black text-slate-800 truncate">{item.name}</h4>
-                                    <p className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mt-0.5">{item.cat}</p>
+                                    <p className="text-[10px] font-bold text-primary uppercase tracking-widest mt-0.5">{item.cat}</p>
                                 </div>
                                 <div className="text-right shrink-0">
                                     <p className="text-sm font-black text-slate-800">{item.rev?.toString().replace('$', '₹')}</p>
@@ -339,7 +339,7 @@ const Dashboard = () => {
                         )}
                     </div>
                     <div className="p-6 border-t border-gray-50 text-center">
-                        <button className="text-[10px] font-black text-gray-400 hover:text-blue-600 uppercase tracking-widest transition-colors">Generate Inventory Report</button>
+                        <button className="text-[10px] font-black text-gray-400 hover:text-primary uppercase tracking-widest transition-colors">Generate Inventory Report</button>
                     </div>
                 </div>
 
@@ -348,9 +348,9 @@ const Dashboard = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <h3 className="text-xl font-black text-slate-800 uppercase tracking-tight">Category Analytics</h3>
-                            <p className="text-xs text-blue-500 font-bold uppercase tracking-widest mt-1">Revenue by Saree Type</p>
+                            <p className="text-xs text-primary font-bold uppercase tracking-widest mt-1">Revenue by Saree Type</p>
                         </div>
-                        <div className="w-10 h-10 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center">
+                        <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
                             <FiActivity />
                         </div>
                     </div>
@@ -407,7 +407,7 @@ const Dashboard = () => {
                                 </div>
                                 <div className="text-right shrink-0">
                                     <p className={`text-sm font-black ${item.color}`}>{item.stock} Left</p>
-                                    <button className="text-[9px] font-black text-blue-500 uppercase tracking-widest mt-1 hover:underline">Purchase Order</button>
+                                    <button className="text-[9px] font-black text-primary uppercase tracking-widest mt-1 hover:underline">Purchase Order</button>
                                 </div>
                             </div>
                         )) : (
@@ -421,9 +421,9 @@ const Dashboard = () => {
                     <div className="flex items-center justify-between mb-8">
                         <div>
                             <h3 className="text-xl font-black text-slate-800 uppercase tracking-tight">Regional Sales Map</h3>
-                            <p className="text-xs text-blue-500 font-bold uppercase tracking-widest mt-1">Geographic Distribution</p>
+                            <p className="text-xs text-primary font-bold uppercase tracking-widest mt-1">Geographic Distribution</p>
                         </div>
-                        <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest border border-blue-100">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl text-[10px] font-black uppercase tracking-widest border border-blue-100">
                             <FiMapPin /> Global Reach
                         </div>
                     </div>
@@ -434,7 +434,7 @@ const Dashboard = () => {
                                 <div key={i} className="space-y-2 group">
                                     <div className="flex items-end justify-between">
                                         <div>
-                                            <h4 className="text-sm font-black text-slate-800 group-hover:text-blue-600 transition-colors">{loc.state}</h4>
+                                            <h4 className="text-sm font-black text-slate-800 group-hover:text-primary transition-colors">{loc.state}</h4>
                                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{loc.orders} Orders</p>
                                         </div>
                                         <div className="text-right">
@@ -458,14 +458,14 @@ const Dashboard = () => {
                         <div className="bg-gray-50 rounded-[2rem] border border-gray-100 flex items-center justify-center p-8 relative overflow-hidden group">
                             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#3b82f610_0%,_transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                             <div className="text-center relative z-10">
-                                <div className="w-20 h-20 bg-white shadow-xl shadow-blue-100/50 rounded-full flex items-center justify-center text-3xl text-blue-500 mx-auto mb-4 group-hover:scale-110 transition-transform cursor-pointer">
+                                <div className="w-20 h-20 bg-white shadow-xl shadow-blue-100/50 rounded-full flex items-center justify-center text-3xl text-primary mx-auto mb-4 group-hover:scale-110 transition-transform cursor-pointer">
                                     🌍
                                 </div>
                                 <h4 className="text-xs font-black text-slate-800 uppercase tracking-[0.2em] mb-2">Interactive Map</h4>
                                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest max-w-[150px] leading-relaxed">Zoom to view city-level sales data</p>
                             </div>
                             {/* Animated dots for "live" locations */}
-                            <div className="absolute top-1/4 left-1/3 w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
+                            <div className="absolute top-1/4 left-1/3 w-2 h-2 bg-primary-light rounded-full animate-ping"></div>
                             <div className="absolute bottom-1/3 right-1/4 w-2 h-2 bg-indigo-400 rounded-full animate-ping delay-700"></div>
                             <div className="absolute top-1/2 right-1/2 w-2 h-2 bg-emerald-400 rounded-full animate-ping delay-1000"></div>
                         </div>
@@ -478,7 +478,7 @@ const Dashboard = () => {
                 <div className="p-8 border-b border-gray-50 flex items-center justify-between">
                     <div>
                         <h3 className="text-xl font-black text-slate-800 uppercase tracking-tight">Recent Orders</h3>
-                        <p className="text-xs text-blue-500 font-bold uppercase tracking-widest mt-1">Real-time Activity</p>
+                        <p className="text-xs text-primary font-bold uppercase tracking-widest mt-1">Real-time Activity</p>
                     </div>
                     <button className="px-6 py-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-100 text-[10px] font-black text-gray-500 rounded-xl uppercase tracking-widest transition-all">View All Orders</button>
                 </div>
@@ -495,10 +495,10 @@ const Dashboard = () => {
                         </thead>
                         <tbody className="divide-y divide-gray-50">
                             {recentOrders.length > 0 ? recentOrders.map((order, i) => (
-                                <tr key={i} className="group hover:bg-blue-50/10 transition-colors">
+                                <tr key={i} className="group hover:bg-primary/10/10 transition-colors">
                                     <td className="px-8 py-6">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-xs font-black text-slate-400 border border-gray-100 group-hover:border-blue-100 group-hover:text-blue-500 transition-all uppercase">
+                                            <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-xs font-black text-slate-400 border border-gray-100 group-hover:border-blue-100 group-hover:text-primary transition-all uppercase">
                                                 {order.customer.charAt(0)}
                                             </div>
                                             <div>
@@ -515,7 +515,7 @@ const Dashboard = () => {
                                         </span>
                                     </td>
                                     <td className="px-8 py-6 text-right">
-                                        <span className="flex items-center justify-end gap-1.5 text-[10px] font-black text-gray-300 group-hover:text-blue-400 transition-all uppercase">
+                                        <span className="flex items-center justify-end gap-1.5 text-[10px] font-black text-gray-300 group-hover:text-primary-light transition-all uppercase">
                                             <FiClock /> {order.date}
                                         </span>
                                     </td>
@@ -538,7 +538,7 @@ const Dashboard = () => {
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsProdModalOpen(false)}></div>
                     <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl relative z-10 overflow-hidden animate-in zoom-in-95 duration-300">
-                        <div className="bg-blue-600 p-8 text-white relative">
+                        <div className="bg-primary p-8 text-white relative">
                             <div className="absolute top-0 right-0 p-8 opacity-10"><FiBox size={80} /></div>
                             <h2 className="text-2xl font-black italic uppercase tracking-tight">Rapid Product</h2>
                             <p className="text-xs text-white/40 font-bold uppercase tracking-widest mt-1">AJAX Listing Console</p>
@@ -551,7 +551,7 @@ const Dashboard = () => {
                                     <input
                                         autoFocus
                                         type="text"
-                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-500/20 rounded-2xl outline-none font-bold text-slate-800 transition-all"
+                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none font-bold text-slate-800 transition-all"
                                         placeholder="e.g. Silk Saree"
                                         value={rapidProd.name}
                                         onChange={(e) => setRapidProd({ ...rapidProd, name: e.target.value })}
@@ -564,7 +564,7 @@ const Dashboard = () => {
                                         <FaRupeeSign className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" />
                                         <input
                                             type="number"
-                                            className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-500/20 rounded-2xl outline-none font-bold text-slate-800 transition-all"
+                                            className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none font-bold text-slate-800 transition-all"
                                             placeholder="2999"
                                             value={rapidProd.mrp}
                                             onChange={(e) => setRapidProd({ ...rapidProd, mrp: e.target.value })}
@@ -578,14 +578,14 @@ const Dashboard = () => {
                                 <button
                                     onClick={(e) => handleRapidProductAdd(e, true)}
                                     disabled={prodSaving}
-                                    className="w-full py-5 bg-white border-2 border-blue-100 hover:bg-blue-50 text-blue-600 rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 flex items-center justify-center gap-3"
+                                    className="w-full py-5 bg-white border-2 border-blue-100 hover:bg-primary/10 text-primary rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 flex items-center justify-center gap-3"
                                 >
                                     List & Add Another
                                 </button>
                                 <button
                                     onClick={(e) => handleRapidProductAdd(e, false)}
                                     disabled={prodSaving}
-                                    className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3"
+                                    className="w-full py-5 bg-primary hover:bg-primary text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-xl shadow-primary/20 flex items-center justify-center gap-3"
                                 >
                                     {prodSaving ? <div className="w-4 h-4 border-2 border-t-white rounded-full animate-spin"></div> : "Finalize & Close"}
                                 </button>
@@ -620,7 +620,7 @@ const Dashboard = () => {
                                 <input
                                     autoFocus
                                     type="text"
-                                    className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-500/20 rounded-2xl outline-none font-bold text-slate-800 transition-all"
+                                    className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none font-bold text-slate-800 transition-all"
                                     placeholder="e.g. Traditional Silk"
                                     value={catName}
                                     onChange={(e) => setCatName(e.target.value)}
@@ -632,14 +632,14 @@ const Dashboard = () => {
                                 <button
                                     onClick={(e) => handleQuickCategoryAdd(e, true)}
                                     disabled={catSaving}
-                                    className="w-full py-5 bg-white border-2 border-blue-100 hover:bg-blue-50 text-blue-600 rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 flex items-center justify-center gap-3"
+                                    className="w-full py-5 bg-white border-2 border-blue-100 hover:bg-primary/10 text-primary rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 flex items-center justify-center gap-3"
                                 >
                                     Create & Add Another
                                 </button>
                                 <button
                                     onClick={(e) => handleQuickCategoryAdd(e, false)}
                                     disabled={catSaving}
-                                    className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3"
+                                    className="w-full py-5 bg-primary hover:bg-primary text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-xl shadow-primary/20 flex items-center justify-center gap-3"
                                 >
                                     {catSaving ? <div className="w-4 h-4 border-2 border-t-white rounded-full animate-spin"></div> : "Save & Close"}
                                 </button>

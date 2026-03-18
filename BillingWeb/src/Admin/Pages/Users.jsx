@@ -213,7 +213,7 @@ const Users = ({ initialTab = "All" }) => {
                 </div>
                 <button
                     onClick={() => { setIsEditing(false); setFormData({ username: "", name: "", email: "", phone: "", role: "user", password: "" }); setIsModalOpen(true); }}
-                    className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-200 active:scale-95"
+                    className="flex items-center justify-center gap-2 bg-primary hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-200 active:scale-95"
                 >
                     <FiUserPlus /> Add New User
                 </button>
@@ -223,25 +223,25 @@ const Users = ({ initialTab = "All" }) => {
             <div className="flex items-center gap-6 border-b border-gray-100 px-2 mt-2">
                 <button
                     onClick={() => setSelectedTab("All")}
-                    className={`pb-4 text-sm font-bold transition-all relative flex items-center gap-2 ${selectedTab === "All" ? "text-blue-600" : "text-gray-400 hover:text-gray-600"}`}
+                    className={`pb-4 text-sm font-bold transition-all relative flex items-center gap-2 ${selectedTab === "All" ? "text-primary" : "text-gray-400 hover:text-gray-600"}`}
                 >
                     All Users
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${selectedTab === "All" ? "bg-blue-50 text-blue-600" : "bg-gray-50 text-gray-400"}`}>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${selectedTab === "All" ? "bg-primary/10 text-primary" : "bg-gray-50 text-gray-400"}`}>
                         {users.length}
                     </span>
-                    {selectedTab === "All" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />}
+                    {selectedTab === "All" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />}
                 </button>
                 <button
                     onClick={() => setSelectedTab("New")}
-                    className={`pb-4 text-sm font-bold transition-all relative flex items-center gap-2 ${selectedTab === "New" ? "text-blue-600" : "text-gray-400 hover:text-gray-600"}`}
+                    className={`pb-4 text-sm font-bold transition-all relative flex items-center gap-2 ${selectedTab === "New" ? "text-primary" : "text-gray-400 hover:text-gray-600"}`}
                 >
                     New Users
                     {newUsersCount > 0 && (
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${selectedTab === "New" ? "bg-blue-600 text-white" : "bg-blue-50 text-blue-600"}`}>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${selectedTab === "New" ? "bg-primary text-white" : "bg-primary/10 text-primary"}`}>
                             {newUsersCount}
                         </span>
                     )}
-                    {selectedTab === "New" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />}
+                    {selectedTab === "New" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />}
                 </button>
             </div>
 
@@ -256,7 +256,7 @@ const Users = ({ initialTab = "All" }) => {
                             placeholder="Find by name or email..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:bg-white focus:border-blue-500 transition-all text-sm"
+                            className="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:bg-white focus:border-primary transition-all text-sm"
                         />
                     </div>
                     <div className="flex items-center gap-2">
@@ -265,7 +265,7 @@ const Users = ({ initialTab = "All" }) => {
                             <select
                                 value={selectedRole}
                                 onChange={(e) => setSelectedRole(e.target.value)}
-                                className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:bg-white focus:border-blue-500 transition-all text-sm font-bold text-gray-600 cursor-pointer appearance-none min-w-[140px]"
+                                className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:bg-white focus:border-primary transition-all text-sm font-bold text-gray-600 cursor-pointer appearance-none min-w-[140px]"
                             >
                                 <option value="all">all roles</option>
                                 <option value="admin">admin</option>
@@ -309,7 +309,7 @@ const Users = ({ initialTab = "All" }) => {
                                 </tr>
                             ) : (
                                 currentItems.map((user) => (
-                                    <tr key={user.id} className="hover:bg-blue-50/30 transition-colors group block md:table-row bg-white md:bg-transparent border border-gray-100 md:border-0 rounded-2xl md:rounded-none mb-4 md:mb-0 shadow-sm md:shadow-none">
+                                    <tr key={user.id} className="hover:bg-primary/10/30 transition-colors group block md:table-row bg-white md:bg-transparent border border-gray-100 md:border-0 rounded-2xl md:rounded-none mb-4 md:mb-0 shadow-sm md:shadow-none">
                                         <td className="px-3 py-4 md:px-6 md:py-4 block md:table-cell border-b border-gray-50 md:border-b-0">
                                             <div className="flex md:block items-center justify-between w-full">
                                                 <span className="md:hidden text-[10px] font-black text-gray-400 uppercase tracking-widest">User Profile</span>
@@ -394,7 +394,7 @@ const Users = ({ initialTab = "All" }) => {
                             <button
                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                 disabled={currentPage === 1}
-                                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-blue-600 disabled:opacity-30 transition-all"
+                                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-primary disabled:opacity-30 transition-all"
                             >
                                 Previous
                             </button>
@@ -403,7 +403,7 @@ const Users = ({ initialTab = "All" }) => {
                                     <button
                                         key={i}
                                         onClick={() => setCurrentPage(i + 1)}
-                                        className={`w-8 h-8 rounded-lg text-[10px] font-black transition-all ${currentPage === i + 1 ? "bg-blue-600 text-white shadow-lg shadow-blue-200" : "text-gray-400 hover:bg-gray-100"}`}
+                                        className={`w-8 h-8 rounded-lg text-[10px] font-black transition-all ${currentPage === i + 1 ? "bg-primary text-white shadow-lg shadow-blue-200" : "text-gray-400 hover:bg-gray-100"}`}
                                     >
                                         {i + 1}
                                     </button>
@@ -412,7 +412,7 @@ const Users = ({ initialTab = "All" }) => {
                             <button
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                 disabled={currentPage === totalPages}
-                                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-blue-600 disabled:opacity-30 transition-all"
+                                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-primary disabled:opacity-30 transition-all"
                             >
                                 Next
                             </button>
@@ -447,7 +447,7 @@ const Users = ({ initialTab = "All" }) => {
                                     value={formData.username}
                                     onChange={handleInputChange}
                                     placeholder="e.g. johndoe"
-                                    className="w-full bg-gray-50 border border-gray-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+                                    className="w-full bg-gray-50 border border-gray-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium"
                                 />
                             </div>
                             <div>
@@ -458,7 +458,7 @@ const Users = ({ initialTab = "All" }) => {
                                     value={formData.email}
                                     onChange={handleInputChange}
                                     placeholder="john@example.com"
-                                    className="w-full bg-gray-50 border border-gray-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+                                    className="w-full bg-gray-50 border border-gray-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium"
                                 />
                             </div>
                             <div>
@@ -469,7 +469,7 @@ const Users = ({ initialTab = "All" }) => {
                                     value={formData.phone}
                                     onChange={handleInputChange}
                                     placeholder="+1 234 567 8900"
-                                    className="w-full bg-gray-50 border border-gray-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+                                    className="w-full bg-gray-50 border border-gray-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium"
                                 />
                             </div>
                             <div>
@@ -478,7 +478,7 @@ const Users = ({ initialTab = "All" }) => {
                                     name="role"
                                     value={formData.role}
                                     onChange={handleInputChange}
-                                    className="w-full bg-gray-50 border border-gray-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium cursor-pointer"
+                                    className="w-full bg-gray-50 border border-gray-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium cursor-pointer"
                                 >
                                     <option value="admin">admin</option>
                                     <option value="manager">manager</option>
@@ -495,7 +495,7 @@ const Users = ({ initialTab = "All" }) => {
                                         value={formData.password}
                                         onChange={handleInputChange}
                                         placeholder="Enter a secure password"
-                                        className="w-full bg-gray-50 border border-gray-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+                                        className="w-full bg-gray-50 border border-gray-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium"
                                     />
                                 </div>
                             )}
@@ -511,7 +511,7 @@ const Users = ({ initialTab = "All" }) => {
                             <button
                                 onClick={handleSaveUser}
                                 disabled={submitLoading || !formData.username || !formData.email || (!isEditing && !formData.password)}
-                                className="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-95 flex items-center gap-2"
+                                className="px-8 py-3 bg-primary hover:bg-blue-700 disabled:bg-primary-light disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-95 flex items-center gap-2"
                             >
                                 {submitLoading ? "Processing..." : isEditing ? "Update Credentials" : "Register User"}
                             </button>

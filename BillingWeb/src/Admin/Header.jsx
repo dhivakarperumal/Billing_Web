@@ -277,7 +277,7 @@ const Header = ({ onMenuClick }) => {
 
   return (
     <header className="sticky top-0 z-30 
-      bg-gradient-to-r from-white via-white to-blue-50/30 backdrop-blur-md
+      bg-gradient-to-r from-white via-white to-primary/10/30 backdrop-blur-md
       border-b border-slate-200/60
       shadow-[0_4px_30px_rgba(0,0,0,0.04)]">
 
@@ -294,14 +294,17 @@ const Header = ({ onMenuClick }) => {
             <Menu className="w-6 h-6" />
           </button>
 
-          <div className="hidden sm:flex flex-col">
-            <h1 className="text-xl sm:text-2xl font-black 
-              text-slate-800 tracking-tight truncate leading-none">
-              {getPageTitle()}
-            </h1>
-            <p className="hidden sm:block text-[10px] text-blue-600 font-bold uppercase tracking-[0.2em] mt-1 opacity-70">
-              Palace Artisan Admin
-            </p>
+          <div className="hidden sm:flex items-center gap-3">
+           
+            <div className="flex flex-col">
+              <h1 className="text-xl sm:text-2xl font-black 
+                text-slate-800 tracking-tight truncate leading-none">
+                {getPageTitle()}
+              </h1>
+              <p className="hidden sm:block text-[10px] text-primary font-bold uppercase tracking-[0.2em] mt-1 opacity-70">
+                Artisan Admin
+              </p>
+            </div>
           </div>
         </div>
 
@@ -342,7 +345,7 @@ const Header = ({ onMenuClick }) => {
                           <button
                             key={order.id}
                             onClick={() => handleSearchResultClick(order.id)}
-                            className="w-full px-4 py-3 flex items-center gap-3 hover:bg-blue-50/50 transition-all text-left group"
+                            className="w-full px-4 py-3 flex items-center gap-3 hover:bg-primary/10/50 transition-all text-left group"
                           >
                             {/* Avatar */}
                             <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center text-white text-xs font-black shrink-0 shadow">
@@ -351,7 +354,7 @@ const Header = ({ onMenuClick }) => {
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between gap-2">
                                 <p className="text-xs font-black text-slate-800 truncate">{order.customer_name || "Unknown"}</p>
-                                <span className="text-[9px] font-black text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded shrink-0">ORD-0{order.id}</span>
+                                <span className="text-[9px] font-black text-primary bg-primary/10 px-1.5 py-0.5 rounded shrink-0">ORD-0{order.id}</span>
                               </div>
                               <div className="flex items-center gap-2 mt-0.5">
                                 <span className="text-[10px] text-slate-400 font-bold truncate">{order.customer_phone || "No phone"}</span>
@@ -383,7 +386,7 @@ const Header = ({ onMenuClick }) => {
             <button
               onClick={() => { setShowSearch(p => !p); if (showSearch) clearSearch(); }}
               className={`p-2 rounded-xl transition-all active:scale-95 border
-              ${showSearch ? 'text-blue-600 bg-white border-blue-100 shadow-md shadow-blue-500/10' : 'bg-white text-slate-500 hover:bg-slate-50 border-slate-200 shadow-sm'}`}
+              ${showSearch ? 'text-primary bg-white border-blue-100 shadow-md shadow-primary/10' : 'bg-white text-slate-500 hover:bg-slate-50 border-slate-200 shadow-sm'}`}
             >
               <Search className="w-5 h-5" />
             </button>
@@ -475,7 +478,7 @@ const Header = ({ onMenuClick }) => {
             <button
               onClick={() => setShowNotifications(p => !p)}
               className={`relative p-2 rounded-xl transition-all active:scale-95 border
-              ${showNotifications ? 'bg-white text-blue-600 border-blue-100 shadow-md shadow-blue-500/10' : 'bg-white text-slate-500 hover:bg-slate-50 border-slate-200 shadow-sm'}`}
+              ${showNotifications ? 'bg-white text-primary border-blue-100 shadow-md shadow-primary/10' : 'bg-white text-slate-500 hover:bg-slate-50 border-slate-200 shadow-sm'}`}
             >
               <Bell className="w-5 h-5" />
               {unreadCount > 0 && (
@@ -495,7 +498,7 @@ const Header = ({ onMenuClick }) => {
                     <h3 className="text-sm font-black text-slate-800 uppercase tracking-tight">
                       New Orders
                     </h3>
-                    <span className="text-[10px] font-black bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg uppercase">
+                    <span className="text-[10px] font-black bg-primary/10 text-primary px-2.5 py-1 rounded-lg uppercase">
                       {(notifications.today?.length || 0) + (notifications.earlier?.length || 0)} Pending
                     </span>
                   </div>
@@ -507,27 +510,27 @@ const Header = ({ onMenuClick }) => {
                         {notifications.today?.length > 0 && (
                           <>
                             <div className="px-5 py-2 bg-slate-50/50 sticky top-0 z-10 backdrop-blur-sm">
-                              <p className="text-[9px] font-black text-blue-600 uppercase tracking-[0.2em]">Today's Orders</p>
+                              <p className="text-[9px] font-black text-primary uppercase tracking-[0.2em]">Today's Orders</p>
                             </div>
                             {notifications.today.map((order) => (
                               <button
                                 key={order.id}
                                 onClick={() => handleNotificationClick(order.id)}
-                                className="w-full px-5 py-4 flex items-start gap-4 hover:bg-blue-50/30 transition-all text-left group  "
+                                className="w-full px-5 py-4 flex items-start gap-4 hover:bg-primary/10/30 transition-all text-left group  "
                               >
-                                <div className="w-10 h-10 rounded-xl bg-blue-100/50 flex items-center justify-center text-blue-600 shrink-0 group-hover:scale-110 transition-transform shadow-sm">
+                                <div className="w-10 h-10 rounded-xl bg-blue-100/50 flex items-center justify-center text-primary shrink-0 group-hover:scale-110 transition-transform shadow-sm">
                                   <ShoppingBag className="w-5 h-5" />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <div className="flex items-center justify-between mb-0.5">
                                     <p className="text-sm font-black text-slate-800 tracking-tight">ORD-0{order.id}</p>
-                                    <p className="text-[12px] text-blue-600 font-black">₹{Number(order.total_amount).toLocaleString('en-IN')}</p>
+                                    <p className="text-[12px] text-primary font-black">₹{Number(order.total_amount).toLocaleString('en-IN')}</p>
                                   </div>
                                   <div className="flex items-center justify-between">
                                     <p className="text-[10px] text-slate-500 font-bold truncate">
                                       {order.customer_name || "New Customer"}
                                     </p>
-                                    <span className="text-[9px] bg-blue-50 text-green-600 font-black px-1.5 py-0.5 rounded uppercase">
+                                    <span className="text-[9px] bg-primary/10 text-green-600 font-black px-1.5 py-0.5 rounded uppercase">
                                       {order.status}
                                     </span>
                                   </div>
@@ -592,7 +595,7 @@ const Header = ({ onMenuClick }) => {
                     <Link
                       to="/admin/orders/new"
                       onClick={() => setShowNotifications(false)}
-                      className="block w-full py-4 text-center text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] bg-blue-50/50 hover:bg-blue-50 transition-colors border-t border-slate-50"
+                      className="block w-full py-4 text-center text-[10px] font-black text-primary uppercase tracking-[0.2em] bg-primary/10/50 hover:bg-primary/10 transition-colors border-t border-slate-50"
                     >
                       View All Manifests
                     </Link>
@@ -606,7 +609,7 @@ const Header = ({ onMenuClick }) => {
             <button
               onClick={() => setShowDropdown(p => !p)}
               className={`flex items-center gap-3 px-2 py-1.5 sm:px-3 rounded-2xl transition-all active:scale-95 border
-              ${showDropdown ? 'bg-blue-50 border-blue-100' : 'bg-slate-50 border-slate-100 hover:bg-slate-100'}`}
+              ${showDropdown ? 'bg-primary/10 border-blue-100' : 'bg-slate-50 border-slate-100 hover:bg-slate-100'}`}
             >
               <div className="w-8 h-8 rounded-xl 
                 bg-slate-900 flex items-center justify-center text-white text-xs font-black shadow-lg">
@@ -617,7 +620,7 @@ const Header = ({ onMenuClick }) => {
                 <p className="text-xs font-black text-slate-800">
                   {userName}
                 </p>
-                <p className="text-[9px] text-blue-600 font-bold uppercase tracking-widest opacity-70">
+                <p className="text-[9px] text-primary font-bold uppercase tracking-widest opacity-70">
                   {userRole}
                 </p>
               </div>
@@ -646,7 +649,7 @@ const Header = ({ onMenuClick }) => {
                   <Link
                     to="/admin/profile"
                     className="flex items-center gap-3 px-3 py-2.5 
-                    rounded-xl hover:bg-blue-50 hover:text-blue-600
+                    rounded-xl hover:bg-primary/10 hover:text-primary
                     text-sm text-slate-600 transition font-bold"
                   >
                     <User className="w-4 h-4 opacity-50" /> Profile
@@ -655,7 +658,7 @@ const Header = ({ onMenuClick }) => {
                   {/* <Link
                     to="/admin/settings"
                     className="flex items-center gap-3 px-3 py-2.5 
-                    rounded-xl hover:bg-blue-50 hover:text-blue-600
+                    rounded-xl hover:bg-primary/10 hover:text-primary
                     text-sm text-slate-600 transition font-bold"
                   >
                     <Settings className="w-4 h-4 opacity-50" /> Settings

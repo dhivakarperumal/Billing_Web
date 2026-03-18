@@ -135,7 +135,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
       >
         {/* ========== LOGO ========== */}
         <div className="flex items-center gap-3 px-4 py-5 border-b border-white/5 overflow-hidden">
-          <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg shadow-blue-600/20 shrink-0 overflow-hidden">
+          <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg shadow-primary/20 shrink-0 overflow-hidden">
             <img
               src="/logo.png"
               alt="Logo"
@@ -146,8 +146,8 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
 
           {!collapsed && (
             <div className="overflow-hidden">
-              <h1 className="text-md font-black text-white tracking-tighter uppercase leading-none">Palace</h1>
-              <p className="text-[9px] text-blue-400 font-bold tracking-widest uppercase opacity-70 mt-1">
+              <h1 className="text-md font-black text-white tracking-tighter uppercase leading-none">Billing</h1>
+              <p className="text-[9px] text-primary-light font-bold tracking-widest uppercase opacity-70 mt-1">
                 Artisan Admin
               </p>
             </div>
@@ -178,7 +178,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
                     className={`
                       w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all
                       ${isMenuOpen
-                        ? "bg-blue-600/10 text-white ring-1 ring-blue-500/30"
+                        ? "bg-primary/10 text-white ring-1 ring-primary/30"
                         : "text-white/50 hover:bg-white/5 hover:text-white"
                       }
                     `}
@@ -214,7 +214,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
                             className={`
                               flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold transition-all
                               ${(location.pathname === sub.path || (sub.path !== "/admin" && location.pathname.startsWith(sub.path)))
-                                ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                                ? "bg-primary text-white shadow-lg shadow-primary/20"
                                 : "text-white/40 hover:text-white hover:bg-white/5"
                               }
                             `}
@@ -245,7 +245,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
                 className={`
                   flex items-center gap-3 px-4 py-3 rounded-xl transition-all
                   ${isActive
-                    ? "bg-blue-600 text-white shadow-xl shadow-blue-600/20"
+                    ? "bg-primary text-white shadow-xl shadow-primary/20"
                     : "text-white/50 hover:bg-white/5 hover:text-white"
                   }
                 `}
@@ -262,12 +262,12 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
           <div className="p-4 mx-3 mb-6 bg-white/5 rounded-2xl border border-white/5">
             <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] mb-3 pl-1">System Identity</p>
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white text-xs font-black shadow-lg shadow-blue-600/40">
+              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-white text-xs font-black shadow-lg shadow-primary/40">
                 {profileName?.charAt(0) || "A"}
               </div>
               <div className="overflow-hidden">
                 <p className="text-xs font-black text-white truncate">{profileName || "Administrator"}</p>
-                <p className="text-[9px] text-blue-400 font-bold uppercase truncate opacity-70">Master Control</p>
+                <p className="text-[9px] text-primary-light font-bold uppercase truncate opacity-70">Master Control</p>
               </div>
             </div>
           </div>
@@ -282,7 +282,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
             bg-white border border-slate-200
             shadow-[0_4px_10px_rgba(0,0,0,0.1)]
             items-center justify-center
-            text-slate-500 hover:text-blue-600 hover:scale-110 transition-all z-50
+            text-slate-500 hover:text-primary hover:scale-110 transition-all z-50
           "
         >
           <ChevronLeft

@@ -187,7 +187,7 @@ const Profile = () => {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
-                <FiLoader className="animate-spin text-4xl text-blue-500" />
+                <FiLoader className="animate-spin text-4xl text-primary" />
             </div>
         );
     }
@@ -236,7 +236,7 @@ const Profile = () => {
 
                             <div className="flex flex-wrap gap-4 mt-4 justify-center md:justify-start">
                                 <span className="flex items-center gap-2 text-xs font-bold text-gray-400">
-                                    <FiMapPin className="text-blue-500" />
+                                    <FiMapPin className="text-primary" />
                                     {locationDisplay}
                                 </span>
 
@@ -258,7 +258,7 @@ const Profile = () => {
                         {/* Change Password */}
                         <button
                             onClick={openPwdModal}
-                            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-colors"
+                            className="flex items-center gap-2 bg-primary hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-colors"
                         >
                             <FiLock />
                             Change Password
@@ -271,7 +271,7 @@ const Profile = () => {
 
                         <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl">
                             <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                                <FiUser className="text-blue-500" />
+                                <FiUser className="text-primary" />
                             </div>
                             <div>
                                 <p className="text-xs text-gray-400">Username</p>
@@ -281,7 +281,7 @@ const Profile = () => {
 
                         <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl">
                             <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                                <FiMail className="text-blue-500" />
+                                <FiMail className="text-primary" />
                             </div>
                             <div>
                                 <p className="text-xs text-gray-400">Email</p>
@@ -291,7 +291,7 @@ const Profile = () => {
 
                         <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl">
                             <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                                <FiPhone className="text-blue-500" />
+                                <FiPhone className="text-primary" />
                             </div>
                             <div>
                                 <p className="text-xs text-gray-400">Phone</p>
@@ -301,7 +301,7 @@ const Profile = () => {
 
                         <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl">
                             <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                                <FiMapPin className="text-blue-500" />
+                                <FiMapPin className="text-primary" />
                             </div>
                             <div>
                                 <p className="text-xs text-gray-400">Location</p>
@@ -329,7 +329,7 @@ const Profile = () => {
                         </button>
 
                         <h2 className="text-xl font-black mb-6 flex items-center gap-2">
-                            <FiEdit2 className="text-blue-500" />
+                            <FiEdit2 className="text-primary" />
                             Edit Profile
                         </h2>
 
@@ -345,7 +345,7 @@ const Profile = () => {
                                         onChange={(e) =>
                                             setProfileData({ ...profileData, username: e.target.value })
                                         }
-                                        className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                        className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                     />
                                 </div>
                                 <div>
@@ -357,7 +357,7 @@ const Profile = () => {
                                         onChange={(e) =>
                                             setProfileData({ ...profileData, name: e.target.value })
                                         }
-                                        className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                        className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                     />
                                 </div>
                             </div>
@@ -371,7 +371,7 @@ const Profile = () => {
                                     onChange={(e) =>
                                         setProfileData({ ...profileData, email: e.target.value })
                                     }
-                                    className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                    className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                 />
                             </div>
 
@@ -384,7 +384,7 @@ const Profile = () => {
                                     onChange={(e) =>
                                         setProfileData({ ...profileData, phone: e.target.value })
                                     }
-                                    className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                    className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                 />
                             </div>
 
@@ -400,7 +400,7 @@ const Profile = () => {
                                     onChange={(e) =>
                                         setProfileData({ ...profileData, street_address: e.target.value })
                                     }
-                                    className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                    className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                 />
                             </div>
 
@@ -414,7 +414,7 @@ const Profile = () => {
                                         onChange={(e) =>
                                             setProfileData({ ...profileData, city: e.target.value })
                                         }
-                                        className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                        className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                     />
                                 </div>
                                 <div>
@@ -426,7 +426,7 @@ const Profile = () => {
                                         onChange={(e) =>
                                             setProfileData({ ...profileData, district: e.target.value })
                                         }
-                                        className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                        className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                     />
                                 </div>
                             </div>
@@ -441,7 +441,7 @@ const Profile = () => {
                                         onChange={(e) =>
                                             setProfileData({ ...profileData, state: e.target.value })
                                         }
-                                        className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                        className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                     />
                                 </div>
                                 <div>
@@ -453,7 +453,7 @@ const Profile = () => {
                                         onChange={(e) =>
                                             setProfileData({ ...profileData, country: e.target.value })
                                         }
-                                        className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                        className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                     />
                                 </div>
                                 <div>
@@ -465,7 +465,7 @@ const Profile = () => {
                                         onChange={(e) =>
                                             setProfileData({ ...profileData, zip_code: e.target.value })
                                         }
-                                        className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                        className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                     />
                                 </div>
                             </div>
@@ -473,7 +473,7 @@ const Profile = () => {
                             <button
                                 onClick={handleProfileUpdate}
                                 disabled={saving}
-                                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-3 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
+                                className="w-full bg-primary hover:bg-blue-700 disabled:bg-primary-light text-white py-3 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
                             >
                                 {saving ? (
                                     <>
@@ -510,7 +510,7 @@ const Profile = () => {
                         </button>
 
                         <h2 className="text-xl font-black mb-6 flex items-center gap-2">
-                            <FiLock className="text-blue-500" />
+                            <FiLock className="text-primary" />
                             Change Password
                         </h2>
 
@@ -523,7 +523,7 @@ const Profile = () => {
                                     placeholder="Enter current password"
                                     value={currentPwd}
                                     onChange={(e) => setCurrentPwd(e.target.value)}
-                                    className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                    className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                 />
                             </div>
 
@@ -534,7 +534,7 @@ const Profile = () => {
                                     placeholder="Minimum 6 characters"
                                     value={newPwd}
                                     onChange={(e) => setNewPwd(e.target.value)}
-                                    className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                    className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                 />
                             </div>
 
@@ -545,14 +545,14 @@ const Profile = () => {
                                     placeholder="Re-enter new password"
                                     value={confirmPwd}
                                     onChange={(e) => setConfirmPwd(e.target.value)}
-                                    className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                    className="w-full border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                                 />
                             </div>
 
                             <button
                                 onClick={handlePwdChange}
                                 disabled={changingPwd}
-                                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-3 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
+                                className="w-full bg-primary hover:bg-blue-700 disabled:bg-primary-light text-white py-3 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
                             >
                                 {changingPwd ? (
                                     <>

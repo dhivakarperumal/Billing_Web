@@ -110,7 +110,7 @@ const Dealers = () => {
                             placeholder="Search dealers..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-all text-sm font-medium"
+                            className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-primary transition-all text-sm font-medium"
                         />
                     </div>
                 </div>
@@ -119,12 +119,12 @@ const Dealers = () => {
                         onClick={handleImportExcel}
                         className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white border border-gray-200 text-slate-700 px-5 py-3 rounded-xl font-bold transition-all hover:bg-gray-50 active:scale-95 shadow-sm"
                     >
-                        <FiUpload className="text-blue-500" /> Import Partners
+                        <FiUpload className="text-primary" /> Import Partners
                     </button>
 
                     <button
                         onClick={() => navigate("/admin/dealers/add")}
-                        className="w-full sm:w-auto flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-100 active:scale-95"
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-100 active:scale-95"
                     >
                         <FiPlus /> New Partnership
                     </button>
@@ -161,11 +161,11 @@ const Dealers = () => {
                                     {dealer.image ? (
                                         <img src={dealer.image} alt={dealer.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                     ) : (
-                                        <span className="text-xl font-black text-blue-600 bg-blue-50 w-full h-full flex items-center justify-center capitalize">{dealer.name?.charAt(0)}</span>
+                                        <span className="text-xl font-black text-primary bg-primary/10 w-full h-full flex items-center justify-center capitalize">{dealer.name?.charAt(0)}</span>
                                     )}
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{dealer.name}</h3>
+                                    <h3 className="text-lg font-bold text-slate-800 group-hover:text-primary transition-colors">{dealer.name}</h3>
                                     <span className={`mt-1 px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-widest border ${getStatusStyle(dealer.status)}`}>
                                         {dealer.status}
                                     </span>
@@ -189,7 +189,7 @@ const Dealers = () => {
                                 </div>
                                 <div className="p-3 bg-gray-50/50 rounded-2xl flex flex-col items-center">
                                     <p className="text-[10px] font-black uppercase text-gray-400 tracking-wider mb-1">Orders</p>
-                                    <div className="flex items-center gap-1 text-blue-600 font-bold">
+                                    <div className="flex items-center gap-1 text-primary font-bold">
                                         <FiPackage /> {dealer.orders}
                                     </div>
                                 </div>
@@ -197,13 +197,13 @@ const Dealers = () => {
 
                             <div className="space-y-2.5 border-t border-gray-50 pt-4">
                                 <div className="flex items-center gap-3 text-sm text-gray-500 font-medium">
-                                    <FiMapPin className="text-blue-500" /> {dealer.location}
+                                    <FiMapPin className="text-primary" /> {dealer.location}
                                 </div>
                                 <div className="flex items-center gap-3 text-sm text-gray-500 font-medium overflow-hidden">
-                                    <FiMail className="text-blue-500" /> <span className="truncate">{dealer.email}</span>
+                                    <FiMail className="text-primary" /> <span className="truncate">{dealer.email}</span>
                                 </div>
                                 <div className="flex items-center gap-3 text-sm text-gray-500 font-medium">
-                                    <FiPhone className="text-blue-500" /> {dealer.phone}
+                                    <FiPhone className="text-primary" /> {dealer.phone}
                                 </div>
                             </div>
                         </div>
@@ -211,7 +211,7 @@ const Dealers = () => {
                         <div className="mt-6 flex gap-2">
                             <button
                                 onClick={() => handleContact(dealer)}
-                                className="flex-1 py-2.5 bg-blue-50 hover:bg-blue-600 hover:text-white rounded-xl text-xs font-bold text-blue-600 transition-all border border-blue-100"
+                                className="flex-1 py-2.5 bg-primary/10 hover:bg-primary hover:text-white rounded-xl text-xs font-bold text-primary transition-all border border-blue-100"
                             >
                                 Contact
                             </button>
@@ -243,7 +243,7 @@ const Dealers = () => {
                     <p className="text-white/70 text-sm mb-8 px-4">Invite more dealers and manage all collections in one place.</p>
                     <button
                         onClick={() => navigate("/admin/dealers/add")}
-                        className="w-full py-3.5 bg-white text-blue-600 rounded-xl font-black text-sm uppercase tracking-widest shadow-lg hover:shadow-2xl active:scale-95 transition-all"
+                        className="w-full py-3.5 bg-white text-primary rounded-xl font-black text-sm uppercase tracking-widest shadow-lg hover:shadow-2xl active:scale-95 transition-all"
                     >
                         Invite Partner
                     </button>
@@ -256,7 +256,7 @@ const Dealers = () => {
                     <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-8 duration-500">
                         <div className="p-8 border-b border-gray-50 flex items-center justify-between bg-slate-50/50">
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                                <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-white shadow-lg shadow-blue-200">
                                     <FiPackage size={20} />
                                 </div>
                                 <div>
@@ -277,7 +277,7 @@ const Dealers = () => {
                                 {mockHistory.map((h, i) => (
                                     <div key={i} className="group p-5 bg-gray-50 hover:bg-white border border-gray-100 hover:border-blue-100 rounded-3xl transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-blue-500 shadow-sm border border-gray-50 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm border border-gray-50 group-hover:bg-primary group-hover:text-white transition-colors">
                                                 <FiDownload size={16} />
                                             </div>
                                             <div>

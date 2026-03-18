@@ -391,7 +391,7 @@ const AddProducts = () => {
 
     if (fetching) return (
         <div className="flex flex-col items-center justify-center py-20">
-            <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-4"></div>
+            <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
             <p className="text-gray-500 font-bold">Fetching boutique details...</p>
         </div>
     );
@@ -402,7 +402,7 @@ const AddProducts = () => {
             {/* Premium Sticky Header Overlay */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-2">
                 <div className="flex items-center gap-3 sm:gap-4">
-                    <button onClick={() => navigate(-1)} className="p-3 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-blue-600 transition-all shadow-sm active:scale-95 shadow-blue-500/5">
+                    <button onClick={() => navigate(-1)} className="p-3 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-primary transition-all shadow-sm active:scale-95 shadow-primary/5">
                         <FiArrowLeft size={20} />
                     </button>
                     <div>
@@ -415,33 +415,33 @@ const AddProducts = () => {
                 <div className="lg:col-span-2 space-y-8">
                     {/* Primary Categorization & Identity */}
                     <div className="bg-white p-6 sm:p-10 rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden group">
-                        <div className="absolute -top-10 -right-10 p-8 opacity-[0.03] text-blue-600">
+                        <div className="absolute -top-10 -right-10 p-8 opacity-[0.03] text-primary">
                             <FiLayers size={200} />
                         </div>
 
                         <div className="relative z-10 space-y-8">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <span className="p-2.5 bg-blue-50 text-blue-600 rounded-xl"><FiLayers size={20} /></span>
+                                    <span className="p-2.5 bg-primary/10 text-primary rounded-xl"><FiLayers size={20} /></span>
                                     <h2 className="text-2xl font-black text-slate-800 tracking-tight">Product Foundation</h2>
                                 </div>
-                                <div className="flex items-center gap-2 p-3 bg-blue-50/50 rounded-2xl border border-blue-100">
-                                    <FiHash className="text-blue-600" />
-                                    <span className="text-sm font-black text-blue-600 tracking-widest">{formData.product_code || 'Generating...'}</span>
+                                <div className="flex items-center gap-2 p-3 bg-primary/10/50 rounded-2xl border border-blue-100">
+                                    <FiHash className="text-primary" />
+                                    <span className="text-sm font-black text-primary tracking-widest">{formData.product_code || 'Generating...'}</span>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="space-y-4">
                                     <label className="text-[10px] sm:text-xs  font-black text-gray-400 uppercase tracking-widest ml-1">Main Collection Category *</label>
-                                    <select name="category" value={formData.category} onChange={handleFormChange} className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-[1.5rem] outline-none focus:bg-white focus:border-blue-500/20 transition-all text-base font-black text-slate-800 shadow-inner cursor-pointer appearance-none">
+                                    <select name="category" value={formData.category} onChange={handleFormChange} className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-[1.5rem] outline-none focus:bg-white focus:border-primary/20 transition-all text-base font-black text-slate-800 shadow-inner cursor-pointer appearance-none">
                                         {categories.map(cat => <option key={cat.id} value={cat.name}>{cat.name}</option>)}
                                     </select>
                                 </div>
 
                                 <div className="space-y-4">
                                     <label className="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-1.5"><FiStar className="text-amber-500" /> Boutique Rating</label>
-                                    <select name="rating" value={formData.rating} onChange={handleFormChange} className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-[1.5rem] outline-none focus:bg-white focus:border-blue-500/20 transition-all text-base font-black text-slate-800 shadow-inner cursor-pointer appearance-none">
+                                    <select name="rating" value={formData.rating} onChange={handleFormChange} className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-[1.5rem] outline-none focus:bg-white focus:border-primary/20 transition-all text-base font-black text-slate-800 shadow-inner cursor-pointer appearance-none">
                                         <option value="1">1 Star </option>
                                         <option value="2">2 Stars</option>
                                         <option value="3">3 Stars</option>
@@ -457,7 +457,7 @@ const AddProducts = () => {
                                     name="age"
                                     value={formData.age}
                                     onChange={handleFormChange}
-                                    className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-[1.5rem] outline-none focus:bg-white focus:border-blue-500/20 transition-all text-base font-bold text-slate-800 shadow-inner cursor-pointer appearance-none"
+                                    className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-[1.5rem] outline-none focus:bg-white focus:border-primary/20 transition-all text-base font-bold text-slate-800 shadow-inner cursor-pointer appearance-none"
                                 >
                                     <option value="">Select Age Group</option>
                                     <option value="Infant (0–1)">Infant (0–1)</option>
@@ -473,12 +473,12 @@ const AddProducts = () => {
 
                             <div className="space-y-4">
                                 <label className="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Creation Name *</label>
-                                <input type="text" name="name" value={formData.name} onChange={handleFormChange} placeholder="e.g. Handwoven Banarasi Silk" className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-[1.5rem] outline-none focus:bg-white focus:border-blue-500/20 transition-all text-base font-bold text-slate-800 shadow-inner" required />
+                                <input type="text" name="name" value={formData.name} onChange={handleFormChange} placeholder="e.g. Handwoven Banarasi Silk" className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-[1.5rem] outline-none focus:bg-white focus:border-primary/20 transition-all text-base font-bold text-slate-800 shadow-inner" required />
                             </div>
 
                             <div className="space-y-4">
                                 <label className="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest ml-1">The Craft Story</label>
-                                <textarea name="description" value={formData.description} onChange={handleFormChange} rows="3" placeholder="Describe the heritage..." className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-[1.5rem] outline-none focus:bg-white focus:border-blue-500/20 transition-all text-sm font-medium text-gray-600 shadow-inner resize-none" />
+                                <textarea name="description" value={formData.description} onChange={handleFormChange} rows="3" placeholder="Describe the heritage..." className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-[1.5rem] outline-none focus:bg-white focus:border-primary/20 transition-all text-sm font-medium text-gray-600 shadow-inner resize-none" />
                             </div>
                         </div>
                     </div>
@@ -495,7 +495,7 @@ const AddProducts = () => {
                                     <h2 className="text-2xl font-black text-gray-900 tracking-tight">Premium Commercials</h2>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                                    <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
                                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse delay-75"></span>
                                 </div>
                             </div>
@@ -505,7 +505,7 @@ const AddProducts = () => {
                                     <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Market MRP *</label>
                                     <div className="relative">
                                         <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-900 font-black text-lg">₹</span>
-                                        <input type="number" name="mrp" value={formData.mrp} onChange={handleFormChange} className="w-full pl-10 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-[1.2rem] outline-none focus:bg-white focus:border-blue-500/20 transition-all text-xl font-black text-slate-900" required />
+                                        <input type="number" name="mrp" value={formData.mrp} onChange={handleFormChange} className="w-full pl-10 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-[1.2rem] outline-none focus:bg-white focus:border-primary/20 transition-all text-xl font-black text-slate-900" required />
                                     </div>
                                 </div>
                                 <div className="space-y-3">
@@ -526,12 +526,12 @@ const AddProducts = () => {
                                     <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1 flex items-center justify-between">
                                         Total Stock
                                         {isStockManuallyEdited && (
-                                            <button onClick={resetStockCalculation} className="text-[8px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded-full hover:bg-blue-500 transition-colors uppercase tracking-widest">Auto Set</button>
+                                            <button onClick={resetStockCalculation} className="text-[8px] bg-primary/20 text-primary-light px-1.5 py-0.5 rounded-full hover:bg-primary transition-colors uppercase tracking-widest">Auto Set</button>
                                         )}
                                     </label>
                                     <div className="relative">
-                                        <FiActivity className={`absolute left-5 top-1/2 -translate-y-1/2 ${isStockManuallyEdited ? 'text-amber-500' : 'text-blue-500'}`} />
-                                        <input type="number" name="total_stock" value={formData.total_stock} onChange={handleFormChange} className={`w-full pl-10 pr-4 py-4 bg-blue-50/50 border border-blue-100 rounded-[1.2rem] outline-none transition-all text-xl font-black ${isStockManuallyEdited ? 'text-amber-500 border-amber-500/30' : 'text-blue-600'}`} />
+                                        <FiActivity className={`absolute left-5 top-1/2 -translate-y-1/2 ${isStockManuallyEdited ? 'text-amber-500' : 'text-primary'}`} />
+                                        <input type="number" name="total_stock" value={formData.total_stock} onChange={handleFormChange} className={`w-full pl-10 pr-4 py-4 bg-primary/10/50 border border-blue-100 rounded-[1.2rem] outline-none transition-all text-xl font-black ${isStockManuallyEdited ? 'text-amber-500 border-amber-500/30' : 'text-primary'}`} />
                                     </div>
                                 </div>
                             </div>
@@ -559,7 +559,7 @@ const AddProducts = () => {
                                     <input type="text" name="work_type" value={formData.work_type} onChange={handleFormChange} placeholder="Zardozi" className="w-full px-6 py-3.5 bg-gray-50 rounded-2xl text-sm font-bold text-slate-800" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-1.5"><FiDroplet className="text-blue-500" /> Caring Instructions</label>
+                                    <label className="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-1.5"><FiDroplet className="text-primary" /> Caring Instructions</label>
                                     <select name="wash_care" value={formData.wash_care} onChange={handleFormChange} className="w-full px-6 py-3.5 bg-gray-50 rounded-2xl text-sm font-bold text-slate-800 cursor-pointer">
                                         <option value="Dry Clean Only">Dry Clean Only</option>
                                         <option value="Mild Hand Wash">Mild Hand Wash</option>
@@ -748,7 +748,7 @@ const AddProducts = () => {
                                                         handleVariantChange(vIndex, "colorName", e.target.value);
                                                     }
                                                 }}
-                                                className="w-full px-3 py-2 bg-gray-50 border border-gray-100 rounded-xl text-xs font-black text-slate-800 outline-none focus:bg-white focus:border-blue-500/30 transition-all uppercase tracking-widest shadow-inner cursor-pointer"
+                                                className="w-full px-3 py-2 bg-gray-50 border border-gray-100 rounded-xl text-xs font-black text-slate-800 outline-none focus:bg-white focus:border-primary/30 transition-all uppercase tracking-widest shadow-inner cursor-pointer"
                                             >
                                                 <option value="">Select Boutique Shade</option>
                                                 {boutiqueColors.map(bc => <option key={bc.hex} value={bc.name}>{bc.name}</option>)}
@@ -756,7 +756,7 @@ const AddProducts = () => {
                                             </select>
                                         </div>
                                     </div>
-                                    <p className="text-[8px] font-bold text-gray-400 uppercase tracking-tight ml-1">Selected Hex: <span className="text-blue-500 font-black">{v.color}</span></p>
+                                    <p className="text-[8px] font-bold text-gray-400 uppercase tracking-tight ml-1">Selected Hex: <span className="text-primary font-black">{v.color}</span></p>
                                 </div>
                                 <button type="button" onClick={() => removeVariant(vIndex)} className="text-gray-200 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"><FiTrash2 size={16} /></button>
                             </div>
@@ -766,7 +766,7 @@ const AddProducts = () => {
                                 <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Shade Stock Management</label>
                                 <div className="flex flex-wrap gap-1.5">
                                     {sizeOptions.map(sz => (
-                                        <button key={sz} type="button" onClick={() => toggleSize(vIndex, sz)} className={`px-3 py-2 rounded-xl text-[9px] font-black tracking-tighter transition-all ${v.selectedSizes.includes(sz) ? 'bg-blue-600 text-white shadow-xl scale-105' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}>{sz}</button>
+                                        <button key={sz} type="button" onClick={() => toggleSize(vIndex, sz)} className={`px-3 py-2 rounded-xl text-[9px] font-black tracking-tighter transition-all ${v.selectedSizes.includes(sz) ? 'bg-primary text-white shadow-xl scale-105' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}>{sz}</button>
                                     ))}
                                 </div>
                                 {v.selectedSizes.length > 0 && (
@@ -777,7 +777,7 @@ const AddProducts = () => {
                                                     <p className="text-[7px] font-black text-slate-400 uppercase leading-none mb-1">{sz}</p>
                                                     <input type="number" value={v.sizesStock[sz]} onChange={(e) => handleStockChange(vIndex, sz, e.target.value)} className="w-full bg-transparent border-none ouline-none p-0 text-sm font-black text-slate-800 focus:ring-0 leading-none" />
                                                 </div>
-                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-400/50"></div>
+                                                <div className="w-1.5 h-1.5 rounded-full bg-primary-light/50"></div>
                                             </div>
                                         ))}
                                     </div>
@@ -792,8 +792,8 @@ const AddProducts = () => {
                                     </div>
                                 ))}
                                 {v.images.length < 5 && (
-                                    <label className="flex flex-col items-center justify-center aspect-[3/4] rounded-2xl border-2 border-dashed border-gray-100 bg-gray-50/50 cursor-pointer hover:bg-white hover:border-blue-500 group/label transition-all shadow-inner">
-                                        <FiUploadCloud size={24} className="text-gray-300 group-hover/label:text-blue-500 transition-colors scale-125" />
+                                    <label className="flex flex-col items-center justify-center aspect-[3/4] rounded-2xl border-2 border-dashed border-gray-100 bg-gray-50/50 cursor-pointer hover:bg-white hover:border-primary group/label transition-all shadow-inner">
+                                        <FiUploadCloud size={24} className="text-gray-300 group-hover/label:text-primary transition-colors scale-125" />
                                         <input type="file" multiple className="hidden" accept="image/*" onChange={(e) => handleVariantImageUpload(vIndex, e)} />
                                     </label>
                                 )}
@@ -819,7 +819,7 @@ const AddProducts = () => {
                                 </div>
                             ) : (
                                 <>
-                                    <div className="p-2 bg-white/10 rounded-xl group-hover:bg-blue-500 transition-colors">
+                                    <div className="p-2 bg-white/10 rounded-xl group-hover:bg-primary transition-colors">
                                         <FiSave className="text-2xl" />
                                     </div>
                                     <span>{isEdit ? 'Update Product' : 'Add Products'}</span>

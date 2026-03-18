@@ -51,7 +51,7 @@ const ProductDetail = () => {
 
     if (loading) return (
         <div className="flex flex-col items-center justify-center py-20">
-            <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-4"></div>
+            <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
             <p className="text-gray-500 font-bold">Revealing the craft...</p>
         </div>
     );
@@ -64,7 +64,7 @@ const ProductDetail = () => {
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <Link to="/admin/products/all" className="p-2 bg-white border border-gray-100 rounded-xl text-gray-400 hover:text-blue-600 hover:border-blue-100 transition-all shadow-sm">
+                    <Link to="/admin/products/all" className="p-2 bg-white border border-gray-100 rounded-xl text-gray-400 hover:text-primary hover:border-blue-100 transition-all shadow-sm">
                         <FiArrowLeft size={20} />
                     </Link>
                     <div>
@@ -105,7 +105,7 @@ const ProductDetail = () => {
                                 <button
                                     key={i}
                                     onClick={() => setActiveImage(i)}
-                                    className={`aspect-square rounded-xl sm:rounded-2xl overflow-hidden border-2 transition-all shadow-sm ${activeImage === i ? 'border-blue-500 scale-95 ring-2 ring-blue-50' : 'border-white hover:border-blue-200 opacity-60 hover:opacity-100'}`}
+                                    className={`aspect-square rounded-xl sm:rounded-2xl overflow-hidden border-2 transition-all shadow-sm ${activeImage === i ? 'border-primary scale-95 ring-2 ring-primary/10' : 'border-white hover:border-blue-200 opacity-60 hover:opacity-100'}`}
                                 >
                                     <img src={img} alt="thumb" className="w-full h-full object-cover" />
                                 </button>
@@ -120,7 +120,7 @@ const ProductDetail = () => {
                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 pb-6 sm:pb-8 border-b border-gray-50">
                             <div className="space-y-4 max-w-xl text-slate-800">
                                 <div className="flex items-center gap-2 flex-wrap">
-                                    <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest border border-blue-100">
+                                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest border border-blue-100">
                                         {product.category}
                                     </span>
                                     <div className="flex items-center gap-1 text-amber-500 font-bold text-xs sm:text-sm">
@@ -134,7 +134,7 @@ const ProductDetail = () => {
                                 <p className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Commercials</p>
                                 <div className="flex items-center justify-center gap-2">
                                     <span className="text-gray-300 font-bold line-through text-xs sm:text-sm">₹{parseFloat(product.mrp || 0).toLocaleString()}</span>
-                                    <p className="text-2xl sm:text-3xl font-black text-blue-600">₹{parseFloat(product.offer_price || 0).toLocaleString()}</p>
+                                    <p className="text-2xl sm:text-3xl font-black text-primary">₹{parseFloat(product.offer_price || 0).toLocaleString()}</p>
                                 </div>
                                 <div className="mt-4 pt-4 border-t border-gray-200">
                                     <p className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">Global Inventory</p>
@@ -180,7 +180,7 @@ const ProductDetail = () => {
                                         <div
                                             key={idx}
                                             onClick={() => { setActiveVariant(idx); setActiveImage(0); }}
-                                            className={`flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer ${activeVariant === idx ? 'bg-blue-50 border-blue-200 ring-2 ring-blue-50/50' : 'bg-gray-50 border-gray-100 hover:border-blue-100'}`}
+                                            className={`flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer ${activeVariant === idx ? 'bg-primary/10 border-blue-200 ring-2 ring-primary/10/50' : 'bg-gray-50 border-gray-100 hover:border-blue-100'}`}
                                         >
                                             <div className="flex items-center gap-4 text-slate-800">
                                                 <div className="w-10 h-10 rounded-xl shadow-inner border-2 border-white" style={{ backgroundColor: v.color }}></div>
@@ -192,7 +192,7 @@ const ProductDetail = () => {
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-xs font-black text-blue-600">
+                                                <p className="text-xs font-black text-primary">
                                                     {Object.values(v.sizesStock || {}).reduce((a, b) => a + (parseInt(b) || 0), 0)} Units
                                                 </p>
                                             </div>
@@ -206,7 +206,7 @@ const ProductDetail = () => {
                         <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-6">
                             <div className="flex items-center justify-between">
                                 <h3 className="font-bold text-slate-800 uppercase tracking-widest text-xs">Product Passport</h3>
-                                <BsQrCode className="text-blue-500" size={18} />
+                                <BsQrCode className="text-primary" size={18} />
                             </div>
                             <div className="flex flex-col items-center justify-center gap-4 bg-gray-50/50 p-6 rounded-[2rem] border border-dashed border-gray-200">
                                 <div className="p-4 bg-white rounded-3xl shadow-sm border border-gray-100">
@@ -220,7 +220,7 @@ const ProductDetail = () => {
                                 </div>
                                 <div className="text-center">
                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-tight">Digital Authenticity</p>
-                                    <p className="text-[9px] font-bold text-blue-500 uppercase mt-1 tracking-tighter">Scan to verify creation</p>
+                                    <p className="text-[9px] font-bold text-primary uppercase mt-1 tracking-tighter">Scan to verify creation</p>
                                 </div>
                             </div>
                         </div>

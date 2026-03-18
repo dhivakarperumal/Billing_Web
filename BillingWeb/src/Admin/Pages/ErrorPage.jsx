@@ -24,7 +24,7 @@ const ErrorPage = () => {
                 <div className="space-y-4">
                     <Link
                         to="/admin"
-                        className="flex items-center justify-center gap-3 w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-lg shadow-blue-200 active:scale-95"
+                        className="flex items-center justify-center gap-3 w-full py-4 bg-primary hover:bg-blue-700 text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-lg shadow-blue-200 active:scale-95"
                     >
                         <FiHome /> Back to Dashboard
                     </Link>

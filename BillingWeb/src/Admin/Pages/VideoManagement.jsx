@@ -127,7 +127,7 @@ const VideoManagement = () => {
                 </div>
                 <button
                     onClick={() => handleOpenModal()}
-                    className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-200 active:scale-95"
+                    className="flex items-center justify-center gap-2 bg-primary hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-200 active:scale-95"
                 >
                     <FiPlus /> Add New Video
                 </button>
@@ -135,7 +135,7 @@ const VideoManagement = () => {
 
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm text-slate-800">
-                    <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-4"></div>
+                    <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
                     <p className="text-gray-500 font-bold">Loading videos...</p>
                 </div>
             ) : (
@@ -146,7 +146,7 @@ const VideoManagement = () => {
                             <input
                                 type="text"
                                 placeholder="Search videos by title..."
-                                className="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:bg-white focus:border-blue-500 transition-all text-sm font-bold"
+                                className="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:bg-white focus:border-primary transition-all text-sm font-bold"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -167,7 +167,7 @@ const VideoManagement = () => {
                                 {videos
                                     .filter(v => (v.title || "").toLowerCase().includes(searchTerm.toLowerCase()))
                                     .map((video) => (
-                                        <tr key={video.id} className="hover:bg-blue-50/30 transition-colors group block md:table-row bg-white md:bg-transparent border border-gray-100 md:border-0 rounded-2xl md:rounded-none mb-4 md:mb-0 shadow-sm md:shadow-none">
+                                        <tr key={video.id} className="hover:bg-primary/10/30 transition-colors group block md:table-row bg-white md:bg-transparent border border-gray-100 md:border-0 rounded-2xl md:rounded-none mb-4 md:mb-0 shadow-sm md:shadow-none">
                                             <td className="px-3 py-4 md:px-6 md:py-4 block md:table-cell border-b border-gray-50 md:border-b-0">
                                                 <div className="flex md:block items-center justify-between w-full">
                                                     <span className="md:hidden text-[10px] font-black text-gray-400 uppercase tracking-widest">Preview</span>
@@ -253,7 +253,7 @@ const VideoManagement = () => {
                     >
                         <div className="p-8 border-b border-gray-50 flex items-center justify-between bg-slate-50/50 sticky top-0 z-10 backdrop-blur-sm">
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-500/20">
+                                <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/20">
                                     <FiVideo size={24} />
                                 </div>
                                 <div>
@@ -279,7 +279,7 @@ const VideoManagement = () => {
                                     <input
                                         type="text"
                                         required
-                                        className="w-full px-6 py-4 bg-gray-50/50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-500/20 focus:ring-4 focus:ring-blue-500/5 transition-all text-slate-800 font-bold shadow-inner"
+                                        className="w-full px-6 py-4 bg-gray-50/50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all text-slate-800 font-bold shadow-inner"
                                         placeholder="e.g. Exclusive Silk Saree Showcase"
                                         value={currentVideo.title}
                                         onChange={(e) => setCurrentVideo({ ...currentVideo, title: e.target.value })}
@@ -296,7 +296,7 @@ const VideoManagement = () => {
                                             onChange={handleThumbnailUpload}
                                             className="absolute inset-0 opacity-0 cursor-pointer z-10"
                                         />
-                                        <div className={`p-4 rounded-3xl border-2 border-dashed transition-all flex items-center gap-4 ${currentVideo.thumbnail ? 'border-blue-500/30 bg-blue-50/30' : 'border-gray-100 bg-gray-50/50 group-hover:border-blue-200'}`}>
+                                        <div className={`p-4 rounded-3xl border-2 border-dashed transition-all flex items-center gap-4 ${currentVideo.thumbnail ? 'border-primary/30 bg-primary/10/30' : 'border-gray-100 bg-gray-50/50 group-hover:border-blue-200'}`}>
                                             <div className="w-16 h-16 rounded-xl overflow-hidden bg-white shadow-sm flex-shrink-0 border border-gray-100">
                                                 {currentVideo.thumbnail ? (
                                                     <img src={currentVideo.thumbnail} className="w-full h-full object-cover" alt="Preview" />
@@ -310,7 +310,7 @@ const VideoManagement = () => {
                                                 <p className="text-xs font-black text-slate-800">{currentVideo.thumbnail ? "Replace Thumbnail" : "Upload Custom Cover"}</p>
                                                 <p className="text-[9px] text-gray-400 font-bold uppercase mt-1">PNG • JPG • WEBP (MAX 2MB)</p>
                                             </div>
-                                            {thumbUploading && <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>}
+                                            {thumbUploading && <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>}
                                         </div>
                                     </div>
                                 </div>
@@ -322,7 +322,7 @@ const VideoManagement = () => {
                                         <button
                                             type="button"
                                             onClick={() => setCurrentVideo({ ...currentVideo, type: 'youtube', videoId: isEditing && currentVideo.type === 'youtube' ? currentVideo.videoId : '' })}
-                                            className={`py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${currentVideo.type === 'youtube' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-400 hover:bg-white/50'}`}
+                                            className={`py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${currentVideo.type === 'youtube' ? 'bg-white text-primary shadow-sm' : 'text-gray-400 hover:bg-white/50'}`}
                                         >
                                             YouTube
                                         </button>
@@ -360,7 +360,7 @@ const VideoManagement = () => {
                                 ) : (
                                     <div className="space-y-4 animate-in slide-in-from-top-2 duration-300">
                                         <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] ml-2">Video File</label>
-                                        <div className={`relative border-2 border-dashed rounded-[2rem] p-8 transition-all group ${currentVideo.videoId && currentVideo.type === 'custom' ? 'border-emerald-500/50 bg-emerald-50/30' : 'border-gray-200 hover:border-blue-500/50 bg-gray-50/30'}`}>
+                                        <div className={`relative border-2 border-dashed rounded-[2rem] p-8 transition-all group ${currentVideo.videoId && currentVideo.type === 'custom' ? 'border-emerald-500/50 bg-emerald-50/30' : 'border-gray-200 hover:border-primary/50 bg-gray-50/30'}`}>
                                             <input
                                                 type="file"
                                                 accept="video/*"

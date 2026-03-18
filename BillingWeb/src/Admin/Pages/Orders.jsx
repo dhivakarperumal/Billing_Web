@@ -179,7 +179,7 @@ const Orders = ({ statusFilter = "All" }) => {
 
                     <Link
                         to="/admin/orders/create"
-                        className="flex items-center gap-2 px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-100 active:scale-95"
+                        className="flex items-center gap-2 px-6 py-4 bg-primary hover:bg-blue-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-100 active:scale-95"
                     >
                         <FiPlus /> New Order
                     </Link>
@@ -189,7 +189,7 @@ const Orders = ({ statusFilter = "All" }) => {
             {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
-                    { label: "Total Matches", value: filteredOrders.length, icon: <FiPackage />, color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-100", status: "All" },
+                    { label: "Total Matches", value: filteredOrders.length, icon: <FiPackage />, color: "text-primary", bg: "bg-primary/10", border: "border-blue-100", status: "All" },
                     { label: "Pending Processing", value: orders.filter(o => ['Order Placed', 'Processing', 'New'].includes(o.status)).length, icon: <FiClock />, color: "text-amber-500", bg: "bg-amber-50", border: "border-amber-100", status: "Order Placed" },
                     { label: "Shipping", value: orders.filter(o => ['Shipping', 'Out for Delivery', 'Shipped', 'Packing'].includes(o.status)).length, icon: <FiTruck />, color: "text-indigo-500", bg: "bg-indigo-50", border: "border-indigo-100", status: "Shipping" },
                     { label: "Delivered", value: orders.filter(o => o.status === 'Delivered').length, icon: <FiCheckCircle />, color: "text-emerald-500", bg: "bg-emerald-50", border: "border-emerald-100", status: "Delivered" }
@@ -198,7 +198,7 @@ const Orders = ({ statusFilter = "All" }) => {
                         key={index}
                         onClick={() => setActiveStatus(stat.status)}
                         className={`bg-white rounded-[2rem] p-6 border shadow-sm flex items-center gap-5 group hover:shadow-md transition-all text-left w-full
-                        ${activeStatus === stat.status ? 'border-blue-500 ring-2 ring-blue-500/10' : 'border-gray-100'}`}
+                        ${activeStatus === stat.status ? 'border-primary ring-2 ring-primary/10' : 'border-gray-100'}`}
                     >
                         <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm border ${stat.bg} ${stat.color} ${stat.border} group-hover:scale-110 transition-transform shrink-0`}>
                             {stat.icon}
@@ -222,7 +222,7 @@ const Orders = ({ statusFilter = "All" }) => {
                                 onClick={() => setActiveStatus(status)}
                                 className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
                                 ${activeStatus === status
-                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
+                                        ? 'bg-primary text-white shadow-lg shadow-primary/20'
                                         : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
                             >
                                 {status}
@@ -235,7 +235,7 @@ const Orders = ({ statusFilter = "All" }) => {
                         <input
                             type="text"
                             placeholder="Search by ID, name or email..."
-                            className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-500/20 transition-all text-sm font-bold"
+                            className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-primary/20 transition-all text-sm font-bold"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -246,7 +246,7 @@ const Orders = ({ statusFilter = "All" }) => {
                 <div className="overflow-x-auto">
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-24 gap-4">
-                            <div className="w-10 h-10 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>
+                            <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
                             <p className="text-gray-300 font-black uppercase tracking-[0.2em] text-[10px]">Syncing Database...</p>
                         </div>
                     ) : (
@@ -265,7 +265,7 @@ const Orders = ({ statusFilter = "All" }) => {
                             <tbody className="block md:table-row-group md:divide-y divide-gray-50 text-sm font-medium px-3 py-4 md:p-0">
                                 {currentItems.length > 0 ? (
                                     currentItems.map((order) => (
-                                        <tr key={order.id} className="hover:bg-blue-50/30 transition-colors group block md:table-row bg-white md:bg-transparent border border-gray-100 md:border-0 rounded-2xl md:rounded-none mb-4 md:mb-0 shadow-sm md:shadow-none">
+                                        <tr key={order.id} className="hover:bg-primary/10/30 transition-colors group block md:table-row bg-white md:bg-transparent border border-gray-100 md:border-0 rounded-2xl md:rounded-none mb-4 md:mb-0 shadow-sm md:shadow-none">
                                             <td className="px-3 py-4 md:px-8 md:py-6 block md:table-cell border-b border-gray-50 md:border-b-0">
                                                 <div className="flex md:block items-center justify-between w-full">
                                                     <span className="md:hidden text-[10px] font-black text-gray-400 uppercase tracking-widest">ID / Date</span>
@@ -281,7 +281,7 @@ const Orders = ({ statusFilter = "All" }) => {
                                                 <div className="flex md:block items-center justify-between gap-3 w-full">
                                                     <span className="md:hidden text-[10px] font-black text-gray-400 uppercase tracking-widest">Customer</span>
                                                     <div className="flex items-center gap-3 text-right md:text-left">
-                                                        <div className="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center text-[11px] font-black text-blue-600 uppercase shadow-sm">
+                                                        <div className="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center text-[11px] font-black text-primary uppercase shadow-sm">
                                                             {order.customer_name?.charAt(0) || 'C'}
                                                         </div>
                                                         <div>
@@ -368,7 +368,7 @@ const Orders = ({ statusFilter = "All" }) => {
                                                     <Link
                                                         to={`/admin/orders/${order.id}`}
                                                         state={{ autoPrint: true }}
-                                                        className="p-3 bg-blue-50 text-blue-600 rounded-2xl hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-blue-100/50 active:scale-90 inline-block"
+                                                        className="p-3 bg-primary/10 text-primary rounded-2xl hover:bg-primary hover:text-white transition-all shadow-sm border border-blue-100/50 active:scale-90 inline-block"
                                                         title="Direct Print Invoice"
                                                     >
                                                         <FiPrinter size={18} />
@@ -381,7 +381,7 @@ const Orders = ({ statusFilter = "All" }) => {
                                                     <div className="flex items-center justify-end gap-2 transition-opacity">
                                                         <Link
                                                             to={`/admin/orders/${order.id}`}
-                                                            className="p-2.5 text-gray-400 hover:text-white hover:bg-blue-500 rounded-xl transition-all shadow-sm border border-transparent hover:border-blue-100"
+                                                            className="p-2.5 text-gray-400 hover:text-white hover:bg-primary rounded-xl transition-all shadow-sm border border-transparent hover:border-blue-100"
                                                             title="View Full Manifest"
                                                         >
                                                             <FiEye size={18} />
@@ -414,7 +414,7 @@ const Orders = ({ statusFilter = "All" }) => {
                             <button
                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                 disabled={currentPage === 1}
-                                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-blue-600 disabled:opacity-30 transition-all"
+                                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-primary disabled:opacity-30 transition-all"
                             >
                                 Prev
                             </button>
@@ -423,7 +423,7 @@ const Orders = ({ statusFilter = "All" }) => {
                                     <button
                                         key={i}
                                         onClick={() => setCurrentPage(i + 1)}
-                                        className={`min-w-[32px] h-8 rounded-lg text-[10px] font-black transition-all ${currentPage === i + 1 ? "bg-blue-600 text-white shadow-lg shadow-blue-200" : "text-gray-400 hover:bg-gray-100"}`}
+                                        className={`min-w-[32px] h-8 rounded-lg text-[10px] font-black transition-all ${currentPage === i + 1 ? "bg-primary text-white shadow-lg shadow-blue-200" : "text-gray-400 hover:bg-gray-100"}`}
                                     >
                                         {i + 1}
                                     </button>
@@ -432,7 +432,7 @@ const Orders = ({ statusFilter = "All" }) => {
                             <button
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                 disabled={currentPage === totalPages}
-                                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-blue-600 disabled:opacity-30 transition-all"
+                                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-primary disabled:opacity-30 transition-all"
                             >
                                 Next
                             </button>
@@ -461,7 +461,7 @@ const Orders = ({ statusFilter = "All" }) => {
                                         <input
                                             required
                                             type="text"
-                                            className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500/20 transition-all outline-none font-bold"
+                                            className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-primary/20 transition-all outline-none font-bold"
                                             placeholder="Enter Tracking ID..."
                                             value={modalData.tracking}
                                             onChange={(e) => setModalData(p => ({ ...p, tracking: e.target.value }))}
@@ -472,7 +472,7 @@ const Orders = ({ statusFilter = "All" }) => {
                                         <input
                                             required
                                             type="text"
-                                            className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500/20 transition-all outline-none font-bold"
+                                            className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-primary/20 transition-all outline-none font-bold"
                                             placeholder="e.g. BlueDart, Delhivery..."
                                             value={modalData.courier}
                                             onChange={(e) => setModalData(p => ({ ...p, courier: e.target.value }))}
@@ -503,7 +503,7 @@ const Orders = ({ statusFilter = "All" }) => {
                                 </button>
                                 <button
                                     type="submit"
-                                    className={`flex-1 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] text-white shadow-lg transition-all active:scale-95 ${modalData.status === 'Cancelled' ? 'bg-red-600 shadow-red-500/20 hover:bg-red-500' : 'bg-blue-600 shadow-blue-500/20 hover:bg-blue-500'}`}
+                                    className={`flex-1 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] text-white shadow-lg transition-all active:scale-95 ${modalData.status === 'Cancelled' ? 'bg-red-600 shadow-red-500/20 hover:bg-red-500' : 'bg-primary shadow-primary/20 hover:bg-primary'}`}
                                 >
                                     Sync Pipeline
                                 </button>

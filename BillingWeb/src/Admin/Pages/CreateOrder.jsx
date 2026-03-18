@@ -184,7 +184,7 @@ const CreateOrder = () => {
             <div className="flex items-center gap-4 pb-2">
                 <button
                     onClick={() => navigate(-1)}
-                    className="p-3 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-blue-600 transition-all shadow-sm active:scale-95"
+                    className="p-3 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-primary transition-all shadow-sm active:scale-95"
                 >
                     <FiArrowLeft size={20} />
                 </button>
@@ -216,7 +216,7 @@ const CreateOrder = () => {
                                             }
                                             setSelectedProductForVariant(null);
                                         }}
-                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-500/20 transition-all font-bold text-slate-800 shadow-inner appearance-none cursor-pointer"
+                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-primary/20 transition-all font-bold text-slate-800 shadow-inner appearance-none cursor-pointer"
                                     >
                                         <option value="">All Categories</option>
                                         {categories.map(cat => (
@@ -238,7 +238,7 @@ const CreateOrder = () => {
                                                 setSelectedProductForVariant(null);
                                             }
                                         }}
-                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-500/20 transition-all font-bold text-slate-800 shadow-inner appearance-none cursor-pointer"
+                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-primary/20 transition-all font-bold text-slate-800 shadow-inner appearance-none cursor-pointer"
                                     >
                                         <option value="" disabled>-- Choose a Product --</option>
                                         {filteredProducts.map(product => (
@@ -254,7 +254,7 @@ const CreateOrder = () => {
                             {selectedProductForVariant && (
                                 <div className="p-6 bg-gray-50 rounded-[2rem] border border-blue-100 space-y-6 animate-in zoom-in-95 duration-300">
                                     <div className="flex justify-between items-center">
-                                        <h3 className="font-black text-blue-600 uppercase tracking-widest text-xs italic">Select Color & Size for: {selectedProductForVariant.name}</h3>
+                                        <h3 className="font-black text-primary uppercase tracking-widest text-xs italic">Select Color & Size for: {selectedProductForVariant.name}</h3>
                                         <button onClick={() => setSelectedProductForVariant(null)} className="p-1 hover:bg-white rounded-lg transition-colors"><FiX /></button>
                                     </div>
 
@@ -266,7 +266,7 @@ const CreateOrder = () => {
                                                 <button
                                                     key={i}
                                                     onClick={() => { setSelectedVariant(v); setSelectedSize(""); }}
-                                                    className={`group relative p-1 rounded-full border-2 transition-all ${selectedVariant === v ? 'border-blue-600 scale-110' : 'border-transparent'}`}
+                                                    className={`group relative p-1 rounded-full border-2 transition-all ${selectedVariant === v ? 'border-primary scale-110' : 'border-transparent'}`}
                                                     title={v.colorName || v.color}
                                                 >
                                                     <div
@@ -274,7 +274,7 @@ const CreateOrder = () => {
                                                         style={{ backgroundColor: v.color }}
                                                     ></div>
                                                     {v.colorName && (
-                                                        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black uppercase opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-blue-600">
+                                                        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black uppercase opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-primary">
                                                             {v.colorName}
                                                         </span>
                                                     )}
@@ -293,7 +293,7 @@ const CreateOrder = () => {
                                                         key={size}
                                                         disabled={parseInt(stock) <= 0}
                                                         onClick={() => setSelectedSize(size)}
-                                                        className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${selectedSize === size ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 border border-gray-100'} ${parseInt(stock) <= 0 ? 'opacity-30 cursor-not-allowed' : 'hover:border-blue-200 shadow-sm'}`}
+                                                        className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${selectedSize === size ? 'bg-primary text-white' : 'bg-white text-gray-600 border border-gray-100'} ${parseInt(stock) <= 0 ? 'opacity-30 cursor-not-allowed' : 'hover:border-blue-200 shadow-sm'}`}
                                                     >
                                                         {size} <span className="opacity-50 ml-1">({stock})</span>
                                                     </button>
@@ -305,7 +305,7 @@ const CreateOrder = () => {
                                     <button
                                         onClick={confirmAddItem}
                                         disabled={!selectedVariant || !selectedSize}
-                                        className="w-full py-4 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-200 text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-blue-500/20"
+                                        className="w-full py-4 bg-primary hover:bg-primary disabled:bg-gray-200 text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-primary/20"
                                     >
                                         Add Selection to Order
                                     </button>
@@ -343,7 +343,7 @@ const CreateOrder = () => {
                                                                 </div>
                                                                 <div>
                                                                     <p className="text-sm font-bold text-slate-800 leading-tight">{item.name}</p>
-                                                                    <p className="text-[9px] font-black text-blue-500 uppercase tracking-wider mt-0.5">
+                                                                    <p className="text-[9px] font-black text-primary uppercase tracking-wider mt-0.5">
                                                                         {item.variant_color} • {item.variant_size}
                                                                     </p>
                                                                 </div>
@@ -384,7 +384,7 @@ const CreateOrder = () => {
                             {/* User Selection */}
                             <div className="space-y-4 pb-6 border-b border-gray-50">
                                 <div className="flex items-center justify-between">
-                                    <label className="text-[10px] font-black italic text-blue-600 uppercase tracking-widest ml-1">Order For *</label>
+                                    <label className="text-[10px] font-black italic text-primary uppercase tracking-widest ml-1">Order For *</label>
                                     <div className="flex gap-2">
                                         <button
                                             type="button"
@@ -395,12 +395,12 @@ const CreateOrder = () => {
                                                 }));
                                                 setUserSearchTerm("");
                                             }}
-                                            className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter transition-all ${isGuest ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-400'}`}
+                                            className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter transition-all ${isGuest ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}`}
                                         >Guest Customer</button>
                                         <button
                                             type="button"
                                             onClick={() => setIsGuest(false)}
-                                            className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter transition-all ${!isGuest ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-400'}`}
+                                            className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter transition-all ${!isGuest ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}`}
                                         >Registered Customer</button>
                                     </div>
                                 </div>
@@ -415,7 +415,7 @@ const CreateOrder = () => {
                                             placeholder="Search registered users by name, email or phone..."
                                             value={userSearchTerm}
                                             onChange={(e) => setUserSearchTerm(e.target.value)}
-                                            className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500/20 font-bold transition-all shadow-inner outline-none"
+                                            className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-primary/20 font-bold transition-all shadow-inner outline-none"
                                         />
                                         {userSearchTerm && filteredUsers.length > 0 && (
                                             <div className="absolute z-10 w-full mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl max-h-60 overflow-y-auto">
@@ -442,26 +442,26 @@ const CreateOrder = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                                        <FiUser className="text-blue-500" /> Customer Name *
+                                        <FiUser className="text-primary" /> Customer Name *
                                     </label>
                                     <input
                                         type="text"
                                         placeholder="Full name"
                                         value={formData.customer_name}
                                         onChange={(e) => setFormData(p => ({ ...p, customer_name: e.target.value }))}
-                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500/20 font-bold transition-all shadow-inner outline-none"
+                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-primary/20 font-bold transition-all shadow-inner outline-none"
                                     />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                                        <FiUser className="text-blue-500" /> Phone Number *
+                                        <FiUser className="text-primary" /> Phone Number *
                                     </label>
                                     <input
                                         type="text"
                                         placeholder="Contact number"
                                         value={formData.customer_phone}
                                         onChange={(e) => setFormData(p => ({ ...p, customer_phone: e.target.value }))}
-                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500/20 font-bold transition-all shadow-inner outline-none"
+                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-primary/20 font-bold transition-all shadow-inner outline-none"
                                     />
                                 </div>
                             </div>
@@ -469,19 +469,19 @@ const CreateOrder = () => {
 
                             <div className="space-y-2">
                                 <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                                    <FiUser className="text-blue-500" /> Email Address
+                                    <FiUser className="text-primary" /> Email Address
                                 </label>
                                 <input
                                     type="email"
                                     placeholder="Optional email"
                                     value={formData.customer_email}
                                     onChange={(e) => setFormData(p => ({ ...p, customer_email: e.target.value }))}
-                                    className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500/20 font-bold transition-all shadow-inner outline-none"
+                                    className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-primary/20 font-bold transition-all shadow-inner outline-none"
                                 />
                             </div>
                             <div className="space-y-4">
                                 <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                                    <FiMapPin className="text-blue-500" /> Shipping Details *
+                                    <FiMapPin className="text-primary" /> Shipping Details *
                                 </label>
 
                                 <div className="space-y-4">
@@ -490,7 +490,7 @@ const CreateOrder = () => {
                                         placeholder="Street Address / Area / Landmark"
                                         value={formData.street_address}
                                         onChange={(e) => setFormData(p => ({ ...p, street_address: e.target.value }))}
-                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500/20 font-bold transition-all shadow-inner outline-none"
+                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-primary/20 font-bold transition-all shadow-inner outline-none"
                                     />
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -499,14 +499,14 @@ const CreateOrder = () => {
                                             placeholder="City"
                                             value={formData.city}
                                             onChange={(e) => setFormData(p => ({ ...p, city: e.target.value }))}
-                                            className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500/20 font-bold transition-all shadow-inner outline-none"
+                                            className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-primary/20 font-bold transition-all shadow-inner outline-none"
                                         />
                                         <input
                                             type="text"
                                             placeholder="District"
                                             value={formData.district}
                                             onChange={(e) => setFormData(p => ({ ...p, district: e.target.value }))}
-                                            className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500/20 font-bold transition-all shadow-inner outline-none"
+                                            className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-primary/20 font-bold transition-all shadow-inner outline-none"
                                         />
                                     </div>
 
@@ -516,14 +516,14 @@ const CreateOrder = () => {
                                             placeholder="State"
                                             value={formData.state}
                                             onChange={(e) => setFormData(p => ({ ...p, state: e.target.value }))}
-                                            className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500/20 font-bold transition-all shadow-inner outline-none"
+                                            className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-primary/20 font-bold transition-all shadow-inner outline-none"
                                         />
                                         <input
                                             type="text"
                                             placeholder="Zip Code"
                                             value={formData.zip_code}
                                             onChange={(e) => setFormData(p => ({ ...p, zip_code: e.target.value }))}
-                                            className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500/20 font-bold transition-all shadow-inner outline-none"
+                                            className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-primary/20 font-bold transition-all shadow-inner outline-none"
                                         />
                                     </div>
 
@@ -532,7 +532,7 @@ const CreateOrder = () => {
                                         placeholder="Country"
                                         value={formData.country}
                                         onChange={(e) => setFormData(p => ({ ...p, country: e.target.value }))}
-                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500/20 font-bold transition-all shadow-inner outline-none"
+                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-primary/20 font-bold transition-all shadow-inner outline-none"
                                     />
                                 </div>
                             </div>
@@ -543,10 +543,10 @@ const CreateOrder = () => {
                                     <button
                                         type="button"
                                         onClick={() => setFormData(p => ({ ...p, payment_method: "Showroom" }))}
-                                        className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center gap-2 ${formData.payment_method === 'Showroom' ? 'border-blue-600 bg-blue-50' : 'border-gray-100'}`}
+                                        className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center gap-2 ${formData.payment_method === 'Showroom' ? 'border-primary bg-primary/10' : 'border-gray-100'}`}
                                     >
-                                        <FiTruck size={24} className={formData.payment_method === 'Showroom' ? 'text-blue-600' : 'text-gray-300'} />
-                                        <span className={`font-black uppercase tracking-widest text-[10px] ${formData.payment_method === 'Showroom' ? 'text-blue-600' : 'text-gray-400'}`}>Showroom / Local</span>
+                                        <FiTruck size={24} className={formData.payment_method === 'Showroom' ? 'text-primary' : 'text-gray-300'} />
+                                        <span className={`font-black uppercase tracking-widest text-[10px] ${formData.payment_method === 'Showroom' ? 'text-primary' : 'text-gray-400'}`}>Showroom / Local</span>
                                     </button>
                                     <button
                                         type="button"
@@ -579,7 +579,7 @@ const CreateOrder = () => {
                         </div>
 
                         <div className="mb-10">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-2">Grand Total</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-primary-light mb-2">Grand Total</p>
                             <h2 className="text-4xl font-black italic">₹{formData.total_amount.toLocaleString()}</h2>
                         </div>
 
@@ -589,7 +589,7 @@ const CreateOrder = () => {
                                     if (formData.items.length === 0) return toast.error("Please add products first");
                                     setStep(2);
                                 }}
-                                className="w-full flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl text-md font-black transition-all active:scale-95 group"
+                                className="w-full flex items-center justify-center gap-3 bg-primary hover:bg-primary text-white py-4 rounded-2xl text-md font-black transition-all active:scale-95 group"
                             >
                                 <span>Next Details</span>
                                 <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
@@ -599,7 +599,7 @@ const CreateOrder = () => {
                                 <button
                                     onClick={handleSubmit}
                                     disabled={loading}
-                                    className="w-full flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl text-lg font-black transition-all active:scale-95 shadow-xl shadow-blue-500/20"
+                                    className="w-full flex items-center justify-center gap-3 bg-primary hover:bg-primary text-white py-4 rounded-2xl text-lg font-black transition-all active:scale-95 shadow-xl shadow-primary/20"
                                 >
                                     {loading ? <div className="w-6 h-6 border-2 border-t-white rounded-full animate-spin"></div> : (
                                         <>

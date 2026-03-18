@@ -220,13 +220,13 @@ const AllProducts = () => {
                     <div className="flex bg-gray-100 p-1 rounded-xl border border-gray-200 shadow-inner">
                         <button
                             onClick={() => setViewMode("table")}
-                            className={`p-2 rounded-lg transition-all ${viewMode === "table" ? "bg-white text-blue-600 shadow-sm" : "text-gray-400 hover:text-slate-600"}`}
+                            className={`p-2 rounded-lg transition-all ${viewMode === "table" ? "bg-white text-primary shadow-sm" : "text-gray-400 hover:text-slate-600"}`}
                         >
                             <FiList size={18} />
                         </button>
                         <button
                             onClick={() => setViewMode("grid")}
-                            className={`p-2 rounded-lg transition-all ${viewMode === "grid" ? "bg-white text-blue-600 shadow-sm" : "text-gray-400 hover:text-slate-600"}`}
+                            className={`p-2 rounded-lg transition-all ${viewMode === "grid" ? "bg-white text-primary shadow-sm" : "text-gray-400 hover:text-slate-600"}`}
                         >
                             <FiGrid size={18} />
                         </button>
@@ -242,7 +242,7 @@ const AllProducts = () => {
 
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-32 bg-white rounded-[2.5rem] border border-gray-100 shadow-sm">
-                    <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-6"></div>
+                    <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-6"></div>
                     <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Synchronizing Vault...</p>
                 </div>
             ) : (
@@ -250,7 +250,7 @@ const AllProducts = () => {
                     {/* Quick Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
-                            { label: "Products", value: stats.total, icon: <FiBox />, color: "text-blue-600", bg: "bg-blue-50" },
+                            { label: "Products", value: stats.total, icon: <FiBox />, color: "text-primary", bg: "bg-primary/10" },
                             { label: "Active", value: stats.active, icon: <FiCheckCircle />, color: "text-emerald-600", bg: "bg-emerald-50" },
                             { label: "Low Stock", value: stats.lowStock, icon: <FiAlertCircle />, color: "text-amber-600", bg: "bg-amber-50" },
                             { label: "Out of Stock", value: stats.outOfStock, icon: <FiXCircle />, color: "text-rose-600", bg: "bg-rose-50" },
@@ -270,11 +270,11 @@ const AllProducts = () => {
                     {/* Controls */}
                     <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-4 md:p-6 flex flex-col md:flex-row gap-4 items-center">
                         <div className="relative flex-1 w-full md:max-w-md group">
-                            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-blue-500 transition-colors" />
+                            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-primary transition-colors" />
                             <input
                                 type="text"
                                 placeholder="Search by name or code..."
-                                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-blue-500 transition-all text-xs font-bold"
+                                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-primary transition-all text-xs font-bold"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -311,7 +311,7 @@ const AllProducts = () => {
                                     </thead>
                                     <tbody className="block md:table-row-group md:divide-y divide-gray-50/50 p-4 md:p-0">
                                         {currentItems.map((product) => (
-                                            <tr key={product.id} className="hover:bg-blue-50/20 transition-colors group block md:table-row bg-white md:bg-transparent border border-gray-100 md:border-0 rounded-2xl md:rounded-none mb-4 md:mb-0 shadow-sm md:shadow-none">
+                                            <tr key={product.id} className="hover:bg-primary/10/20 transition-colors group block md:table-row bg-white md:bg-transparent border border-gray-100 md:border-0 rounded-2xl md:rounded-none mb-4 md:mb-0 shadow-sm md:shadow-none">
                                                 <td className="px-4 py-5 md:px-8 md:py-6 block md:table-cell border-b border-gray-50 md:border-b-0">
                                                     <div className="flex flex-col md:block w-full gap-3 md:gap-0">
                                                         <span className="md:hidden text-[11px] font-black text-gray-400 uppercase tracking-widest">Product Name</span>
@@ -328,7 +328,7 @@ const AllProducts = () => {
                                                             <div className="min-w-0 flex-1 md:flex-none">
                                                                 <p className="text-sm font-black text-slate-800 break-words whitespace-normal leading-tight md:truncate md:whitespace-nowrap md:max-w-[200px] lg:max-w-xs">{product.name}</p>
                                                                 <div className="flex flex-wrap md:flex-nowrap items-center justify-start gap-2 mt-1.5">
-                                                                    <span className="text-[9px] font-black uppercase tracking-widest text-blue-500 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
+                                                                    <span className="text-[9px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded border border-blue-100">
                                                                         {product.product_code || `PRD-${product.id}`}
                                                                     </span>
                                                                     <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 italic">
@@ -353,8 +353,8 @@ const AllProducts = () => {
                                                     <div className="flex flex-col md:block w-full gap-3 md:gap-0">
                                                         <span className="md:hidden text-[11px] font-black text-gray-400 uppercase tracking-widest">Stock Count</span>
                                                         <div className="flex items-center justify-start gap-2 cursor-pointer group/stock" onClick={() => { setCurrentProduct(product); setNewStock(product.total_stock || "0"); }}>
-                                                            <FiPackage className="text-gray-300 group-hover/stock:text-blue-500 transition-colors" size={14} />
-                                                            <span className="text-sm font-black text-slate-700 underline decoration-dotted decoration-gray-200 group-hover/stock:text-blue-600 transition-colors">{product.total_stock ?? product.stock ?? 0}</span>
+                                                            <FiPackage className="text-gray-300 group-hover/stock:text-primary transition-colors" size={14} />
+                                                            <span className="text-sm font-black text-slate-700 underline decoration-dotted decoration-gray-200 group-hover/stock:text-primary transition-colors">{product.total_stock ?? product.stock ?? 0}</span>
                                                             <span className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">Units</span>
                                                         </div>
                                                     </div>
@@ -374,7 +374,7 @@ const AllProducts = () => {
                                                         <div className="flex items-center justify-start md:justify-end gap-3">
                                                             <Link
                                                                 to={`/admin/products/${product.id}`}
-                                                                className="p-3 border border-gray-200 text-gray-500 rounded-xl hover:bg-blue-500 hover:text-white transition-all shadow-sm md:shadow-none"
+                                                                className="p-3 border border-gray-200 text-gray-500 rounded-xl hover:bg-primary hover:text-white transition-all shadow-sm md:shadow-none"
                                                                 title="View Product"
                                                             >
                                                                 <FiEye size={18} />
@@ -434,7 +434,7 @@ const AllProducts = () => {
                                     <div className="p-6 space-y-4">
                                         <div className="flex justify-between items-start">
                                             <div className="min-w-0">
-                                                <p className="text-[10px] font-black uppercase tracking-widest text-blue-500 mb-1 leading-none">{product.category}</p>
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1 leading-none">{product.category}</p>
                                                 <h4 className="text-sm font-black text-slate-800 truncate leading-tight mt-1">{product.name}</h4>
                                             </div>
                                             <div className="text-right">
@@ -470,7 +470,7 @@ const AllProducts = () => {
                                 <button
                                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                     disabled={currentPage === 1}
-                                    className="px-6 py-2.5 bg-white border border-gray-100 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-blue-600 hover:border-blue-100 disabled:opacity-30 transition-all shadow-sm"
+                                    className="px-6 py-2.5 bg-white border border-gray-100 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-primary hover:border-blue-100 disabled:opacity-30 transition-all shadow-sm"
                                 >
                                     Prev
                                 </button>
@@ -488,7 +488,7 @@ const AllProducts = () => {
                                 <button
                                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                     disabled={currentPage === totalPages}
-                                    className="px-6 py-2.5 bg-white border border-gray-100 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-blue-600 hover:border-blue-100 disabled:opacity-30 transition-all shadow-sm"
+                                    className="px-6 py-2.5 bg-white border border-gray-100 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-primary hover:border-blue-100 disabled:opacity-30 transition-all shadow-sm"
                                 >
                                     Next
                                 </button>
@@ -533,7 +533,7 @@ const AllProducts = () => {
                                     <input
                                         autoFocus
                                         type="number"
-                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-500/20 rounded-2xl outline-none font-bold text-slate-800 transition-all text-2xl text-center"
+                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none font-bold text-slate-800 transition-all text-2xl text-center"
                                         placeholder="0"
                                         value={newStock}
                                         onChange={(e) => setNewStock(e.target.value)}
@@ -545,7 +545,7 @@ const AllProducts = () => {
                             <button
                                 type="submit"
                                 disabled={updatingStock}
-                                className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3"
+                                className="w-full py-5 bg-primary hover:bg-primary text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-xl shadow-primary/20 flex items-center justify-center gap-3"
                             >
                                 {updatingStock ? <div className="w-4 h-4 border-2 border-t-white rounded-full animate-spin"></div> : "Sync Stock Record"}
                             </button>
@@ -580,7 +580,7 @@ const AllProducts = () => {
                                     <input
                                         autoFocus
                                         type="text"
-                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-500/20 rounded-2xl outline-none font-bold text-slate-800 transition-all"
+                                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none font-bold text-slate-800 transition-all"
                                         placeholder="e.g. Traditional Silk"
                                         value={rapidProd.name}
                                         onChange={(e) => setRapidProd({ ...rapidProd, name: e.target.value })}
@@ -593,7 +593,7 @@ const AllProducts = () => {
                                         <FaRupeeSign className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" />
                                         <input
                                             type="number"
-                                            className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-500/20 rounded-2xl outline-none font-bold text-slate-800 transition-all"
+                                            className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none font-bold text-slate-800 transition-all"
                                             placeholder="2999"
                                             value={rapidProd.mrp}
                                             onChange={(e) => setRapidProd({ ...rapidProd, mrp: e.target.value })}
@@ -607,14 +607,14 @@ const AllProducts = () => {
                                 <button
                                     onClick={(e) => handleRapidAdd(e, true)}
                                     disabled={rapidSaving}
-                                    className="w-full py-5 bg-white border-2 border-blue-100 hover:bg-blue-50 text-blue-600 rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 flex items-center justify-center gap-3"
+                                    className="w-full py-5 bg-white border-2 border-blue-100 hover:bg-primary/10 text-primary rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 flex items-center justify-center gap-3"
                                 >
                                     List & Add Another
                                 </button>
                                 <button
                                     onClick={(e) => handleRapidAdd(e, false)}
                                     disabled={rapidSaving}
-                                    className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3"
+                                    className="w-full py-5 bg-primary hover:bg-primary text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-xl shadow-primary/20 flex items-center justify-center gap-3"
                                 >
                                     {rapidSaving ? <div className="w-4 h-4 border-2 border-t-white rounded-full animate-spin"></div> : "Save & Close"}
                                 </button>

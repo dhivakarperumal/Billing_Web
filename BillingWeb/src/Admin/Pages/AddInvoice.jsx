@@ -134,7 +134,7 @@ const AddInvoice = () => {
             <div className="flex items-center gap-4 pb-2">
                 <button
                     onClick={() => navigate(-1)}
-                    className="p-3 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-blue-600 transition-all shadow-sm active:scale-95"
+                    className="p-3 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-primary transition-all shadow-sm active:scale-95"
                 >
                     <FiArrowLeft size={20} />
                 </button>
@@ -160,7 +160,7 @@ const AddInvoice = () => {
                                         setSearchTerm(e.target.value);
                                         if (formData.dealer_id) setFormData(prev => ({ ...prev, dealer_id: "" }));
                                     }}
-                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-500/20 transition-all font-bold text-slate-800 shadow-inner"
+                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-primary/20 transition-all font-bold text-slate-800 shadow-inner"
                                 />
                                 {searchTerm && filteredDealers.length > 0 && !formData.dealer_id && (
                                     <div className="absolute z-10 w-full mt-2 bg-white border border-gray-100 rounded-2xl shadow-2xl max-h-60 overflow-y-auto overflow-x-hidden">
@@ -172,13 +172,13 @@ const AddInvoice = () => {
                                                     setFormData(prev => ({ ...prev, dealer_id: dealer.id }));
                                                     setSearchTerm(dealer.name);
                                                 }}
-                                                className="w-full px-6 py-4 text-left hover:bg-blue-50 transition-colors flex items-center justify-between group border-b border-gray-50 last:border-0"
+                                                className="w-full px-6 py-4 text-left hover:bg-primary/10 transition-colors flex items-center justify-between group border-b border-gray-50 last:border-0"
                                             >
                                                 <div>
                                                     <p className="font-bold text-slate-800">{dealer.name}</p>
                                                     <p className="text-[10px] text-gray-400 uppercase font-black">{dealer.contact} • {dealer.location}</p>
                                                 </div>
-                                                <FiPlus className="text-gray-300 group-hover:text-blue-600 transition-colors" />
+                                                <FiPlus className="text-gray-300 group-hover:text-primary transition-colors" />
                                             </button>
                                         ))}
                                     </div>
@@ -219,7 +219,7 @@ const AddInvoice = () => {
                                     placeholder="Search products by name or code..."
                                     value={productSearchTerm}
                                     onChange={(e) => setProductSearchTerm(e.target.value)}
-                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-500/20 transition-all font-bold text-slate-800 shadow-inner"
+                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-primary/20 transition-all font-bold text-slate-800 shadow-inner"
                                 />
                                 {productSearchTerm && filteredProducts.length > 0 && (
                                     <div className="absolute z-10 w-full mt-2 bg-white border border-gray-100 rounded-2xl shadow-2xl max-h-60 overflow-y-auto">
@@ -228,7 +228,7 @@ const AddInvoice = () => {
                                                 key={product.id}
                                                 type="button"
                                                 onClick={() => handleAddItem(product)}
-                                                className="w-full px-6 py-4 text-left hover:bg-blue-50 transition-colors flex items-center justify-between group border-b border-gray-50 last:border-0"
+                                                className="w-full px-6 py-4 text-left hover:bg-primary/10 transition-colors flex items-center justify-between group border-b border-gray-50 last:border-0"
                                             >
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-10 h-10 rounded-lg bg-gray-100 overflow-hidden">
@@ -245,7 +245,7 @@ const AddInvoice = () => {
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <FiPlus className="text-gray-300 group-hover:text-blue-600 transition-colors" />
+                                                <FiPlus className="text-gray-300 group-hover:text-primary transition-colors" />
                                             </button>
                                         ))}
                                     </div>
@@ -288,7 +288,7 @@ const AddInvoice = () => {
                                                                 min="1"
                                                                 value={item.quantity}
                                                                 onChange={(e) => handleQuantityChange(index, e.target.value)}
-                                                                className="w-16 px-3 py-1 bg-gray-100 rounded-lg outline-none focus:bg-white focus:ring-2 focus:ring-blue-500/10 font-bold text-sm"
+                                                                className="w-16 px-3 py-1 bg-gray-100 rounded-lg outline-none focus:bg-white focus:ring-2 focus:ring-primary/10 font-bold text-sm"
                                                             />
                                                         </td>
                                                         <td className="px-6 py-4 text-right">
@@ -358,7 +358,7 @@ const AddInvoice = () => {
                         </div>
 
                         <div className="mb-8">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-2">Grand Total</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-primary-light mb-2">Grand Total</p>
                             <h2 className="text-4xl font-black italic">₹{formData.total_amount.toLocaleString()}</h2>
                         </div>
 
@@ -369,14 +369,14 @@ const AddInvoice = () => {
                                     type="date"
                                     value={formData.invoice_date}
                                     onChange={(e) => setFormData(prev => ({ ...prev, invoice_date: e.target.value }))}
-                                    className="bg-transparent w-full font-bold outline-none text-blue-400"
+                                    className="bg-transparent w-full font-bold outline-none text-primary-light"
                                 />
                             </div>
 
                             <button
                                 onClick={handleSubmit}
                                 disabled={loading}
-                                className="w-full flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 text-white py-4 rounded-2xl text-lg font-black transition-all active:scale-95 shadow-xl shadow-blue-500/20 mt-4 group"
+                                className="w-full flex items-center justify-center gap-3 bg-primary hover:bg-primary disabled:bg-slate-700 text-white py-4 rounded-2xl text-lg font-black transition-all active:scale-95 shadow-xl shadow-primary/20 mt-4 group"
                             >
                                 {loading ? (
                                     <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>

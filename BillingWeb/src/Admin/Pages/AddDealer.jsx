@@ -74,7 +74,7 @@ const AddDealer = () => {
             <div className="flex items-center gap-4 pb-2">
                 <button
                     onClick={() => navigate(-1)}
-                    className="p-3 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-blue-600 transition-all shadow-sm active:scale-95"
+                    className="p-3 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-primary transition-all shadow-sm active:scale-95"
                 >
                     <FiArrowLeft size={20} />
                 </button>
@@ -91,7 +91,7 @@ const AddDealer = () => {
                         <div className="space-y-3">
                             <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Company / Dealer Name *</label>
                             <div className="relative">
-                                <FiTruck className="absolute left-5 top-1/2 -translate-y-1/2 text-blue-500" />
+                                <FiTruck className="absolute left-5 top-1/2 -translate-y-1/2 text-primary" />
                                 <input
                                     type="text"
                                     name="name"
@@ -99,7 +99,7 @@ const AddDealer = () => {
                                     value={formData.name}
                                     onChange={handleChange}
                                     placeholder="e.g. Silk Traditions Ltd"
-                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-500/20 transition-all font-bold text-slate-800 shadow-inner"
+                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-primary/20 transition-all font-bold text-slate-800 shadow-inner"
                                 />
                             </div>
                         </div>
@@ -108,7 +108,7 @@ const AddDealer = () => {
                         <div className="space-y-3">
                             <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Contact Person *</label>
                             <div className="relative">
-                                <FiUser className="absolute left-5 top-1/2 -translate-y-1/2 text-blue-500" />
+                                <FiUser className="absolute left-5 top-1/2 -translate-y-1/2 text-primary" />
                                 <input
                                     type="text"
                                     name="contact"
@@ -116,7 +116,7 @@ const AddDealer = () => {
                                     value={formData.contact}
                                     onChange={handleChange}
                                     placeholder="Manager Name"
-                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-500/20 transition-all font-bold text-slate-800 shadow-inner"
+                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-primary/20 transition-all font-bold text-slate-800 shadow-inner"
                                 />
                             </div>
                         </div>
@@ -125,14 +125,14 @@ const AddDealer = () => {
                         <div className="space-y-3">
                             <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Email Address</label>
                             <div className="relative">
-                                <FiMail className="absolute left-5 top-1/2 -translate-y-1/2 text-blue-500" />
+                                <FiMail className="absolute left-5 top-1/2 -translate-y-1/2 text-primary" />
                                 <input
                                     type="email"
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
                                     placeholder="dealer@company.com"
-                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-500/20 transition-all font-bold text-slate-800 shadow-inner"
+                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-primary/20 transition-all font-bold text-slate-800 shadow-inner"
                                 />
                             </div>
                         </div>
@@ -141,7 +141,7 @@ const AddDealer = () => {
                         <div className="space-y-3">
                             <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Phone Number *</label>
                             <div className="relative">
-                                <FiPhone className="absolute left-5 top-1/2 -translate-y-1/2 text-blue-500" />
+                                <FiPhone className="absolute left-5 top-1/2 -translate-y-1/2 text-primary" />
                                 <input
                                     type="tel"
                                     name="phone"
@@ -149,7 +149,7 @@ const AddDealer = () => {
                                     value={formData.phone}
                                     onChange={handleChange}
                                     placeholder="+91 00000 00000"
-                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-500/20 transition-all font-bold text-slate-800 shadow-inner"
+                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-primary/20 transition-all font-bold text-slate-800 shadow-inner"
                                 />
                             </div>
                         </div>
@@ -158,7 +158,7 @@ const AddDealer = () => {
                         <div className="md:col-span-2 space-y-3">
                             <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Business Location *</label>
                             <div className="relative">
-                                <FiMapPin className="absolute left-5 top-1/2 -translate-y-1/2 text-blue-500" />
+                                <FiMapPin className="absolute left-5 top-1/2 -translate-y-1/2 text-primary" />
                                 <input
                                     type="text"
                                     name="location"
@@ -166,7 +166,7 @@ const AddDealer = () => {
                                     value={formData.location}
                                     onChange={handleChange}
                                     placeholder="City, State"
-                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-500/20 transition-all font-bold text-slate-800 shadow-inner"
+                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-primary/20 transition-all font-bold text-slate-800 shadow-inner"
                                 />
                             </div>
                         </div>
@@ -185,7 +185,7 @@ const AddDealer = () => {
                                     value={formData.rating}
                                     onChange={handleChange}
                                     placeholder="4.5"
-                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-500/20 transition-all font-bold text-slate-800 shadow-inner"
+                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-primary/20 transition-all font-bold text-slate-800 shadow-inner"
                                 />
                             </div>
                         </div>
@@ -194,14 +194,14 @@ const AddDealer = () => {
                         <div className="space-y-3">
                             <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Total Orders</label>
                             <div className="relative">
-                                <FiPackage className="absolute left-5 top-1/2 -translate-y-1/2 text-blue-500" />
+                                <FiPackage className="absolute left-5 top-1/2 -translate-y-1/2 text-primary" />
                                 <input
                                     type="number"
                                     name="orders"
                                     value={formData.orders}
                                     onChange={handleChange}
                                     placeholder="0"
-                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-500/20 transition-all font-bold text-slate-800 shadow-inner"
+                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-primary/20 transition-all font-bold text-slate-800 shadow-inner"
                                 />
                             </div>
                         </div>

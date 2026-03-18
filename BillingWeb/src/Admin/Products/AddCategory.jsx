@@ -213,7 +213,7 @@ export default function AddCategory() {
 
           <div className="bg-white/5 border border-white/10 rounded-[2.5rem] p-10 backdrop-blur-xl">
             <div className="flex items-center gap-4 mb-10 text-white">
-               <Layers className="text-blue-500" size={20} />
+               <Layers className="text-primary" size={20} />
                <h3 className="text-sm font-black uppercase italic tracking-widest">Sub-Stream Modules</h3>
             </div>
 
@@ -224,7 +224,7 @@ export default function AddCategory() {
                       value={sub}
                       onChange={(e) => handleSubChange(index, e.target.value)}
                       placeholder="Module Identity..."
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:border-blue-500 outline-none transition-all pr-12"
+                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:border-primary outline-none transition-all pr-12"
                     />
                     {subcategories.length > 1 && (
                       <button 
@@ -240,7 +240,7 @@ export default function AddCategory() {
                <button 
                  type="button" 
                  onClick={addSub}
-                 className="py-4 border-2 border-dashed border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white/20 hover:border-blue-500/50 hover:text-white transition-all flex items-center justify-center gap-2"
+                 className="py-4 border-2 border-dashed border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white/20 hover:border-primary/50 hover:text-white transition-all flex items-center justify-center gap-2"
                >
                  <Plus size={14} /> Add Module
                </button>

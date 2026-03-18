@@ -40,7 +40,7 @@ const Billing = () => {
                     <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-100 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all shadow-sm">
                         <FiFileText /> Generate Report
                     </button>
-                    <button className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-100">
+                    <button className="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-100">
                         <FiCreditCard /> Withdrawal
                     </button>
                 </div>
@@ -57,7 +57,7 @@ const Billing = () => {
                         <FiTrendingUp /> ↑ 12% from last month
                     </div>
                 </div>
-                <div className="bg-blue-600 p-8 rounded-[2rem] shadow-xl shadow-blue-100 flex flex-col justify-between text-white">
+                <div className="bg-primary p-8 rounded-[2rem] shadow-xl shadow-blue-100 flex flex-col justify-between text-white">
                     <div>
                         <p className="text-sm font-bold opacity-70 uppercase tracking-widest mb-4">Pending Payouts</p>
                         <h2 className="text-4xl font-black">₹12,850</h2>
@@ -85,10 +85,10 @@ const Billing = () => {
                             <input
                                 type="text"
                                 placeholder="Invoice ID..."
-                                className="pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:bg-white focus:border-blue-500 transition-all text-sm w-full md:w-64"
+                                className="pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:bg-white focus:border-primary transition-all text-sm w-full md:w-64"
                             />
                         </div>
-                        <button className="p-2.5 bg-gray-50 text-gray-400 hover:text-blue-500 rounded-xl border border-gray-100 transition-all">
+                        <button className="p-2.5 bg-gray-50 text-gray-400 hover:text-primary rounded-xl border border-gray-100 transition-all">
                             <FiFilter />
                         </button>
                     </div>
@@ -109,7 +109,7 @@ const Billing = () => {
                         </thead>
                         <tbody className="divide-y divide-gray-50">
                             {invoices.map((inv) => (
-                                <tr key={inv.id} className="hover:bg-blue-50/20 transition-colors group">
+                                <tr key={inv.id} className="hover:bg-primary/10/20 transition-colors group">
                                     <td className="px-8 py-6 font-bold text-slate-800">{inv.id}</td>
                                     <td className="px-8 py-6 text-sm text-gray-500">{inv.date}</td>
                                     <td className="px-8 py-6 font-bold text-slate-700">{inv.customer}</td>
@@ -126,7 +126,7 @@ const Billing = () => {
                                     <td className="px-8 py-6 font-bold text-slate-800">₹{inv.amount.toFixed(2)}</td>
                                     <td className="px-8 py-6">
                                         <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button className="p-2 text-blue-500 hover:bg-blue-100 rounded-lg transition-all" title="Download">
+                                            <button className="p-2 text-primary hover:bg-blue-100 rounded-lg transition-all" title="Download">
                                                 <FiDownload size={16} />
                                             </button>
                                             <button className="p-2 text-gray-400 hover:bg-gray-100 rounded-lg transition-all">
