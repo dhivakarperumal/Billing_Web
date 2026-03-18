@@ -19,10 +19,10 @@ const More = () => {
       path: "/admin/printer-settings",
     },
     {
-      title: "Backup & Restore",
-      desc: "Secure your data",
+      title: "GST Settings",
+      desc: "Configure GST for billing",
       icon: Database,
-      path: "/admin/backup",
+      path: "/admin/gst-settings",
     },
   ];
 
