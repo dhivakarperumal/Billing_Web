@@ -206,7 +206,7 @@ const StockDetails = () => {
                     <button onClick={handleSync} className={`p-3 bg-white border border-rose-100 rounded-2xl text-rose-500 hover:bg-rose-50 transition-all flex items-center gap-2 ${isSyncing ? 'animate-spin' : ''}`}>
                         <FiRefreshCw size={18} />
                     </button>
-                    <button onClick={() => navigate('/admin/products/stock/add')} className="flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl shadow-rose-100 transition-all active:scale-95">
+                    <button onClick={() => navigate('/products/stock/add')} className="flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl shadow-rose-100 transition-all active:scale-95">
                         <FiPlus size={16} /> <span>New Stock Entry</span>
                     </button>
                 </div>

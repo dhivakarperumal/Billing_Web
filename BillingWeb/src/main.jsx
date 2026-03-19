@@ -2,7 +2,7 @@ import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "./PrivateRouter/AuthContext.jsx";
 import { StoreProvider } from "./PrivateRouter/StoreContext.jsx";
@@ -56,6 +56,7 @@ const lazy = (element) => <React.Suspense fallback={<PageLoader />}>{element}</R
 const router = createBrowserRouter([
   { path: "/login", element: lazy(<Login />) },
   { path: "/register", element: lazy(<Register />) },
+  { path: "/admin", element: <Navigate to="/" replace /> },
   {
     path: "/",
     errorElement: lazy(<ErrorPage />),

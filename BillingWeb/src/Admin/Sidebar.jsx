@@ -84,7 +84,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
 
     // 1. Strict exact match for root routes to prevent Dashboard/BackHome overlap
     if (item.path === "/" || item.path === "" || item.exact) {
-      return currentPath === item.path;
+      return currentPath === item.path || (currentPath === "/" && item.path === "");
     }
 
     // 2. Dropdown parent check: check if any child is perfectly active or a sub-path
@@ -106,6 +106,14 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
   const toggleMenu = (label) => {
     setOpenMenu(prev => prev === label ? null : label);
   };
+
+  useEffect(() => {
+    navItems.forEach(item => {
+      if (item.children && isActiveRoute(item)) {
+        setOpenMenu(item.label);
+      }
+    });
+  }, [location.pathname]);
 
   return (
     <>
@@ -172,7 +180,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
                     onClick={() => toggleMenu(item.label)}
                     className={`
                       w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all
-                      ${isMenuOpen
+                      ${isMenuOpen || isAnyChildActive
                         ? "bg-blue-600/10 text-white ring-1 ring-blue-500/30"
                         : "text-white/80 hover:bg-white/5 hover:text-white"
                       }

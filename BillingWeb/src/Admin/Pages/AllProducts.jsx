@@ -611,9 +611,12 @@ const AllProducts = () => {
                                                 {product.status}
                                             </span>
                                             <div className="flex flex-col gap-2 pointer-events-auto opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <Link to={`/admin/products/edit/${product.id}`} className="p-3 bg-white/90 backdrop-blur rounded-full text-amber-500 shadow-xl hover:bg-white border border-white/50">
+                                                <Link to={`/admin/products/edit/${product.id}`} className="p-2.5 bg-white/90 backdrop-blur rounded-full text-amber-500 shadow-xl hover:bg-white border border-white/50 transition-all hover:scale-110">
                                                     <FiEdit2 size={14} />
                                                 </Link>
+                                                <button onClick={() => handleDelete(product.id)} className="p-2.5 bg-white/90 backdrop-blur rounded-full text-rose-500 shadow-xl hover:bg-rose-50 border border-white/50 transition-all hover:scale-110">
+                                                    <FiTrash2 size={14} />
+                                                </button>
                                             </div>
                                         </div>
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
@@ -638,12 +641,9 @@ const AllProducts = () => {
                                                 <div className={`w-2.5 h-2.5 rounded-full shadow-sm ${product.status === 'Active' ? 'bg-emerald-500 ring-2 ring-emerald-50' : product.status === 'Low Stock' ? 'bg-amber-500 ring-2 ring-amber-50' : 'bg-rose-500 ring-2 ring-rose-50'}`}></div>
                                                 <span className="text-[10px] font-black uppercase tracking-tighter text-slate-500">Stock: {product.total_stock ?? product.stock ?? 0}</span>
                                             </div>
-                                            <button
-                                                onClick={() => handleDelete(product.id)}
-                                                className="text-[10px] font-black uppercase tracking-widest text-gray-300 hover:text-rose-500 transition-colors"
-                                            >
-                                                Archived
-                                            </button>
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-gray-400">
+                                                {product.product_code || `PRD-${product.id}`}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

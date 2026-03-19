@@ -31,7 +31,7 @@ function Login() {
       toast.success("Login successful!");
 
       if (res.data.user.role === "admin") {
-        navigate("/admin");
+        navigate("/");
       } else {
         navigate("/");
       }

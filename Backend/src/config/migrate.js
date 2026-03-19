@@ -169,10 +169,18 @@ const migrate = async () => {
         console.log("✨ Migration successful! All tables and columns are up to date.");
     } catch (error) {
         console.error("❌ Migration failed:", error);
-        process.exit(1);
+        throw error;
     } finally {
         if (connection) await connection.end();
     }
 };
 
-migrate();
+export default migrate;
+
+// If run directly via `node src/config/migrate.js`, exit with non-zero on failure.
+if (fileURLToPath(import.meta.url) === process.argv[1]) {
+    migrate().catch((error) => {
+        console.error("❌ Migration failed:", error);
+        process.exit(1);
+    });
+}

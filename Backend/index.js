@@ -19,6 +19,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+
 app.use(cors());
 
 // Route Logger
@@ -27,7 +28,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.json({ limit: 524288000 })); // 500MB in bytes
+app.use(express.json({ limit: 524288000 })); 
 app.use(express.urlencoded({ limit: 524288000, extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 

@@ -88,7 +88,7 @@ export default function CategoryList() {
           </div>
 
           <button
-            onClick={() => navigate("/admin/products/addcategory")}
+            onClick={() => navigate("/products/addcategory")}
             className="flex items-center gap-2 bg-slate-900 hover:bg-black text-white px-6 py-4 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl"
           >
             <Plus /> New Category
@@ -158,7 +158,7 @@ export default function CategoryList() {
                     <div className="flex justify-between pt-4 border-t">
                       <button
                         onClick={() =>
-                          navigate(`/admin/products/category/edit/${cat.id}`)
+                          navigate(`/products/category/edit/${cat.id}`)
                         }
                       >
                         <Pencil size={16} />
@@ -239,7 +239,7 @@ export default function CategoryList() {
                           <button
                             onClick={() =>
                               navigate(
-                                `/admin/products/category/edit/${cat.id}`,
+                                `/products/category/edit/${cat.id}`,
                               )
                             }
                             className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all"

@@ -15,19 +15,45 @@ const generateUserID = async () => {
 
 export const register = async (req, res) => {
     const { name, email, password, role, phone } = req.body;
+
+    if (!name || !email || !password) {
+        return res.status(400).json({ message: "Name, email and password are required" });
+    }
+
+    let userId;
+
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const userId = await generateUserID();
-        
-        const [result] = await db.promise().query(
+        userId = await generateUserID();
+
+        await db.promise().query(
             "INSERT INTO users (userId, name, email, password, role, phone) VALUES (?, ?, ?, ?, ?, ?)",
             [userId, name, email, hashedPassword, role || 'user', phone || null]
         );
-        
+
         res.status(201).json({ message: "User registered successfully", userId });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Registration failed", error: error.message });
+        console.error("[register]", error);
+
+        // If the users table doesn't yet have a `phone` column, retry without it
+        if (error.code === "ER_BAD_FIELD_ERROR" && error.sqlMessage?.includes("phone")) {
+            try {
+                await db.promise().query(
+                    "INSERT INTO users (userId, name, email, password, role) VALUES (?, ?, ?, ?, ?)",
+                    [userId, name, email, await bcrypt.hash(password, 10), role || 'user']
+                );
+                return res.status(201).json({ message: "User registered successfully (phone field not stored)", userId });
+            } catch (retryError) {
+                console.error("[register retry]", retryError);
+                return res.status(500).json({ message: "Registration failed", error: retryError.message });
+            }
+        }
+
+        if (error.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({ message: "A user with this email already exists" });
+        }
+
+        return res.status(500).json({ message: "Registration failed", error: error.message });
     }
 };
 
@@ -48,7 +74,17 @@ export const login = async (req, res) => {
             { expiresIn: "1d" }
         );
 
-        res.json({ token, user: { id: user.id, name: user.name, role: user.role, userId: user.userId } });
+        res.json({
+            token,
+            user: {
+                id: user.id,
+                name: user.name,
+                role: user.role,
+                userId: user.userId,
+                email: user.email,
+                phone: user.phone,
+            },
+        });
     } catch (error) {
         res.status(500).json({ message: "Login failed", error: error.message });
     }
@@ -82,7 +118,17 @@ export const googleLogin = async (req, res) => {
             { expiresIn: "1d" }
         );
 
-        res.json({ token: jwtToken, user: { id: user.id, name: user.name, role: user.role, userId: user.userId } });
+        res.json({
+            token: jwtToken,
+            user: {
+                id: user.id,
+                name: user.name,
+                role: user.role,
+                userId: user.userId,
+                email: user.email,
+                phone: user.phone,
+            },
+        });
     } catch (error) {
         res.status(500).json({ message: "Google login failed", error: error.message });
     }
