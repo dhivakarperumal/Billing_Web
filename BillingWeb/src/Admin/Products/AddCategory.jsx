@@ -138,7 +138,7 @@ export default function AddCategory() {
         toast.success("Category created");
       }
 
-      navigate("/admin/products/category");
+      navigate("/products/category");
     } catch (err) {
       toast.error("Error saving category");
     } finally {
