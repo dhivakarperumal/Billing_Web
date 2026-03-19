@@ -15,47 +15,46 @@ export default function AddCategory() {
     catId: id ? "" : "CAT001",
     name: "",
     description: "",
-    image: ""
+    image: "",
   });
 
   const [subcategories, setSubcategories] = useState([""]);
 
   useEffect(() => {
     if (!id) {
-       fetchCategories();
+      fetchCategories();
     } else {
-       loadCategory();
+      loadCategory();
     }
   }, [id]);
 
   const fetchCategories = async () => {
     try {
       const res = await api.get("/categories");
-      
+
       let nextNum = 1;
       const data = Array.isArray(res.data) ? res.data : [];
-      
+
       if (data.length > 0) {
-        const ids = data
-          .map(c => {
-            const num = parseInt(c.catId?.replace("CAT", ""), 10);
-            return isNaN(num) ? 0 : num;
-          });
+        const ids = data.map((c) => {
+          const num = parseInt(c.catId?.replace("CAT", ""), 10);
+          return isNaN(num) ? 0 : num;
+        });
         nextNum = Math.max(...ids, 0) + 1;
       }
 
       const formattedNum = nextNum.toString().padStart(3, "0");
 
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        catId: `CAT${formattedNum}`
+        catId: `CAT${formattedNum}`,
       }));
     } catch (err) {
       console.error("Failed to fetch categories for ID generation:", err);
       // Fallback to CAT001 if it's already empty or was loading
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        catId: prev.catId || "CAT001"
+        catId: prev.catId || "CAT001",
       }));
     }
   };
@@ -69,13 +68,11 @@ export default function AddCategory() {
         catId: data.catId,
         name: data.name,
         description: data.description || "",
-        image: data.image || ""
+        image: data.image || "",
       });
 
       setSubcategories(
-        Array.isArray(data.subcategories)
-          ? data.subcategories
-          : [""]
+        Array.isArray(data.subcategories) ? data.subcategories : [""],
       );
 
       if (data.image) setPreview(data.image);
@@ -84,26 +81,26 @@ export default function AddCategory() {
     }
   };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleImageChange = e => {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
 
     if (!file) return;
 
     const reader = new FileReader();
 
-    reader.onload = event => {
-      setFormData(prev => ({
+    reader.onload = (event) => {
+      setFormData((prev) => ({
         ...prev,
-        image: event.target.result
+        image: event.target.result,
       }));
       setPreview(event.target.result);
     };
@@ -119,18 +116,18 @@ export default function AddCategory() {
 
   const addSub = () => setSubcategories([...subcategories, ""]);
 
-  const removeSub = index => {
+  const removeSub = (index) => {
     setSubcategories(subcategories.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const payload = {
         ...formData,
-        subcategories: subcategories.filter(s => s.trim() !== "")
+        subcategories: subcategories.filter((s) => s.trim() !== ""),
       };
 
       if (id) {
@@ -150,142 +147,142 @@ export default function AddCategory() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="min-h-screen bg-[#FDFDFF] p-4 lg:p-8">
+      <form onSubmit={handleSubmit} className="max-w-5xl mx-auto space-y-8">
+        {/* HEADER */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-gray-50"
+          >
+            <ArrowLeft size={18} />
+          </button>
 
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-6">
-        <button
-          onClick={() => navigate(-1)}
-          className="p-2 border rounded"
-        >
-          <ArrowLeft size={18} />
-        </button>
-
-        <h1 className="text-2xl font-semibold">
-          {id ? "Edit Category" : "Add Category"}
-        </h1>
-      </div>
-
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow rounded-lg p-6 space-y-6"
-      >
-
-        {/* Category ID */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Category ID
-          </label>
-
-          <input
-            name="catId"
-            value={formData.catId}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
-            required
-          />
+          <h1 className="text-2xl font-black text-slate-800">
+            {id ? "Edit Category" : "Add Category"}
+          </h1>
         </div>
 
-        {/* Name */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Category Name
-          </label>
-
-          <input
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
-            required
-          />
-        </div>
-
-        {/* Description */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Description
-          </label>
-
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows="3"
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
-
-        {/* Image Upload */}
-        <div>
-          <label className="block text-sm font-medium mb-2">
-            Category Image
-          </label>
-
-          <input
-            type="file"
-            onChange={handleImageChange}
-          />
-
-          {preview && (
-            <img
-              src={preview}
-              alt="preview"
-              className="mt-3 w-32 h-32 object-cover border rounded"
+        {/* MAIN CARD */}
+        <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm space-y-6">
+          {/* Category ID */}
+          <div>
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+              Category ID
+            </label>
+            <input
+              name="catId"
+              value={formData.catId}
+              onChange={handleChange}
+              className="w-full px-5 py-4 bg-[#F8F9FF] rounded-[1.25rem] border-2 border-transparent focus:border-rose-100 focus:bg-white outline-none font-semibold text-sm"
+              required
             />
-          )}
-        </div>
+          </div>
 
-        {/* Subcategories */}
-        <div>
-          <label className="block text-sm font-medium mb-2">
-            Subcategories
-          </label>
+          {/* Name */}
+          <div>
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+              Category Name
+            </label>
+            <input
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full px-5 py-4 bg-[#F8F9FF] rounded-[1.25rem] border-2 border-transparent focus:border-rose-100 focus:bg-white outline-none font-semibold text-sm"
+              required
+            />
+          </div>
 
-          <div className="space-y-2">
-            {subcategories.map((sub, index) => (
-              <div key={index} className="flex gap-2">
-                <input
-                  value={sub}
-                  onChange={e =>
-                    handleSubChange(index, e.target.value)
-                  }
-                  className="flex-1 border rounded px-3 py-2"
-                  placeholder="Subcategory name"
-                />
+          {/* Description */}
+          <div>
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+              Description
+            </label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows="4"
+              className="w-full px-5 py-4 bg-[#F8F9FF] rounded-[1.25rem] border-2 border-transparent focus:border-rose-100 focus:bg-white outline-none font-semibold text-sm"
+            />
+          </div>
 
-                {subcategories.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeSub(index)}
-                    className="p-2 text-red-500"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                )}
-              </div>
-            ))}
+          {/* Image Upload */}
+          <div>
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 block mb-2">
+              Category Image
+            </label>
 
-            <button
-              type="button"
-              onClick={addSub}
-              className="flex items-center gap-2 text-blue-600 text-sm"
-            >
-              <Plus size={16} /> Add Subcategory
-            </button>
+            <div className="relative h-40 border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-all cursor-pointer">
+              <input
+                type="file"
+                onChange={handleImageChange}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
+              <span className="text-xs font-black text-gray-400 uppercase">
+                Click to Upload
+              </span>
+            </div>
+
+            {preview && (
+              <img
+                src={preview}
+                alt="preview"
+                className="mt-4 w-32 h-32 object-cover rounded-xl border"
+              />
+            )}
+          </div>
+
+          {/* Subcategories */}
+          <div>
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 block mb-2">
+              Subcategories
+            </label>
+
+            <div className="space-y-3">
+              {subcategories.map((sub, index) => (
+                <div key={index} className="flex gap-3">
+                  <input
+                    value={sub}
+                    onChange={(e) => handleSubChange(index, e.target.value)}
+                    className="flex-1 px-5 py-4 bg-[#F8F9FF] rounded-[1.25rem] border-2 border-transparent focus:border-rose-100 focus:bg-white outline-none font-semibold text-sm"
+                    placeholder="Subcategory name"
+                  />
+
+                  {subcategories.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeSub(index)}
+                      className="p-3 text-red-500 hover:bg-red-50 rounded-xl"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={addSub}
+                className="w-full py-3 border-2 border-dashed border-rose-100 rounded-2xl text-rose-500 font-bold hover:bg-rose-50 flex items-center justify-center gap-2"
+              >
+                <Plus size={16} /> Add Subcategory
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-        >
-          <Save size={16} />
-          {loading ? "Saving..." : "Save Category"}
-        </button>
-
+        {/* ACTION BUTTON */}
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            disabled={loading}
+            className="px-8 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold shadow-lg shadow-rose-100 flex items-center gap-2 disabled:opacity-50"
+          >
+            <Save size={16} />
+            {loading ? "Saving..." : "Save Category"}
+          </button>
+        </div>
       </form>
     </div>
   );

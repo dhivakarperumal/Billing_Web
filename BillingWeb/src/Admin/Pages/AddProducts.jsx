@@ -800,20 +800,22 @@ const FormSelect = ({ label, options, ...props }) => (
       {label}
     </label>
     <div className="relative">
-  <select
-    {...props}
-    className={`w-full px-5 pr-12 py-4 bg-[#F8F9FF] border-2 border-transparent rounded-[1.25rem] focus:border-rose-100 focus:bg-white focus:outline-none text-sm font-semibold text-slate-700 transition-all appearance-none cursor-pointer ${props.className || ""}`}
-  >
-    <option value="">Choose Options</option>
-    {options.map((opt, i) => (
-      <option key={i} value={opt}>{opt}</option>
-    ))}
-  </select>
+      <select
+        {...props}
+        className={`w-full px-5 pr-12 py-4 bg-[#F8F9FF] border-2 border-transparent rounded-[1.25rem] focus:border-rose-100 focus:bg-white focus:outline-none text-sm font-semibold text-slate-700 transition-all appearance-none cursor-pointer ${props.className || ""}`}
+      >
+        <option value="">Choose Options</option>
+        {options.map((opt, i) => (
+          <option key={i} value={opt}>
+            {opt}
+          </option>
+        ))}
+      </select>
 
-  <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
-    ▼
-  </span>
-</div>
+      <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
+        ▼
+      </span>
+    </div>
   </div>
 );
 
