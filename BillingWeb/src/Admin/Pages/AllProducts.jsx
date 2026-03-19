@@ -379,7 +379,7 @@ const AllProducts = () => {
                     </div>
 
                     <button
-                        onClick={() => navigate("/admin/products/add")}
+                        onClick={() => navigate("/products/add")}
                         className="flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-6 py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-xl shadow-rose-100 active:scale-95 whitespace-nowrap"
                     >
                         <FiPlus /> New Product
@@ -564,14 +564,14 @@ const AllProducts = () => {
                                                         <span className="md:hidden text-[11px] font-black text-gray-400 uppercase tracking-widest">Actions</span>
                                                         <div className="flex items-center justify-start md:justify-end gap-3">
                                                             <Link
-                                                                to={`/admin/products/detail/${product.id}`}
+                                                                to={`/products/detail/${product.id}`}
                                                                 className="p-3 border border-gray-200 text-gray-500 rounded-xl hover:bg-rose-600 hover:text-white transition-all shadow-sm md:shadow-none"
                                                                 title="View Product"
                                                             >
                                                                 <FiEye size={18} />
                                                             </Link>
                                                             <Link
-                                                                to={`/admin/products/edit/${product.id}`}
+                                                                to={`/products/edit/${product.id}`}
                                                                 className="p-3 border border-gray-200 text-gray-500 rounded-xl hover:bg-green-500 hover:text-white transition-all shadow-sm md:shadow-none"
                                                                 title="Edit Product"
                                                             >
@@ -611,7 +611,7 @@ const AllProducts = () => {
                                                 {product.status}
                                             </span>
                                             <div className="flex flex-col gap-2 pointer-events-auto opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <Link to={`/admin/products/edit/${product.id}`} className="p-2.5 bg-white/90 backdrop-blur rounded-full text-amber-500 shadow-xl hover:bg-white border border-white/50 transition-all hover:scale-110">
+                                                <Link to={`/products/edit/${product.id}`} className="p-2.5 bg-white/90 backdrop-blur rounded-full text-amber-500 shadow-xl hover:bg-white border border-white/50 transition-all hover:scale-110">
                                                     <FiEdit2 size={14} />
                                                 </Link>
                                                 <button onClick={() => handleDelete(product.id)} className="p-2.5 bg-white/90 backdrop-blur rounded-full text-rose-500 shadow-xl hover:bg-rose-50 border border-white/50 transition-all hover:scale-110">
@@ -620,7 +620,7 @@ const AllProducts = () => {
                                             </div>
                                         </div>
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                                            <Link to={`/admin/products/detail/${product.id}`} className="w-full py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 shadow-2xl hover:bg-white hover:text-slate-900 transition-all">
+                                            <Link to={`/products/detail/${product.id}`} className="w-full py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 shadow-2xl hover:bg-white hover:text-slate-900 transition-all">
                                                 Visual Details <FiChevronRight />
                                             </Link>
                                         </div>

@@ -31,9 +31,8 @@ const AddStock = React.lazy(() => import("./Admin/Pages/AddStock.jsx"));
 const Users = React.lazy(() => import("./Admin/Pages/Users.jsx"));
 const Dealers = React.lazy(() => import("./Admin/Pages/Dealers.jsx"));
 const AddDealer = React.lazy(() => import("./Admin/Pages/AddDealer.jsx"));
-const AddInvoice = React.lazy(() => import("./Admin/Pages/AddInvoice.jsx"));
-const BannerManagement = React.lazy(() => import("./Admin/Pages/BannerManagement.jsx"));
-const VideoManagement = React.lazy(() => import("./Admin/Pages/VideoManagement.jsx"));
+
+
 const Reviews = React.lazy(() => import("./Admin/Pages/Reviews.jsx"));
 const Reports = React.lazy(() => import("./Admin/Pages/Reports.jsx"));
 const Profile = React.lazy(() => import("./Admin/Pages/Profile.jsx"));
@@ -83,12 +82,11 @@ const router = createBrowserRouter([
       { path: "users/all", element: lazy(<Users />) },
       { path: "dealers", element: lazy(<Dealers />) },
       { path: "dealers/add", element: lazy(<AddDealer />) },
-      { path: "invoices/add", element: lazy(<AddInvoice />) },
+
       { path: "billing", element: lazy(<Billing />) },
       { path: "billing/create", element: lazy(<CreateBilling />) },
       { path: "orders/:id", element: lazy(<OrderDetail />) },
-      { path: "banners", element: lazy(<BannerManagement />) },
-      { path: "videos", element: lazy(<VideoManagement />) },
+
       { path: "reviews", element: lazy(<Reviews />) },
       { path: "reports", element: lazy(<Reports />) },
       { path: "more", element: lazy(<More />) },

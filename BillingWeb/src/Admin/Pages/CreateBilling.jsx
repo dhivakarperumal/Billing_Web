@@ -8,6 +8,7 @@ import api from "../../api";
 import { toast } from "react-hot-toast";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { transliterateToTamil, transliterateTamilToLatin } from "../../utils/tamilPhonetic";
+import { getTamilProductName } from "../../utils/tamilProductNames";
 
 const CreateBilling = () => {
     const navigate = useNavigate();
@@ -129,13 +130,18 @@ const CreateBilling = () => {
 
         const productName = (p.name || "").toString().toLowerCase().normalize('NFC');
         const productCode = (p.product_code || "").toString().toLowerCase().normalize('NFC');
-        const productNameTamil = transliterateToTamil(productName);
+        
+        // Use stored Tamil name from database if available, otherwise phonetically generate it
+        const storedProductNameTamil = p.name_tamil ? (p.name_tamil || "").toString().toLowerCase().normalize('NFC') : "";
+        const properProductNameTamil = getTamilProductName(p.name) || transliterateToTamil(productName);
+        const productNameTamil = storedProductNameTamil || properProductNameTamil;
 
         const matchSearch =
             (rawSearch && (
                 productName.includes(normalizedSearch) ||
                 productName.includes(searchLatin) ||
                 productNameTamil.includes(searchTamil) ||
+                storedProductNameTamil.includes(searchTamil) ||
                 productCode.includes(normalizedSearch) ||
                 productCode.includes(searchLatin)
             ));

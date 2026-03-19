@@ -150,6 +150,7 @@ const migrate = async () => {
         const upgrades = [
             { table: "categories", column: "subcategories", type: "LONGTEXT AFTER description" },
             { table: "products", column: "subcategory", type: "VARCHAR(255) AFTER category" },
+            { table: "products", column: "name_tamil", type: "VARCHAR(255) AFTER name" },
             { table: "products", column: "expiry", type: "LONGTEXT AFTER variants" },
             { table: "products", column: "supplier", type: "LONGTEXT AFTER expiry" },
             { table: "products", column: "rating", type: "DECIMAL(3,2) DEFAULT 0 AFTER supplier" },

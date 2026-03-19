@@ -76,8 +76,23 @@ export const getProducts = async (req, res) => {
     const offset = (page - 1) * limit;
 
     try {
+        // Try to include name_tamil in search; if column doesn't exist, fall back to name only
         let query = "SELECT * FROM products WHERE (name LIKE ? OR product_code LIKE ?)";
         const queryParams = [`%${search}%`, `%${search}%`];
+
+        // Check if name_tamil column exists first (graceful fallback)
+        try {
+            const [columns] = await db.promise().query(
+                "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'products' AND COLUMN_NAME = 'name_tamil'"
+            );
+            if (columns && columns.length > 0) {
+                // Column exists, include it in the search
+                query = "SELECT * FROM products WHERE (name LIKE ? OR name_tamil LIKE ? OR product_code LIKE ?)";
+                queryParams.splice(1, 0, `%${search}%`);
+            }
+        } catch (err) {
+            console.warn("Could not check for name_tamil column, using fallback search", err.message);
+        }
 
         if (status === "Low Stock") {
             query += " AND total_stock < 10 AND total_stock > 0";
@@ -89,7 +104,24 @@ export const getProducts = async (req, res) => {
         queryParams.push(parseInt(limit), parseInt(offset));
 
         const [products] = await db.promise().query(query, queryParams);
-        const [totalRows] = await db.promise().query("SELECT COUNT(*) as count FROM products WHERE (name LIKE ? OR product_code LIKE ?)", [`%${search}%`, `%${search}%`]);
+        
+        // Use same fallback logic for count query
+        let countQuery = "SELECT COUNT(*) as count FROM products WHERE (name LIKE ? OR product_code LIKE ?)";
+        const countParams = [`%${search}%`, `%${search}%`];
+        
+        try {
+            const [columns] = await db.promise().query(
+                "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'products' AND COLUMN_NAME = 'name_tamil'"
+            );
+            if (columns && columns.length > 0) {
+                countQuery = "SELECT COUNT(*) as count FROM products WHERE (name LIKE ? OR name_tamil LIKE ? OR product_code LIKE ?)";
+                countParams.splice(1, 0, `%${search}%`);
+            }
+        } catch (err) {
+            console.warn("Could not check for name_tamil column in count query", err.message);
+        }
+        
+        const [totalRows] = await db.promise().query(countQuery, countParams);
 
         const [activeRows] = await db.promise().query("SELECT COUNT(*) as count FROM products WHERE status = 'Active'");
         const [lowStockRows] = await db.promise().query("SELECT COUNT(*) as count FROM products WHERE total_stock < 10 AND total_stock > 0");
@@ -174,7 +206,7 @@ export const getProductById = async (req, res) => {
 };
 
 export const createProduct = async (req, res) => {
-    let { product_code, name, category, subCategory, mrp, offer_price, total_stock, status, variants, description, expiry, supplier, rating, images } = req.body;
+    let { product_code, name, category, subCategory, mrp, offer_price, total_stock, status, variants, description, expiry, supplier, rating, images, name_tamil } = req.body;
     try {
         if (!product_code) {
             product_code = await generateProductCode();
@@ -199,10 +231,24 @@ export const createProduct = async (req, res) => {
         const numStock = Number(total_stock) || 0;
         const numRating = Number(rating) || 0;
 
-        const [result] = await db.promise().query(
-            "INSERT INTO products (product_code, name, category, subcategory, mrp, offer_price, total_stock, status, images, variants, expiry, supplier, rating, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [product_code, name || "", category || "", subCategory || "", numMrp, numOffer, numStock, (status === 'Inactive' ? 'Inactive' : 'Active'), imagesJson, variantsJson, expiryJson, supplierJson, numRating, description || ""]
-        );
+        // Check if name_tamil column exists before inserting
+        let insertQuery = "INSERT INTO products (product_code, name, category, subcategory, mrp, offer_price, total_stock, status, images, variants, expiry, supplier, rating, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        let insertParams = [product_code, name || "", category || "", subCategory || "", numMrp, numOffer, numStock, (status === 'Inactive' ? 'Inactive' : 'Active'), imagesJson, variantsJson, expiryJson, supplierJson, numRating, description || ""];
+
+        try {
+            const [columns] = await db.promise().query(
+                "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'products' AND COLUMN_NAME = 'name_tamil'"
+            );
+            if (columns && columns.length > 0) {
+                // Column exists, include it
+                insertQuery = "INSERT INTO products (product_code, name, name_tamil, category, subcategory, mrp, offer_price, total_stock, status, images, variants, expiry, supplier, rating, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                insertParams.splice(2, 0, name_tamil || "");
+            }
+        } catch (err) {
+            console.warn("Could not check for name_tamil column, using fallback insert", err.message);
+        }
+
+        const [result] = await db.promise().query(insertQuery, insertParams);
 
         res.status(201).json({ message: "Product created successfully", id: result.insertId, product_code });
     } catch (error) {
@@ -213,7 +259,7 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
     const { id } = req.params;
-    let { product_code, name, category, subCategory, mrp, offer_price, total_stock, status, images, variants, description, expiry, supplier, rating } = req.body;
+    let { product_code, name, category, subCategory, mrp, offer_price, total_stock, status, images, variants, description, expiry, supplier, rating, name_tamil } = req.body;
     try {
         // Separate existing images from new base64 strings
         const existingImages = (images || []).filter(img => !img.startsWith('data:image'));
@@ -236,10 +282,24 @@ export const updateProduct = async (req, res) => {
         const numStock = Number(total_stock) || 0;
         const numRating = Number(rating) || 0;
 
-        await db.promise().query(
-            "UPDATE products SET product_code = ?, name = ?, category = ?, subcategory = ?, mrp = ?, offer_price = ?, total_stock = ?, status = ?, images = ?, variants = ?, expiry = ?, supplier = ?, rating = ?, description = ? WHERE id = ?",
-            [product_code, name || "", category || "", subCategory || "", numMrp, numOffer, numStock, (status || "Active"), imagesJson, variantsJson, expiryJson, supplierJson, numRating, description || "", id]
-        );
+        // Check if name_tamil column exists before updating
+        let updateQuery = "UPDATE products SET product_code = ?, name = ?, category = ?, subcategory = ?, mrp = ?, offer_price = ?, total_stock = ?, status = ?, images = ?, variants = ?, expiry = ?, supplier = ?, rating = ?, description = ? WHERE id = ?";
+        let updateParams = [product_code, name || "", category || "", subCategory || "", numMrp, numOffer, numStock, (status || "Active"), imagesJson, variantsJson, expiryJson, supplierJson, numRating, description || "", id];
+
+        try {
+            const [columns] = await db.promise().query(
+                "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'products' AND COLUMN_NAME = 'name_tamil'"
+            );
+            if (columns && columns.length > 0) {
+                // Column exists, include it
+                updateQuery = "UPDATE products SET product_code = ?, name = ?, name_tamil = ?, category = ?, subcategory = ?, mrp = ?, offer_price = ?, total_stock = ?, status = ?, images = ?, variants = ?, expiry = ?, supplier = ?, rating = ?, description = ? WHERE id = ?";
+                updateParams.splice(2, 0, name_tamil || "");
+            }
+        } catch (err) {
+            console.warn("Could not check for name_tamil column, using fallback update", err.message);
+        }
+
+        await db.promise().query(updateQuery, updateParams);
 
         res.status(200).json({ message: "Product updated successfully", images: finalImagePaths });
     } catch (error) {

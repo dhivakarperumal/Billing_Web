@@ -4,6 +4,8 @@ import { toast } from "react-hot-toast";
 import imageCompression from "browser-image-compression";
 import { useParams, useNavigate } from "react-router-dom";
 import JsBarcode from "jsbarcode";
+import { transliterateToTamil } from "../../utils/tamilPhonetic";
+import { getTamilProductName } from "../../utils/tamilProductNames";
 import {
   FiPackage,
   FiTag,
@@ -33,6 +35,7 @@ const AddProducts = () => {
   const [formData, setFormData] = useState({
     product_code: "",
     name: "",
+    name_tamil: "",
     description: "",
     rating: "",
     category: "",
@@ -101,6 +104,7 @@ const AddProducts = () => {
       setFormData({
         product_code: product.product_code || "",
         name: product.name || "",
+        name_tamil: product.name_tamil || (product.name ? (getTamilProductName(product.name) || transliterateToTamil(product.name)) : ""),
         description: product.description || "",
         rating: product.rating || "",
         category: product.category || "",
@@ -187,13 +191,22 @@ const AddProducts = () => {
 
   const handleChange = (e, section = null) => {
     const { name, value } = e.target;
+
     if (section) {
       setFormData((prev) => ({
         ...prev,
         [section]: { ...prev[section], [name]: value },
       }));
     } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+        // If the user is typing the product name, first check for proper Tamil translation,
+        // then fall back to phonetic transliteration
+        ...(name === "name" ? { 
+          name_tamil: getTamilProductName(value) || transliterateToTamil(value) 
+        } : {}),
+      }));
     }
 
     if (name === "category") {
@@ -310,6 +323,7 @@ const AddProducts = () => {
       const payload = {
         product_code: formData.product_code,
         name: formData.name,
+        name_tamil: formData.name_tamil,
         description: formData.description,
         rating: formData.rating,
         category: formData.category,
@@ -331,7 +345,7 @@ const AddProducts = () => {
         await axios.post("http://localhost:5000/api/products", payload);
         toast.success("Product added successfully!");
       }
-      navigate("/admin/products/all");
+      navigate("/products/all");
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.message || "Failed to save product");
@@ -352,7 +366,7 @@ const AddProducts = () => {
               icon={<FiInfo className="text-blue-500" />}
             >
               <div className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-3 gap-6">
                   <FormInput
                     label="Product Name"
                     name="name"
@@ -360,6 +374,13 @@ const AddProducts = () => {
                     onChange={handleChange}
                     placeholder="e.g. Organic Brown Rice"
                     required
+                  />
+                  <FormInput
+                    label="Tamil Name"
+                    name="name_tamil"
+                    value={formData.name_tamil}
+                    onChange={handleChange}
+                    placeholder="e.g. ஆர்கானிக் பிரவுன் ரைஸ்"
                   />
                   <FormInput
                     label="Product Code / Barcode"
