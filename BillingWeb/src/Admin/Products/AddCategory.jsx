@@ -164,7 +164,7 @@ export default function AddCategory() {
         </div>
 
         {/* MAIN CARD */}
-        <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm space-y-6">
+        <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm grid md:grid-cols-2 gap-6">
           {/* Category ID */}
           <div>
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
@@ -234,7 +234,7 @@ export default function AddCategory() {
           </div>
 
           {/* Subcategories */}
-          <div>
+          <div className="md:col-span-2">
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 block mb-2">
               Subcategories
             </label>
@@ -261,13 +261,15 @@ export default function AddCategory() {
                 </div>
               ))}
 
-              <button
-                type="button"
-                onClick={addSub}
-                className="w-full py-3 border-2 border-dashed border-rose-100 rounded-2xl text-rose-500 font-bold hover:bg-rose-50 flex items-center justify-center gap-2"
-              >
-                <Plus size={16} /> Add Subcategory
-              </button>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={addSub}
+                  className="px-5 py-2 border-2 border-dashed border-rose-100 rounded-xl text-rose-500 font-bold hover:bg-rose-50 flex items-center gap-2"
+                >
+                  <Plus size={16} /> Add Subcategory
+                </button>
+              </div>
             </div>
           </div>
         </div>
