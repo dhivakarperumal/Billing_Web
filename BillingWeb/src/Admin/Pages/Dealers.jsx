@@ -24,12 +24,8 @@ const Dealers = () => {
     const [selectedDealer, setSelectedDealer] = useState(null);
     const [showHistory, setShowHistory] = useState(false);
 
-    // Mock history data
-    const mockHistory = [
-        { id: "#INV-2024-001", date: "2024-03-01", items: "Wedding Silk Saree x 5", amount: "₹45,000", status: "Paid" },
-        { id: "#INV-2024-042", date: "2024-02-15", items: "Cotton Saree x 12", amount: "₹18,000", status: "Paid" },
-        { id: "#INV-2023-118", date: "2024-01-20", items: "Linen Saree x 2", amount: "₹4,200", status: "Pending" },
-    ];
+    const [history, setHistory] = useState([]);
+    const [fetchingHistory, setFetchingHistory] = useState(false);
 
     useEffect(() => {
         fetchDealers();
@@ -66,9 +62,70 @@ const Dealers = () => {
         );
     };
 
-    const handleViewHistory = (dealer) => {
+    const handleDownloadInvoice = async (invoiceId) => {
+        const loadingToast = toast.loading(`Preparing INV-#${invoiceId.toString().padStart(4, '0')} for download...`);
+        try {
+            const res = await api.get(`/invoices/${invoiceId}`);
+            const data = res.data;
+            
+            const summary = `
+=========================================
+      OFFICIAL TRANSACTION INVOICE
+=========================================
+Invoice ID: INV-#${data.id.toString().padStart(4, '0')}
+Transaction Date: ${new Date(data.invoice_date).toLocaleDateString()}
+Created On: ${new Date(data.created_at).toLocaleString()}
+
+PARTNER DETAILS:
+Name: ${data.dealer_name}
+Email: ${data.dealer_email || 'N/A'}
+Phone: ${data.dealer_phone || 'N/A'}
+
+ITEMS PURCHASED:
+${data.items.map((item, idx) => `${idx + 1}. ${item.name} (${item.quantity} x ₹${parseFloat(item.price).toLocaleString()}) = ₹${parseFloat(item.total).toLocaleString()}`).join('\n')}
+
+-----------------------------------------
+GRAND TOTAL: ₹${parseFloat(data.total_amount).toLocaleString()}
+STATUS: ${data.status.toUpperCase()}
+-----------------------------------------
+
+Issued by: Billing Software System
+Thank you for your business!
+=========================================
+`;
+
+            const blob = new Blob([summary], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `INV-000${data.id}.txt`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            toast.dismiss(loadingToast);
+            toast.success("Transaction Record Downloaded!");
+        } catch (error) {
+            console.error("Download Error:", error);
+            toast.dismiss(loadingToast);
+            toast.error("Failed to generate download");
+        }
+    };
+
+    const handleViewHistory = async (dealer) => {
         setSelectedDealer(dealer);
         setShowHistory(true);
+        setFetchingHistory(true);
+        try {
+            const res = await api.get(`/invoices/dealer/${dealer.id}`);
+            setHistory(res.data);
+        } catch (error) {
+            console.error("Fetch History Error:", error);
+            toast.error("Failed to load transaction history");
+        } finally {
+            setFetchingHistory(false);
+        }
     };
 
     const handleImportExcel = () => {
@@ -273,30 +330,48 @@ const Dealers = () => {
                         </div>
 
                         <div className="p-8 max-h-[60vh] overflow-y-auto">
-                            <div className="space-y-4">
-                                {mockHistory.map((h, i) => (
-                                    <div key={i} className="group p-5 bg-gray-50 hover:bg-white border border-gray-100 hover:border-blue-100 rounded-3xl transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm border border-gray-50 group-hover:bg-primary group-hover:text-white transition-colors">
-                                                <FiDownload size={16} />
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-black text-slate-800">{h.id}</p>
-                                                <p className="text-xs text-gray-400 font-bold italic">{h.items}</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center justify-between sm:justify-end gap-6">
-                                            <div className="text-right">
-                                                <p className="text-sm font-black text-slate-800 italic">{h.amount}</p>
-                                                <p className="text-[10px] text-gray-400 font-bold">{h.date}</p>
-                                            </div>
-                                            <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${h.status === 'Paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
-                                                {h.status}
-                                            </span>
-                                        </div>
+                            {fetchingHistory ? (
+                                <div className="flex flex-col items-center justify-center py-12">
+                                    <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
+                                    <p className="text-[10px] font-black uppercase text-gray-400">Loading History...</p>
+                                </div>
+                            ) : history.length === 0 ? (
+                                <div className="text-center py-12">
+                                    <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-200">
+                                        <FiPackage size={32} />
                                     </div>
-                                ))}
-                            </div>
+                                    <p className="text-gray-400 font-bold">No transactions found for this partner.</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {history.map((h, i) => (
+                                        <div key={i} className="group p-5 bg-gray-50 hover:bg-white border border-gray-100 hover:border-blue-100 rounded-3xl transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                            <div className="flex items-center gap-4">
+                                                <button 
+                                                    onClick={() => handleDownloadInvoice(h.id)}
+                                                    className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm border border-gray-100 hover:bg-primary hover:text-white transition-all active:scale-95"
+                                                    title="Download Details"
+                                                >
+                                                    <FiDownload size={16} />
+                                                </button>
+                                                <div>
+                                                    <p className="text-sm font-black text-slate-800">INV-#{h.id.toString().padStart(4, '0')}</p>
+                                                    <p className="text-xs text-gray-400 font-bold italic">Invoice Date: {new Date(h.invoice_date).toLocaleDateString()}</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center justify-between sm:justify-end gap-6">
+                                                <div className="text-right">
+                                                    <p className="text-sm font-black text-slate-800 italic">₹{parseFloat(h.total_amount).toLocaleString()}</p>
+                                                    <p className="text-[10px] text-gray-400 font-bold">Created: {new Date(h.created_at).toLocaleDateString()}</p>
+                                                </div>
+                                                <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${h.status === 'Paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                                                    {h.status}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         <div className="p-8 bg-gray-50/50 border-t border-gray-50">

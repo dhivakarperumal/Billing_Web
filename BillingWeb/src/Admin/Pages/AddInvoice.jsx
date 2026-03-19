@@ -29,15 +29,19 @@ const AddInvoice = () => {
             try {
                 const [dealerRes, productRes] = await Promise.all([
                     api.get("/dealers"),
-                    api.get("/products")
+                    api.get("/products?limit=1000")
                 ]);
-                setDealers(dealerRes.data || []);
-                setProducts(productRes.data || []);
+                const dealersData = Array.isArray(dealerRes.data) ? dealerRes.data : (dealerRes.data.dealers || []);
+                const productsData = Array.isArray(productRes.data) ? productRes.data : (productRes.data.products || []);
+                
+                setDealers(dealersData);
+                setProducts(productsData);
 
-                if (preselectedDealerId && dealerRes.data) {
-                    const dealer = dealerRes.data.find(d => d.id.toString() === preselectedDealerId.toString());
+                if (preselectedDealerId && dealersData) {
+                    const dealer = dealersData.find(d => d.id.toString() === preselectedDealerId.toString());
                     if (dealer) {
                         setSearchTerm(dealer.name);
+                        setFormData(prev => ({ ...prev, dealer_id: dealer.id }));
                     }
                 }
             } catch (error) {
@@ -106,22 +110,60 @@ const AddInvoice = () => {
 
         setLoading(true);
         try {
-            // Simulation
+            const res = await api.post("/invoices", {
+                dealer_id: formData.dealer_id,
+                invoice_date: formData.invoice_date,
+                total_amount: formData.total_amount,
+                status: formData.status,
+                items: formData.items
+            });
+            
             toast.success("Invoice created successfully!");
             setTimeout(() => navigate("/admin/dealers"), 1500);
         } catch (error) {
             console.error("Invoice Error:", error);
-            toast.error("Failed to create invoice");
+            toast.error(error.response?.data?.message || "Failed to create invoice");
         } finally {
             setLoading(false);
         }
+    };
+
+    const getProductImage = (product) => {
+        let imgUrl = null;
+        try {
+            const processUrl = (url) => {
+                if (!url || typeof url !== 'string') return null;
+                if (url.startsWith('http') || url.startsWith('data:')) return url;
+                const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+                const cleanPath = url.startsWith('/') ? url : `/${url}`;
+                return `${backendUrl}${cleanPath}`;
+            };
+
+            if (product.variants && Array.isArray(product.variants) && product.variants.length > 0) {
+                const firstVar = product.variants[0];
+                const vImgs = typeof firstVar.images === 'string' ? JSON.parse(firstVar.images) : firstVar.images;
+                if (Array.isArray(vImgs) && vImgs.length > 0) imgUrl = vImgs[0];
+            }
+
+            if (!imgUrl && product.images) {
+                const imgs = typeof product.images === 'string' ? JSON.parse(product.images) : product.images;
+                if (Array.isArray(imgs) && imgs.length > 0) imgUrl = imgs[0];
+            }
+
+            const finalUrl = processUrl(imgUrl);
+            if (finalUrl) return finalUrl;
+        } catch (e) {
+            console.error("Error getting product image:", e);
+        }
+
+        return `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name || 'P')}&background=random`;
     };
 
     const filteredDealers = dealers.filter(d =>
         d.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const filteredProducts = products.filter(p =>
+    const filteredProducts = (Array.isArray(products) ? products : []).filter(p =>
         p.name.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
         p.product_code?.toLowerCase().includes(productSearchTerm.toLowerCase())
     );
@@ -233,9 +275,10 @@ const AddInvoice = () => {
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-10 h-10 rounded-lg bg-gray-100 overflow-hidden">
                                                         <img
-                                                            src={product.variants?.[0]?.images?.[0] || (product.images && product.images[0]) || `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}`}
+                                                            src={getProductImage(product)}
                                                             alt=""
                                                             className="w-full h-full object-cover"
+                                                            onError={(e) => e.target.src = 'https://via.placeholder.com/100?text=No+Image'}
                                                         />
                                                     </div>
                                                     <div>
