@@ -124,18 +124,53 @@ export const productNameMapping = {
   fresh: "புதிய",
   premium: "ப்ரீமியம்",
   deluxe: "டீலக்ஸ்",
-  special: "சிறப்பு"
+  special: "சிறப்பு",
+
+  // Colors
+  red: "சிவப்பு",
+  green: "பச்சை",
+  blue: "நீலம்",
+  yellow: "மஞ்சள்",
+  white: "வெள்ளை",
+  black: "கருப்பு",
+  brown: "பிரவுன்"
 };
+
+import { transliterateToTamil } from "./tamilPhonetic";
 
 /**
  * Get proper Tamil product name from English product name
- * If no mapping exists, returns the English name as-is
+ * If no mapping exists for a word, it falls back to phonetic transliteration
  * @param {string} englishName - The product name in English
- * @returns {string} - The proper Tamil product name or English name if no mapping
+ * @returns {string} - The proper Tamil product name
  */
 export const getTamilProductName = (englishName) => {
   if (!englishName) return "";
   
-  const key = englishName.toLowerCase().trim().replace(/\s+/g, "_");
-  return productNameMapping[key] || englishName;
+  // Split into words to handle multi-word products like "Fresh Red Apple"
+  const words = englishName.trim().split(/\s+/);
+  
+  const tamilWords = words.map(word => {
+    let key = word.toLowerCase().replace(/[^a-z]/g, "");
+    
+    // Check exact match
+    if (productNameMapping[key]) {
+      return productNameMapping[key];
+    }
+    
+    // Check without trailing 's' (e.g. apples -> apple)
+    if (key.endsWith('s') && productNameMapping[key.slice(0, -1)]) {
+      return productNameMapping[key.slice(0, -1)] + "கள்"; // adding tamil plural suffix
+    }
+    
+    // Check without trailing 'es' (e.g. potatoes -> potato)
+    if (key.endsWith('es') && productNameMapping[key.slice(0, -2)]) {
+      return productNameMapping[key.slice(0, -2)] + "கள்"; 
+    }
+    
+    // Fallback to phonetic transliteration
+    return transliterateToTamil(word);
+  });
+  
+  return tamilWords.join(" ");
 };

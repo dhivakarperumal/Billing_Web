@@ -703,7 +703,7 @@ const AddProducts = () => {
           <div className="max-w-6xl mx-auto flex justify-end gap-4 border-t border-gray-200 pt-4">
             <button
               type="button"
-              onClick={() => navigate("/admin/products/all")}
+              onClick={() => navigate("/products/all")}
               className="px-6 py-3 rounded-xl border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 transition-all"
             >
               Cancel
