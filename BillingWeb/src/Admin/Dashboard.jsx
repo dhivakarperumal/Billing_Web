@@ -145,21 +145,21 @@ const Dashboard = () => {
 
   <button 
     onClick={() => navigate('/admin/billing/create')}
-    className="flex items-center gap-3 px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg shadow-rose-200 active:scale-95"
+    className="flex items-center gap-3 px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg shadow-rose-200 active:scale-95 cursor-pointer"
   >
     <FiShoppingBag className="text-lg" /> New Bill
   </button>
 
   <button 
     onClick={() => navigate('/admin/products/all')}
-    className="flex items-center gap-3 px-6 py-3 bg-white border border-gray-200 text-slate-700 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm hover:shadow-md active:scale-95"
+    className="flex items-center gap-3 px-6 py-3 bg-white border border-gray-200 text-slate-700 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm hover:shadow-md active:scale-95 cursor-pointer"
   >
     <FiPackage className="text-lg text-rose-500" /> Inventory
   </button>
 
   <button 
     onClick={() => navigate('/admin/products/add')}
-    className="flex items-center gap-3 px-6 py-3 bg-white border border-gray-200 text-slate-700 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm hover:shadow-md active:scale-95"
+    className="flex items-center gap-3 px-6 py-3 bg-white border border-gray-200 text-slate-700 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm hover:shadow-md active:scale-95 cursor-pointer"
   >
     <FiBox className="text-lg text-rose-500" /> Add Product
   </button>

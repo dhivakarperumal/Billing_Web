@@ -343,41 +343,6 @@ const AddProducts = () => {
   return (
     <div className="min-h-screen bg-[#FDFDFF] p-4 lg:p-8">
       <form onSubmit={handleSubmit} className="max-w-6xl mx-auto space-y-8">
-        {/* HEADER */}
-        {/* <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm">
-                    <div>
-                        <h1 className="text-3xl font-black text-slate-800 flex items-center gap-3">
-                            <span className="p-3 bg-rose-50 text-rose-600 rounded-2xl">
-                                {isEdit ? <FiBox size={24} /> : <FiPlus size={24} />}
-                            </span>
-                            {isEdit ? "Edit Product" : "Add New Product"}
-                        </h1>
-                        <p className="text-gray-400 mt-1 font-medium ml-14">
-                            {isEdit ? "Modify existing inventory details." : "Expand your inventory with new awesome items."}
-                        </p>
-                    </div>
-                    <div className="flex gap-3 ml-14 md:ml-0">
-                        <button
-                            type="button"
-                            onClick={() => navigate("/admin/products/all")}
-                            className="px-6 py-3 rounded-xl border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 transition-all"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="px-8 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold shadow-lg shadow-rose-100 transition-all flex items-center gap-2 disabled:opacity-50"
-                        >
-                            {loading ? "Saving..." : (
-                                <>
-                                    <FiCheckCircle />
-                                    {isEdit ? "Update Product" : "Publish Product"}
-                                </>
-                            )}
-                        </button>
-                    </div>
-                </div> */}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* LEFT COLUMN: Main Info */}

@@ -150,7 +150,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
 
           <button
             onClick={onClose}
-            className="ml-auto p-2 rounded-xl text-white/40 hover:bg-white/5 lg:hidden border border-transparent hover:border-white/10 transition-all"
+            className="ml-auto p-2 rounded-xl text-white/70 hover:bg-white/5 lg:hidden border border-transparent hover:border-white/10 transition-all"
           >
             <X className="w-5 h-5" />
           </button>
@@ -210,7 +210,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
                               flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold transition-all
                               ${(location.pathname === sub.path || (sub.path !== "/admin" && location.pathname.startsWith(sub.path)))
                                 ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/30"
-                                : "text-white/40 hover:text-white hover:bg-white/5"
+                                : "text-white/70 hover:text-white hover:bg-white/5"
                               }
                             `}
                           >
@@ -277,7 +277,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
             bg-white border border-slate-200
             shadow-[0_4px_10px_rgba(0,0,0,0.1)]
             items-center justify-center
-            text-slate-500 hover:text-primary hover:scale-110 transition-all z-50
+            text-slate-500 hover:text-blue-500 hover:scale-110 transition-all z-50 cursor-pointer
           "
         >
           <ChevronLeft
