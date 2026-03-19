@@ -27,16 +27,16 @@ import { useAuth } from "../PrivateRouter/AuthContext";
 
 /* ================= NAV ITEMS ================= */
 const navItems = [
-  { path: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { path: "", label: "Dashboard", icon: LayoutDashboard, exact: true },
 
   {
     label: "Inventory",
     icon: Package,
     children: [
-      { path: "/admin/products/all", label: "All Products", icon: List },
-      { path: "/admin/products/add", label: "Add Product", icon: PlusCircle },
-      { path: "/admin/products/category", label: "Categories", icon: Layers },
-      { path: "/admin/products/stock", label: "Stock Details", icon: Archive },
+      { path: "/products/all", label: "All Products", icon: List },
+      { path: "/products/add", label: "Add Product", icon: PlusCircle },
+      { path: "/products/category", label: "Categories", icon: Layers },
+      { path: "/products/stock", label: "Stock Details", icon: Archive },
     ],
   },
 
@@ -46,23 +46,23 @@ const navItems = [
     label: "Billing",
     icon: ShoppingCart,
     children: [
-      { path: "/admin/billing/create", label: "Create Bill", icon: PlusCircle },
+      { path: "/billing/create", label: "Create Bill", icon: PlusCircle },
     ],
   },
 
-  { path: "/admin/users/all", label: "Customers", icon: Users },
+  { path: "/users/all", label: "Customers", icon: Users },
   {
     label: "Dealers",
     icon: Handshake,
     children: [
-      { path: "/admin/dealers", label: "Dealers List", icon: List },
-      { path: "/admin/invoices/add", label: "New Invoice", icon: PlusCircle },
+      { path: "/dealers", label: "Dealers List", icon: List },
+      { path: "/invoices/add", label: "New Invoice", icon: PlusCircle },
     ],
   },
  
   
-  { path: "/admin/reports", label: "Reports", icon: BarChart3 },
-  { path: "/admin/more", label: "More", icon: Layers },
+  { path: "/reports", label: "Reports", icon: BarChart3 },
+  { path: "/more", label: "More", icon: Layers },
   // { path: "/", label: "Back Home", icon: Home },
 ];
 
@@ -74,8 +74,8 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
 
   /* ================= ACTIVE ROUTE MAP ================= */
   const activeRouteMap = {
-    "/admin/products": ["/admin/products/all", "/admin/products/add", "/admin/products/category"],
-    "/admin/users": ["/admin/users/all"],
+    "/products": ["/products/all", "/products/add", "/products/category"],
+    "/users": ["/users/all"],
   };
 
   /* ================= HELPERS & LOGIC ================= */
@@ -83,7 +83,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
     const currentPath = location.pathname;
 
     // 1. Strict exact match for root routes to prevent Dashboard/BackHome overlap
-    if (item.path === "/" || item.path === "/admin" || item.exact) {
+    if (item.path === "/" || item.path === "" || item.exact) {
       return currentPath === item.path;
     }
 
@@ -208,7 +208,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
                             onClick={() => isOpen && onClose()}
                             className={`
                               flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold transition-all
-                              ${(location.pathname === sub.path || (sub.path !== "/admin" && location.pathname.startsWith(sub.path)))
+                              ${(location.pathname === sub.path || (sub.path !== "" && location.pathname.startsWith(sub.path)))
                                 ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/30"
                                 : "text-white/70 hover:text-white hover:bg-white/5"
                               }

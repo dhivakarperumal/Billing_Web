@@ -91,34 +91,38 @@ function Login() {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <label htmlFor="">Username</label>
-          <input
-            name="identifier"
-            type="text"
-            placeholder="Email or Username"
-            onChange={handleChange}
-            className="w-full p-3 rounded-lg bg-white border border-border focus:ring-2 focus:ring-primary-light outline-none"
-            required
-          />
-
-          <div className="relative">
-            <label htmlFor="">Password</label>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1 pb-1">Username</label>
             <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Password"
+              name="identifier"
+              type="text"
+              placeholder="Email or Username"
               onChange={handleChange}
-              className="w-full p-3 pr-10 rounded-lg bg-white border border-border focus:ring-2 focus:ring-primary-light outline-none"
+              className="w-full p-3 rounded-lg bg-white border border-border focus:ring-2 focus:ring-primary-light outline-none"
               required
             />
+          </div>
 
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1 pb-1">Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                onChange={handleChange}
+                className="w-full p-3 pr-10 rounded-lg bg-white border border-border focus:ring-2 focus:ring-primary-light outline-none"
+                required
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
 
           <button

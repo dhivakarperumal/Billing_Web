@@ -15,9 +15,7 @@ import PrinterSettings from "./Admin/Pages/More/PrinterSettings.jsx";
 import PrinterConfig from "./Admin/Pages/More/PrinterConfig.jsx";
 import GSTSettings from "./Admin/Pages/More/GstSettings.jsx";
 
-// Lazy Load Main Components
-const Home = React.lazy(() => import("./Home/Home.jsx"));
-
+// Lazy Load Auth Components
 const Login = React.lazy(() => import("./components/Auth/Login.jsx"));
 const Register = React.lazy(() => import("./components/Auth/Register.jsx"));
 
@@ -45,57 +43,58 @@ const Billing = React.lazy(() => import("./Admin/Pages/Billing.jsx"));
 const OrderDetail = React.lazy(() => import("./Admin/Pages/OrderDetail.jsx"));
 const ErrorPage = React.lazy(() => import("./Admin/Pages/ErrorPage.jsx"));
 
+// Suspense fallback loader
+const PageLoader = () => (
+  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", background: "#0f172a", color: "#94a3b8", fontSize: "1rem" }}>
+    Loading...
+  </div>
+);
+
+// Helper to wrap lazy elements
+const lazy = (element) => <React.Suspense fallback={<PageLoader />}>{element}</React.Suspense>;
+
 const router = createBrowserRouter([
+  { path: "/login", element: lazy(<Login />) },
+  { path: "/register", element: lazy(<Register />) },
   {
     path: "/",
-    element: <App />,
-    errorElement: <ErrorPage />,
-    children: [
-      { path: "/", element: <Home /> },
-      
-
-    ],
-  },
-  { path: "/login", element: <Login /> },
-  { path: "/register", element: <Register /> },
-  {
-    path: "/admin",
+    errorElement: lazy(<ErrorPage />),
     element: (
-      <PrivateRoute allowedRoles={["admin"]}>
-        <AdminProvider>
-          <AdminPanel />
-        </AdminProvider>
-      </PrivateRoute>
+      <React.Suspense fallback={<PageLoader />}>
+        <PrivateRoute allowedRoles={["admin"]}>
+          <AdminProvider>
+            <AdminPanel />
+          </AdminProvider>
+        </PrivateRoute>
+      </React.Suspense>
     ),
-  
     children: [
-      { index: true, element: <Dashboard /> },
-      { path: "products/all", element: <AllProducts /> },
-      { path: "products/add", element: <AddProducts /> },
-      { path: "products/edit/:id", element: <AddProducts /> },
-      { path: "products/detail/:id", element: <ProductDetail /> },
-      { path: "products/category", element: <Category /> },
-      { path: "products/addcategory", element: <AddCategory /> },
-      { path: "products/category/edit/:id", element: <AddCategory /> },
-      { path: "products/stock", element: <StockDetails /> },
-      { path: "products/stock/add", element: <AddStock /> },
-      { path: "users/all", element: <Users /> },
-      { path: "dealers", element: <Dealers /> },
-      { path: "dealers/add", element: <AddDealer /> },
-      { path: "invoices/add", element: <AddInvoice /> },
-      { path: "billing", element: <Billing /> },
-      { path: "billing/create", element: <CreateBilling /> },
-      { path: "orders/:id", element: <OrderDetail /> },
-      { path: "banners", element: <BannerManagement /> },
-      { path: "videos", element: <VideoManagement /> },
-      { path: "reviews", element: <Reviews /> },
-      { path: "reports", element: <Reports /> },
-      { path: "more", element: <More /> },
-      { path: "printer", element: <PrinterConfig /> },
-      { path: "printer-settings", element: <PrinterSettings /> },
-      { path: "gst-settings", element: <GSTSettings /> },
-      { path: "profile", element: <Profile /> },
-    
+      { index: true, element: lazy(<Dashboard />) },
+      { path: "products/all", element: lazy(<AllProducts />) },
+      { path: "products/add", element: lazy(<AddProducts />) },
+      { path: "products/edit/:id", element: lazy(<AddProducts />) },
+      { path: "products/detail/:id", element: lazy(<ProductDetail />) },
+      { path: "products/category", element: lazy(<Category />) },
+      { path: "products/addcategory", element: lazy(<AddCategory />) },
+      { path: "products/category/edit/:id", element: lazy(<AddCategory />) },
+      { path: "products/stock", element: lazy(<StockDetails />) },
+      { path: "products/stock/add", element: lazy(<AddStock />) },
+      { path: "users/all", element: lazy(<Users />) },
+      { path: "dealers", element: lazy(<Dealers />) },
+      { path: "dealers/add", element: lazy(<AddDealer />) },
+      { path: "invoices/add", element: lazy(<AddInvoice />) },
+      { path: "billing", element: lazy(<Billing />) },
+      { path: "billing/create", element: lazy(<CreateBilling />) },
+      { path: "orders/:id", element: lazy(<OrderDetail />) },
+      { path: "banners", element: lazy(<BannerManagement />) },
+      { path: "videos", element: lazy(<VideoManagement />) },
+      { path: "reviews", element: lazy(<Reviews />) },
+      { path: "reports", element: lazy(<Reports />) },
+      { path: "more", element: lazy(<More />) },
+      { path: "printer", element: lazy(<PrinterConfig />) },
+      { path: "printer-settings", element: lazy(<PrinterSettings />) },
+      { path: "gst-settings", element: lazy(<GSTSettings />) },
+      { path: "profile", element: lazy(<Profile />) },
     ],
   },
 ]);
