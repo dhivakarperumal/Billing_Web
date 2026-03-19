@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../../api";
 import { toast } from "react-hot-toast";
 import { Html5QrcodeScanner } from "html5-qrcode";
+import { transliterateToTamil, transliterateTamilToLatin } from "../../utils/tamilPhonetic";
 
 const CreateBilling = () => {
     const navigate = useNavigate();
@@ -24,6 +25,7 @@ const CreateBilling = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [dropdownValue, setDropdownValue] = useState("");
     const [isListening, setIsListening] = useState(false);
+    const [voiceLang, setVoiceLang] = useState("ta-IN");
     const [isScannerFocused, setIsScannerFocused] = useState(true);
     const [showCameraScanner, setShowCameraScanner] = useState(false);
     const [viewMode, setViewMode] = useState("grid"); // grid or table
@@ -114,8 +116,31 @@ const CreateBilling = () => {
 
     const filteredProducts = (products || []).filter(p => {
         const matchCat = selectedCategory === "All" || p.category === selectedCategory;
-        const matchSearch = (p.name || "").toLowerCase().includes(productSearchTerm.toLowerCase()) || (p.product_code || "").toLowerCase().includes(productSearchTerm.toLowerCase());
-        return matchCat && matchSearch;
+
+        const rawSearch = productSearchTerm.trim();
+        const normalizedSearch = rawSearch.toLowerCase().normalize('NFC');
+        const containsTamil = /[\u0B80-\u0BFF]/.test(rawSearch);
+
+        // If user typed Tamil chars, transliterate it into Latin for matching against English product names
+        const searchLatin = containsTamil ? transliterateTamilToLatin(rawSearch) : normalizedSearch;
+
+        // If user typed Latin chars, transliterate into Tamil to match Tamil product names
+        const searchTamil = containsTamil ? rawSearch : transliterateToTamil(normalizedSearch);
+
+        const productName = (p.name || "").toString().toLowerCase().normalize('NFC');
+        const productCode = (p.product_code || "").toString().toLowerCase().normalize('NFC');
+        const productNameTamil = transliterateToTamil(productName);
+
+        const matchSearch =
+            (rawSearch && (
+                productName.includes(normalizedSearch) ||
+                productName.includes(searchLatin) ||
+                productNameTamil.includes(searchTamil) ||
+                productCode.includes(normalizedSearch) ||
+                productCode.includes(searchLatin)
+            ));
+
+        return matchCat && (rawSearch ? matchSearch : true);
     });
 
     // Derived State for live search results
@@ -129,15 +154,28 @@ const CreateBilling = () => {
             return;
         }
         const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
+        // Set language based on user selection (Tamil or English)
+        recognition.lang = voiceLang;
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
         recognition.start();
         setIsListening(true);
+
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
             setProductSearchTerm(transcript);
             setIsListening(false);
         };
-        recognition.onerror = () => setIsListening(false);
+
+        recognition.onerror = (event) => {
+            setIsListening(false);
+            if (event.error === 'not-allowed' || event.error === 'permission-denied') {
+                toast.error('Please allow microphone access for voice search');
+            } else {
+                toast.error('Voice search failed, please try typing');
+            }
+        };
     };
 
     // Handlers
@@ -502,7 +540,23 @@ const CreateBilling = () => {
                                     </div>
                                 )}
                             </div>
-                            <button onClick={startVoiceSearch} className={`p-3 rounded-xl ${isListening ? 'bg-red-500 text-white animate-pulse' : 'bg-indigo-50 text-indigo-500'}`}><FiMic size={18} /></button>
+                            <div className="flex items-center gap-2">
+                                <select
+                                    value={voiceLang}
+                                    onChange={(e) => setVoiceLang(e.target.value)}
+                                    className="bg-white border border-gray-200 rounded-xl text-[10px] font-bold px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                                >
+                                    <option value="ta-IN">தமிழ்</option>
+                                    <option value="en-US">English</option>
+                                </select>
+                                <button
+                                    onClick={startVoiceSearch}
+                                    className={`p-3 rounded-xl ${isListening ? 'bg-red-500 text-white animate-pulse' : 'bg-indigo-50 text-indigo-500'}`}
+                                    title={`Voice search (${voiceLang === 'ta-IN' ? 'Tamil' : 'English'})`}
+                                >
+                                    <FiMic size={18} />
+                                </button>
+                            </div>
                         </div>
 
                         {viewMode === "grid" ? (
@@ -577,7 +631,7 @@ const CreateBilling = () => {
                                 <thead className="text-gray-500 border-b border-white/10 uppercase font-black tracking-widest"><tr><th className="px-4 py-3">Product</th><th className="px-4 py-3">Price</th><th className="px-4 py-3 w-16">Qty</th><th className="px-4 py-3 text-right">Total</th><th className="px-4 py-3"></th></tr></thead>
                                 <tbody className="divide-y divide-white/5">
                                     <tr className="bg-white/5 border-none">
-                                        <td colSpan={3} className="px-4 py-2"><input type="text" placeholder="Easy Add: Type Name or Code... (Enter)" onKeyDown={(e) => { if (e.key === 'Enter') { const v = e.target.value.trim(); const p = products.find(prod => prod.name.toLowerCase() === v.toLowerCase() || prod.product_code === v); if (p) { handleProductClick(p); e.target.value = ""; } else { toast.error("Product not found"); } } }} className="w-full bg-transparent border-none outline-none text-indigo-300 placeholder:text-gray-600 font-bold" /></td>
+                                        <td colSpan={3} className="px-4 py-2"><input type="text" placeholder="Easy Add: Type Name or Code... (Enter)" onKeyDown={(e) => { if (e.key === 'Enter') { const v = e.target.value.trim(); const search = v.toLowerCase(); const tamilSearch = transliterateToTamil(search); const p = products.find(prod => { const name = (prod.name || '').toLowerCase(); const code = (prod.product_code || '').toLowerCase(); return name.includes(search) || name.includes(tamilSearch) || code === search; }); if (p) { handleProductClick(p); e.target.value = ""; } else { toast.error("Product not found"); } } }} className="w-full bg-transparent border-none outline-none text-indigo-300 placeholder:text-gray-600 font-bold" /></td>
                                         <td></td><td></td>
                                     </tr>
                                     {formData.items.length === 0 ? (<tr><td colSpan={5} className="py-20 text-center opacity-30 font-black uppercase tracking-widest">No Items Added</td></tr>) : formData.items.map((item, i) => (

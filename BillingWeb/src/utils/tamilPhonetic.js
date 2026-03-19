@@ -24,7 +24,11 @@ const tamilMap = {
     'zh': 'ழ்', 'zha': 'ழ', 'zhaa': 'ழா', 'zhi': 'ழி', 'zhii': 'ழீ', 'zhu': 'ழு', 'zhuu': 'ழூ', 'zhe': 'ழெ', 'zhee': 'ழே', 'zhai': 'ழை', 'zho': 'ழொ', 'zhoo': 'ழோ', 'zhau': 'ழௌ',
     'L': 'ள்', 'La': 'ள', 'Laa': 'ளா', 'Li': 'ளி', 'Lii': 'ளீ', 'Lu': 'ளு', 'Luu': 'ளூ', 'Le': 'ளெ', 'Lee': 'ளே', 'Lai': 'ளை', 'Lo': 'ளொ', 'Loo': 'ளோ', 'Lau': 'ளௌ',
     'rr': 'ற்', 'rra': 'ற', 'rraa': 'றா', 'rri': 'றி', 'rrii': 'றீ', 'rru': 'று', 'rruu': 'றூ', 'rre': 'றெ', 'rree': 'றே', 'rrai': 'றை', 'rro': 'றொ', 'rroo': 'றோ', 'rrau': 'றௌ',
-    'nn': 'ன்', 'nna': 'ன', 'nnaa': 'னா', 'nni': 'னி', 'nnii': 'னீ', 'nnu': 'னு', 'nnuu': 'னூ', 'nne': 'னெ', 'nnee': 'னே', 'nnai': 'னை', 'nno': 'னொ', 'nnoo': 'னோ', 'nnau': 'னௌ'
+    'nn': 'ன்', 'nna': 'ன', 'nnaa': 'னா', 'nni': 'னி', 'nnii': 'னீ', 'nnu': 'னு', 'nnuu': 'னூ', 'nne': 'னெ', 'nnee': 'னே', 'nnai': 'னை', 'nno': 'னொ', 'nnoo': 'னோ', 'nnau': 'னௌ',
+
+    // Added common Latin phonetics for Tamil S / SH sounds
+    's': 'ஸ்', 'sa': 'ச', 'saa': 'சா', 'si': 'சி', 'sii': 'சீ', 'su': 'சு', 'suu': 'சூ', 'se': 'செ', 'see': 'சே', 'sai': 'சை', 'so': 'சொ', 'soo': 'சோ', 'sau': 'சௌ',
+    'sh': 'ஷ்', 'sha': 'ஷ', 'shaa': 'ஷா', 'shi': 'ஷி', 'shii': 'ஷீ', 'shu': 'ஷு', 'shuu': 'ஷூ', 'she': 'ஷெ', 'shee': 'ஷே', 'shai': 'ஷை', 'sho': 'ஷொ', 'shoo': 'ஷோ', 'shau': 'ஷௌ'
 };
 
 /**
@@ -33,17 +37,30 @@ const tamilMap = {
  * @param {string} text - The phonetic English text.
  * @returns {string} - The transliterated Tamil text.
  */
+// Build reverse map for Tamil -> Latin transliteration (used for Tamil->English phonetic matching)
+const reverseTamilMap = Object.entries(tamilMap)
+    .reduce((acc, [latin, tamil]) => {
+        // Some Tamil values may already exist; prefer the longest Latin key
+        if (!acc[tamil] || latin.length > acc[tamil].length) {
+            acc[tamil] = latin;
+        }
+        return acc;
+    }, {});
+
+// Sort reverse keys by length descending so longer Tamil sequences match first
+const reverseSortedKeys = Object.keys(reverseTamilMap).sort((a, b) => b.length - a.length);
+
 export const transliterateToTamil = (text) => {
     if (!text) return "";
-    
+
     // Sort keys by length DESC to match longer compounds first (e.g., 'aa' before 'a')
     const sortedKeys = Object.keys(tamilMap).sort((a, b) => b.length - a.length);
     let result = "";
     let i = 0;
-    
+
     while (i < text.length) {
         let matchFound = false;
-        
+
         // Try to match the longest key first
         for (const key of sortedKeys) {
             if (text.startsWith(key, i)) {
@@ -53,12 +70,39 @@ export const transliterateToTamil = (text) => {
                 break;
             }
         }
-        
+
         if (!matchFound) {
             result += text[i]; // Keep original if no match
             i++;
         }
     }
-    
+
+    return result;
+};
+
+export const transliterateTamilToLatin = (text) => {
+    if (!text) return "";
+
+    let result = "";
+    let i = 0;
+
+    while (i < text.length) {
+        let matchFound = false;
+
+        for (const key of reverseSortedKeys) {
+            if (text.startsWith(key, i)) {
+                result += reverseTamilMap[key];
+                i += key.length;
+                matchFound = true;
+                break;
+            }
+        }
+
+        if (!matchFound) {
+            result += text[i];
+            i++;
+        }
+    }
+
     return result;
 };
