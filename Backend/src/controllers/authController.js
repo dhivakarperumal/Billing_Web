@@ -14,14 +14,14 @@ const generateUserID = async () => {
 };
 
 export const register = async (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, phone } = req.body;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const userId = await generateUserID();
         
         const [result] = await db.promise().query(
-            "INSERT INTO users (userId, name, email, password, role) VALUES (?, ?, ?, ?, ?)",
-            [userId, name, email, hashedPassword, role || 'user']
+            "INSERT INTO users (userId, name, email, password, role, phone) VALUES (?, ?, ?, ?, ?, ?)",
+            [userId, name, email, hashedPassword, role || 'user', phone || null]
         );
         
         res.status(201).json({ message: "User registered successfully", userId });
@@ -85,5 +85,38 @@ export const googleLogin = async (req, res) => {
         res.json({ token: jwtToken, user: { id: user.id, name: user.name, role: user.role, userId: user.userId } });
     } catch (error) {
         res.status(500).json({ message: "Google login failed", error: error.message });
+    }
+};
+
+export const getUsers = async (req, res) => {
+    try {
+        const [rows] = await db.promise().query("SELECT id, userId, name, email, role, phone, created_at FROM users");
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch users", error: error.message });
+    }
+};
+
+export const updateUser = async (req, res) => {
+    const { id } = req.params;
+    const { name, email, role, phone } = req.body;
+    try {
+        await db.promise().query(
+            "UPDATE users SET name = ?, email = ?, role = ?, phone = ? WHERE id = ?",
+            [name, email, role, phone, id]
+        );
+        res.json({ message: "User updated successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to update user", error: error.message });
+    }
+};
+
+export const deleteUser = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await db.promise().query("DELETE FROM users WHERE id = ?", [id]);
+        res.json({ message: "User deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to delete user", error: error.message });
     }
 };

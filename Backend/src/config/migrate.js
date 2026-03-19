@@ -74,6 +74,7 @@ const migrate = async () => {
                 name VARCHAR(255) NOT NULL,
                 email VARCHAR(255) UNIQUE NOT NULL,
                 password VARCHAR(255),
+                phone VARCHAR(20),
                 role VARCHAR(50) DEFAULT 'user',
                 googleId VARCHAR(255),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -104,7 +105,8 @@ const migrate = async () => {
             { table: "products", column: "supplier", type: "LONGTEXT AFTER expiry" },
             { table: "products", column: "rating", type: "DECIMAL(3,2) DEFAULT 0 AFTER supplier" },
             { table: "orders", column: "customer_phone", type: "VARCHAR(50) AFTER customer_name" },
-            { table: "orders", column: "items", type: "LONGTEXT AFTER total_amount" }
+            { table: "orders", column: "items", type: "LONGTEXT AFTER total_amount" },
+            { table: "users", column: "phone", type: "VARCHAR(20) AFTER password" }
         ];
 
         for (const upgrade of upgrades) {

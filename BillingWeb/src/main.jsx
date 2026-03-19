@@ -9,7 +9,7 @@ import { StoreProvider } from "./PrivateRouter/StoreContext.jsx";
 import PrivateRoute from "./PrivateRouter/PrivateRouter.jsx";
 import { AdminProvider } from "./PrivateRouter/AdminContext.jsx";
 import { Toaster } from "react-hot-toast";
-import Loader from "./components/Loader.jsx";
+
 import More from "./Admin/Pages/More/More.jsx";
 import PrinterSettings from "./Admin/Pages/More/PrinterSettings.jsx";
 import PrinterConfig from "./Admin/Pages/More/PrinterConfig.jsx";
@@ -105,9 +105,9 @@ createRoot(document.getElementById("root")).render(
     <AuthProvider>
       <StoreProvider>
         <Toaster position="top-left" reverseOrder={false} />
-        <React.Suspense fallback={<Loader />}>
+        
           <RouterProvider router={router} />
-        </React.Suspense>
+       
       </StoreProvider>
     </AuthProvider>
   </GoogleOAuthProvider>

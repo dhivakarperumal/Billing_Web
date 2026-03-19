@@ -65,7 +65,7 @@ function Login() {
       if (res.data.user.role === "admin") {
         navigate("/admin");
       } else {
-        navigate("/");
+        navigate("/admin");
       }
 
     } catch (error) {

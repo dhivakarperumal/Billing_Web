@@ -51,14 +51,16 @@ const Users = ({ initialTab = "All" }) => {
                 const response = await api.get("/auth/users");
                 // Transform data if needed for UI
                 const fetchedUsers = response.data.map(u => ({
-                    id: u.id || u.user_id,
-                    name: u.name || u.username,
+                    id: u.id,
+                    userId: u.userId,
+                    name: u.name,
                     email: u.email,
+                    phone: u.phone,
                     role: u.role ? u.role.toLowerCase() : 'user',
-                    status: 'Active', // Mocking status since it's not in db yet
+                    status: 'Active',
                     joined: u.created_at ? new Date(u.created_at).toLocaleDateString() : 'N/A',
                     rawCreated_at: u.created_at,
-                    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name || u.username)}&background=random`
+                    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name || 'User')}&background=random`
                 }));
                 setUsers(fetchedUsers);
             } catch (error) {
@@ -75,14 +77,16 @@ const Users = ({ initialTab = "All" }) => {
         try {
             const response = await api.get("/auth/users");
             const fetchedUsers = response.data.map(u => ({
-                id: u.id || u.user_id,
-                name: u.name || u.username,
+                id: u.id,
+                userId: u.userId,
+                name: u.name,
                 email: u.email,
+                phone: u.phone,
                 role: u.role ? u.role.toLowerCase() : 'user',
                 status: 'Active',
                 joined: u.created_at ? new Date(u.created_at).toLocaleDateString() : 'N/A',
                 rawCreated_at: u.created_at,
-                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name || u.username)}&background=random`
+                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name || 'User')}&background=random`
             }));
             setUsers(fetchedUsers);
         } catch (error) {
@@ -97,7 +101,7 @@ const Users = ({ initialTab = "All" }) => {
     };
 
     const handleSaveUser = async () => {
-        if (!formData.username || !formData.email) return;
+        if (!formData.name || !formData.email) return;
         if (!isEditing && !formData.password) return;
 
         setSubmitLoading(true);
@@ -110,7 +114,7 @@ const Users = ({ initialTab = "All" }) => {
                 toast.success("User registered successfully!");
             }
             setIsModalOpen(false);
-            setFormData({ username: "", name: "", email: "", phone: "", role: "user", password: "" });
+            setFormData({ name: "", email: "", phone: "", role: "user", password: "" });
             setIsEditing(false);
             setEditUserId(null);
             fetchUsers();
@@ -136,7 +140,6 @@ const Users = ({ initialTab = "All" }) => {
     const handleQuickRoleUpdate = async (id, newRole, user) => {
         try {
             const payload = {
-                username: user.username || user.name,
                 name: user.name,
                 email: user.email,
                 phone: user.phone || ""
@@ -151,12 +154,11 @@ const Users = ({ initialTab = "All" }) => {
 
     const openEditModal = (user) => {
         setFormData({
-            username: user.username || user.name,
             name: user.name,
             email: user.email,
             phone: user.phone || "",
             role: user.role,
-            password: "" // Don't show password on edit
+            password: ""
         });
         setEditUserId(user.id);
         setIsEditing(true);
@@ -212,8 +214,8 @@ const Users = ({ initialTab = "All" }) => {
 
                 </div>
                 <button
-                    onClick={() => { setIsEditing(false); setFormData({ username: "", name: "", email: "", phone: "", role: "user", password: "" }); setIsModalOpen(true); }}
-                    className="flex items-center justify-center gap-2 bg-primary hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-200 active:scale-95"
+                    onClick={() => { setIsEditing(false); setFormData({ name: "", email: "", phone: "", role: "user", password: "" }); setIsModalOpen(true); }}
+                    className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-200 active:scale-95"
                 >
                     <FiUserPlus /> Add New User
                 </button>
@@ -317,10 +319,10 @@ const Users = ({ initialTab = "All" }) => {
                                                     <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden ring-2 ring-white shadow-sm shrink-0">
                                                         <img src={user.avatar} alt={user.name} />
                                                     </div>
-                                                    <div>
-                                                        <p className="text-sm font-bold text-slate-800">{user.name}</p>
-                                                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">ID: {user.id}</p>
-                                                    </div>
+                                                     <div>
+                                                         <p className="text-sm font-bold text-slate-800">{user.name}</p>
+                                                         <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">ID: {user.userId}</p>
+                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
@@ -440,13 +442,13 @@ const Users = ({ initialTab = "All" }) => {
 
                         <div className="p-6 overflow-y-auto space-y-4">
                             <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Username *</label>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Full Name *</label>
                                 <input
                                     type="text"
-                                    name="username"
-                                    value={formData.username}
+                                    name="name"
+                                    value={formData.name}
                                     onChange={handleInputChange}
-                                    placeholder="e.g. johndoe"
+                                    placeholder="e.g. John Doe"
                                     className="w-full bg-gray-50 border border-gray-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium"
                                 />
                             </div>
@@ -510,8 +512,8 @@ const Users = ({ initialTab = "All" }) => {
                             </button>
                             <button
                                 onClick={handleSaveUser}
-                                disabled={submitLoading || !formData.username || !formData.email || (!isEditing && !formData.password)}
-                                className="px-8 py-3 bg-primary hover:bg-blue-700 disabled:bg-primary-light disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-95 flex items-center gap-2"
+                                disabled={submitLoading || !formData.name || !formData.email || (!isEditing && !formData.password)}
+                                className="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-95 flex items-center gap-2"
                             >
                                 {submitLoading ? "Processing..." : isEditing ? "Update Credentials" : "Register User"}
                             </button>
