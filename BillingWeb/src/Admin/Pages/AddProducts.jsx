@@ -490,108 +490,6 @@ const AddProducts = () => {
                                 <FormSelect label="Status" name="status" value={formData.status} onChange={handleChange} options={["Active", "Inactive", "Low Stock", "Out of Stock"]} />
                             </div> */}
             </FormSection>
-
-            <FormSection
-              title="Product Variants"
-              icon={<FiBox className="text-purple-500" />}
-            >
-              <div className="space-y-4">
-                {formData.variants.map((v, i) => (
-                  <div
-                    key={i}
-                    className="group relative bg-[#F8F9FF] p-5 rounded-2xl border border-rose-50 grid md:grid-cols-7 gap-4 items-end"
-                  >
-                    <FormInput
-                      label="Weight"
-                      value={v.quantity}
-                      onChange={(e) =>
-                        handleVariantChange(i, "quantity", e.target.value)
-                      }
-                      placeholder="e.g. 500"
-                    />
-                    <FormInput
-                      label="Unit"
-                      value={v.unit}
-                      onChange={(e) =>
-                        handleVariantChange(i, "unit", e.target.value)
-                      }
-                      placeholder="kg / g / pcs"
-                    />
-                    <FormInput
-                      label="MRP"
-                      value={v.mrp}
-                      onChange={(e) =>
-                        handleVariantChange(i, "mrp", e.target.value)
-                      }
-                      placeholder="0"
-                    />
-                    <FormInput
-                      label="Offer (%)"
-                      value={v.discount}
-                      onChange={(e) =>
-                        handleVariantChange(i, "discount", e.target.value)
-                      }
-                      placeholder="0"
-                    />
-                    <FormInput
-                      label="Offer Price"
-                      value={v.sellingPrice}
-                      readOnly
-                      placeholder="0"
-                      className="bg-white/50"
-                    />
-                    <FormInput
-                      label="Stock"
-                      value={v.stock}
-                      onChange={(e) =>
-                        handleVariantChange(i, "stock", e.target.value)
-                      }
-                      placeholder="0"
-                    />
-                    <div className="flex items-center gap-2">
-                      {formData.variants.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeVariant(i)}
-                          className="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-all"
-                        >
-                          <FiTrash2 size={18} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={addVariant}
-                  className="w-full py-4 border-2 border-dashed border-rose-100 rounded-2xl text-rose-500 font-bold hover:bg-rose-50 hover:border-rose-200 transition-all flex items-center justify-center gap-2"
-                >
-                  <FiPlus /> Add more variants (Size, Weight, Pack)
-                </button>
-                <div className="mt-6 grid md:grid-cols-2 gap-6">
-                  <FormInput
-                    label="Total Stock Available"
-                    name="total_stock"
-                    value={formData.total_stock}
-                    readOnly
-                    placeholder="0"
-                    className="bg-gray-50 font-bold text-rose-600"
-                  />
-                  <FormSelect
-                    label="Status"
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
-                    options={[
-                      "Active",
-                      "Inactive",
-                      "Low Stock",
-                      "Out of Stock",
-                    ]}
-                  />
-                </div>
-              </div>
-            </FormSection>
           </div>
 
           {/* RIGHT COLUMN: Sidebar Info */}
@@ -713,6 +611,107 @@ const AddProducts = () => {
             </FormSection>
           </div>
         </div>
+        <FormSection
+          title="Product Variants"
+          icon={<FiBox className="text-purple-500" />}
+        >
+          <div className="space-y-4">
+            {formData.variants.map((v, i) => (
+              <div
+                key={i}
+                className="group relative bg-[#F8F9FF] p-5 rounded-2xl border border-rose-50 grid md:grid-cols-7 gap-4 items-end"
+              >
+                <FormInput
+                  label="Weight"
+                  value={v.quantity}
+                  onChange={(e) =>
+                    handleVariantChange(i, "quantity", e.target.value)
+                  }
+                  placeholder="e.g. 500"
+                  className="bg-white"
+                />
+                <FormSelect
+                  label="Unit"
+                  value={v.unit}
+                  onChange={(e) =>
+                    handleVariantChange(i, "unit", e.target.value)
+                  }
+                  options={["kg", "g", "mg", "L", "ml", "pcs", "box", "pack"]}
+                  className="bg-white"
+                />
+                <FormInput
+                  label="MRP"
+                  value={v.mrp}
+                  onChange={(e) =>
+                    handleVariantChange(i, "mrp", e.target.value)
+                  }
+                  placeholder="0"
+                  className="bg-white"
+                />
+                <FormInput
+                  label="Offer (%)"
+                  value={v.discount}
+                  onChange={(e) =>
+                    handleVariantChange(i, "discount", e.target.value)
+                  }
+                  placeholder="0"
+                  className="bg-white"
+                />
+                <FormInput
+                  label="Offer Price"
+                  value={v.sellingPrice}
+                  readOnly
+                  placeholder="0"
+                  className="bg-white"
+                />
+                <FormInput
+                  label="Stock"
+                  value={v.stock}
+                  onChange={(e) =>
+                    handleVariantChange(i, "stock", e.target.value)
+                  }
+                  placeholder="0"
+                  className="bg-white"
+                />
+                <div className="flex items-center gap-2">
+                  {formData.variants.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeVariant(i)}
+                      className="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                    >
+                      <FiTrash2 size={18} />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addVariant}
+              className="w-full py-4 border-2 border-dashed border-rose-100 rounded-2xl text-rose-500 font-bold hover:bg-rose-50 hover:border-rose-200 transition-all flex items-center justify-center gap-2"
+            >
+              <FiPlus /> Add more variants (Size, Weight, Pack)
+            </button>
+            <div className="mt-6 grid md:grid-cols-2 gap-6">
+              <FormInput
+                label="Total Stock Available"
+                name="total_stock"
+                value={formData.total_stock}
+                readOnly
+                placeholder="0"
+                className="bg-gray-50 font-bold text-rose-600"
+              />
+              <FormSelect
+                label="Status"
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                options={["Active", "Inactive", "Low Stock", "Out of Stock"]}
+              />
+            </div>
+          </div>
+        </FormSection>
         {/* FORM ACTION BUTTONS */}
         <div className="sticky bottom-0 bg-[#FDFDFF] pt-6">
           <div className="max-w-6xl mx-auto flex justify-end gap-4 border-t border-gray-200 pt-4">
@@ -800,17 +799,21 @@ const FormSelect = ({ label, options, ...props }) => (
     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
       {label}
     </label>
-    <select
-      {...props}
-      className="w-full px-5 py-4 bg-[#F8F9FF] border-2 border-transparent rounded-[1.25rem] focus:border-rose-100 focus:bg-white focus:outline-none text-sm font-semibold text-slate-700 transition-all appearance-none cursor-pointer"
-    >
-      <option value="">Choose Options</option>
-      {options.map((opt, i) => (
-        <option key={i} value={opt}>
-          {opt}
-        </option>
-      ))}
-    </select>
+    <div className="relative">
+  <select
+    {...props}
+    className={`w-full px-5 pr-12 py-4 bg-[#F8F9FF] border-2 border-transparent rounded-[1.25rem] focus:border-rose-100 focus:bg-white focus:outline-none text-sm font-semibold text-slate-700 transition-all appearance-none cursor-pointer ${props.className || ""}`}
+  >
+    <option value="">Choose Options</option>
+    {options.map((opt, i) => (
+      <option key={i} value={opt}>{opt}</option>
+    ))}
+  </select>
+
+  <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
+    ▼
+  </span>
+</div>
   </div>
 );
 
