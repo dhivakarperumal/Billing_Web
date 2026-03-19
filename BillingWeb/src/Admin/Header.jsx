@@ -51,12 +51,18 @@ const Header = ({ onMenuClick }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-  const [notifications, setNotifications] = useState({ today: [], earlier: [] });
+  const [notifications, setNotifications] = useState({
+    today: [],
+    earlier: [],
+  });
   const [unreadCount, setUnreadCount] = useState(0);
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState({ products: [], orders: [] });
+  const [searchResults, setSearchResults] = useState({
+    products: [],
+    orders: [],
+  });
   const [searchLoading, setSearchLoading] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [allOrders, setAllOrders] = useState([]);
@@ -108,13 +114,13 @@ const Header = ({ onMenuClick }) => {
 
       // Filter for all pending/new orders
       const pendingOrders = Array.isArray(data)
-        ? data.filter(o => o.status?.trim() === "Order Placed")
+        ? data.filter((o) => o.status?.trim() === "Order Placed")
         : [];
 
       // Get today's date parts in local time (handles M/D/YYYY and ISO formats)
       const nowLocal = new Date();
       const todayY = nowLocal.getFullYear();
-      const todayM = nowLocal.getMonth();   // 0-indexed
+      const todayM = nowLocal.getMonth(); // 0-indexed
       const todayD = nowLocal.getDate();
 
       const isSameDay = (dateValue) => {
@@ -129,15 +135,19 @@ const Header = ({ onMenuClick }) => {
         );
       };
 
-      const categorized = pendingOrders.reduce((acc, order) => {
-        const dateVal = order.created_at || order.order_date || order.date || null;
-        if (isSameDay(dateVal)) {
-          acc.today.push(order);
-        } else {
-          acc.earlier.push(order);
-        }
-        return acc;
-      }, { today: [], earlier: [] });
+      const categorized = pendingOrders.reduce(
+        (acc, order) => {
+          const dateVal =
+            order.created_at || order.order_date || order.date || null;
+          if (isSameDay(dateVal)) {
+            acc.today.push(order);
+          } else {
+            acc.earlier.push(order);
+          }
+          return acc;
+        },
+        { today: [], earlier: [] },
+      );
 
       setNotifications(categorized);
       setUnreadCount(pendingOrders.length);
@@ -152,10 +162,14 @@ const Header = ({ onMenuClick }) => {
       try {
         const [ordersRes, productsRes] = await Promise.all([
           api.get("/orders"),
-          api.get("/products", { params: { limit: 1000 } })
+          api.get("/products", { params: { limit: 1000 } }),
         ]);
         setAllOrders(Array.isArray(ordersRes.data) ? ordersRes.data : []);
-        setAllProducts(Array.isArray(productsRes.data) ? productsRes.data : (productsRes.data.products || []));
+        setAllProducts(
+          Array.isArray(productsRes.data)
+            ? productsRes.data
+            : productsRes.data.products || [],
+        );
       } catch (e) {
         console.error("Failed to preload data for search", e);
       }
@@ -174,27 +188,33 @@ const Header = ({ onMenuClick }) => {
     }
     setSearchLoading(true);
     const lower = q.toLowerCase().trim();
-    
+
     // Search Orders
-    const matchedOrders = allOrders.filter(o => {
-      const orderId = `ORD-0${o.id}`;
-      const name = (o.customer_name || "").toLowerCase();
-      const phone = (o.customer_phone || "").toLowerCase();
-      return (
-        orderId.toLowerCase().includes(lower) ||
-        String(o.id).includes(lower) ||
-        name.includes(lower) ||
-        phone.includes(lower)
-      );
-    }).slice(0, 5);
+    const matchedOrders = allOrders
+      .filter((o) => {
+        const orderId = `ORD-0${o.id}`;
+        const name = (o.customer_name || "").toLowerCase();
+        const phone = (o.customer_phone || "").toLowerCase();
+        return (
+          orderId.toLowerCase().includes(lower) ||
+          String(o.id).includes(lower) ||
+          name.includes(lower) ||
+          phone.includes(lower)
+        );
+      })
+      .slice(0, 5);
 
     // Search Products
-    const matchedProducts = allProducts.filter(p => {
-      const name = (p.name || "").toLowerCase();
-      const code = (p.product_code || "").toLowerCase();
-      const cat = (p.category || "").toLowerCase();
-      return name.includes(lower) || code.includes(lower) || cat.includes(lower);
-    }).slice(0, 5);
+    const matchedProducts = allProducts
+      .filter((p) => {
+        const name = (p.name || "").toLowerCase();
+        const code = (p.product_code || "").toLowerCase();
+        const cat = (p.category || "").toLowerCase();
+        return (
+          name.includes(lower) || code.includes(lower) || cat.includes(lower)
+        );
+      })
+      .slice(0, 5);
 
     setSearchResults({ products: matchedProducts, orders: matchedOrders });
     setShowSearchResults(true);
@@ -219,30 +239,33 @@ const Header = ({ onMenuClick }) => {
   useEffect(() => {
     const handleClickOutside = (e) => {
       // Search
-      if (searchWrapperRef.current && !searchWrapperRef.current.contains(e.target)) {
+      if (
+        searchWrapperRef.current &&
+        !searchWrapperRef.current.contains(e.target)
+      ) {
         setShowSearchResults(false);
         // If search is open but empty, close the search bar too
         if (showSearch && !searchQuery.trim()) {
           setShowSearch(false);
         }
       }
-      
+
       // Low Stock
       if (lowStockRef.current && !lowStockRef.current.contains(e.target)) {
         setShowLowStock(false);
       }
-      
+
       // Notifications
       if (notifRef.current && !notifRef.current.contains(e.target)) {
         setShowNotifications(false);
       }
-      
+
       // Profile Dropdown
       if (profileRef.current && !profileRef.current.contains(e.target)) {
         setShowDropdown(false);
       }
     };
-    
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showSearch, searchQuery]); // Dependencies to check search state
@@ -252,14 +275,16 @@ const Header = ({ onMenuClick }) => {
     try {
       const res = await api.get("/products");
       const products = Array.isArray(res.data) ? res.data : [];
-      const alerts = products.filter(p => {
-        const stock = parseInt(p.total_stock ?? p.stock ?? 0);
-        return stock <= 10; // low stock threshold
-      }).sort((a, b) => {
-        const sa = parseInt(a.total_stock ?? a.stock ?? 0);
-        const sb = parseInt(b.total_stock ?? b.stock ?? 0);
-        return sa - sb; // worst first
-      });
+      const alerts = products
+        .filter((p) => {
+          const stock = parseInt(p.total_stock ?? p.stock ?? 0);
+          return stock <= 10; // low stock threshold
+        })
+        .sort((a, b) => {
+          const sa = parseInt(a.total_stock ?? a.stock ?? 0);
+          const sb = parseInt(b.total_stock ?? b.stock ?? 0);
+          return sa - sb; // worst first
+        });
       setLowStockItems(alerts);
     } catch (e) {
       console.error("Failed to fetch low stock", e);
@@ -286,19 +311,18 @@ const Header = ({ onMenuClick }) => {
   // ✅ Safe values
   const userName = profileName || "Admin";
 
-  const userRole =
-    role
-      ? role.charAt(0).toUpperCase() + role.slice(1)
-      : "Administrator";
+  const userRole = role
+    ? role.charAt(0).toUpperCase() + role.slice(1)
+    : "Administrator";
 
   return (
-    <header className="sticky top-0 z-30 
-      bg-gray-900
+    <header
+      className="sticky top-0 z-30 
+      bg-white
       border-b border-slate-200/60
-      shadow-[0_4px_30px_rgba(0,0,0,0.04)]">
-
+      shadow-[0_4px_30px_rgba(0,0,0,0.04)]"
+    >
       <div className="flex items-center justify-between px-4 py-3 sm:px-6">
-
         {/* LEFT */}
         <div className="flex items-center gap-4 min-w-0">
           <button
@@ -311,10 +335,11 @@ const Header = ({ onMenuClick }) => {
           </button>
 
           <div className="hidden sm:flex items-center gap-3">
-           
             <div className="flex flex-col">
-              <h1 className="text-xl sm:text-2xl font-black 
-                text-white tracking-tighter truncate leading-none italic">
+              <h1
+                className="text-xl sm:text-2xl font-black 
+                text-gray-900 tracking-tighter truncate leading-none italic"
+              >
                 {getPageTitle()}
               </h1>
               <p className="hidden sm:block text-[10px] text-primary font-bold uppercase tracking-[0.2em] mt-1 opacity-70">
@@ -326,10 +351,11 @@ const Header = ({ onMenuClick }) => {
 
         {/* RIGHT */}
         <div className="flex items-center gap-3">
-
           {/* SEARCH */}
           <div className="relative flex items-center" ref={searchWrapperRef}>
-            <div className={`flex items-center transition-all duration-300 overflow-visible ${showSearch ? 'w-56 sm:w-72 opacity-100 mr-2' : 'w-0 opacity-0 pointer-events-none'}`}>
+            <div
+              className={`flex items-center transition-all duration-300 overflow-visible ${showSearch ? "w-56 sm:w-72 opacity-100 mr-2" : "w-0 opacity-0 pointer-events-none"}`}
+            >
               <div className="relative w-full">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
@@ -342,7 +368,10 @@ const Header = ({ onMenuClick }) => {
                   className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-8 py-3 text-sm focus:outline-none focus:ring-3 focus:ring-gray-500/10 focus:border-gray-300 text-slate-700 transition-all"
                 />
                 {searchQuery && (
-                  <button onClick={clearSearch} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700">
+                  <button
+                    onClick={clearSearch}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
+                  >
                     <X className="w-3.5 h-3.5" />
                   </button>
                 )}
@@ -351,10 +380,12 @@ const Header = ({ onMenuClick }) => {
                 {showSearchResults && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-2xl shadow-2xl z-[500] overflow-hidden">
                     {searchLoading ? (
-                      <div className="px-4 py-3 text-xs text-slate-400 font-bold italic">Scanning Repository...</div>
-                    ) : (searchResults.orders.length > 0 || searchResults.products.length > 0) ? (
+                      <div className="px-4 py-3 text-xs text-slate-400 font-bold italic">
+                        Scanning Repository...
+                      </div>
+                    ) : searchResults.orders.length > 0 ||
+                      searchResults.products.length > 0 ? (
                       <div className="divide-y divide-slate-50 max-h-[440px] overflow-y-auto custom-scrollbar">
-                        
                         {/* PRODUCT RESULTS */}
                         {searchResults.products.length > 0 && (
                           <>
@@ -363,24 +394,44 @@ const Header = ({ onMenuClick }) => {
                                 <Package size={10} /> Inventory Matches
                               </p>
                             </div>
-                            {searchResults.products.map(p => (
+                            {searchResults.products.map((p) => (
                               <button
                                 key={`p-${p.id}`}
-                                onClick={() => { navigate(`/admin/products/detail/${p.id}`); setShowSearchResults(false); setShowSearch(false); setSearchQuery(""); }}
+                                onClick={() => {
+                                  navigate(`/admin/products/detail/${p.id}`);
+                                  setShowSearchResults(false);
+                                  setShowSearch(false);
+                                  setSearchQuery("");
+                                }}
                                 className="w-full px-4 py-3 flex items-center gap-3 hover:bg-rose-50/50 transition-all text-left group"
                               >
                                 <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden shrink-0">
-                                  <img 
-                                    src={(p.images?.[0]) || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=random`} 
-                                    alt="" className="w-full h-full object-cover" 
+                                  <img
+                                    src={
+                                      p.images?.[0] ||
+                                      `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=random`
+                                    }
+                                    alt=""
+                                    className="w-full h-full object-cover"
                                   />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-xs font-black text-slate-800 truncate">{p.name}</p>
+                                  <p className="text-xs font-black text-slate-800 truncate">
+                                    {p.name}
+                                  </p>
                                   <div className="flex items-center gap-2 mt-0.5">
-                                    <span className="text-[9px] font-black text-slate-400 uppercase">{p.category}</span>
-                                    <span className="text-[9px] text-slate-300">•</span>
-                                    <span className="text-[10px] font-black text-rose-600">₹{Number(p.offer_price || p.price).toLocaleString()}</span>
+                                    <span className="text-[9px] font-black text-slate-400 uppercase">
+                                      {p.category}
+                                    </span>
+                                    <span className="text-[9px] text-slate-300">
+                                      •
+                                    </span>
+                                    <span className="text-[10px] font-black text-rose-600">
+                                      ₹
+                                      {Number(
+                                        p.offer_price || p.price,
+                                      ).toLocaleString()}
+                                    </span>
                                   </div>
                                 </div>
                               </button>
@@ -396,24 +447,41 @@ const Header = ({ onMenuClick }) => {
                                 <ShoppingBag size={10} /> Bill Records
                               </p>
                             </div>
-                            {searchResults.orders.map(order => (
+                            {searchResults.orders.map((order) => (
                               <button
                                 key={`o-${order.id}`}
-                                onClick={() => handleSearchResultClick(order.id)}
+                                onClick={() =>
+                                  handleSearchResultClick(order.id)
+                                }
                                 className="w-full px-4 py-3 flex items-center gap-3 hover:bg-primary/10/50 transition-all text-left group"
                               >
                                 <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center text-white text-xs font-black shrink-0 shadow">
-                                  {(order.customer_name || "?").charAt(0).toUpperCase()}
+                                  {(order.customer_name || "?")
+                                    .charAt(0)
+                                    .toUpperCase()}
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <div className="flex items-center justify-between gap-2">
-                                    <p className="text-xs font-black text-slate-800 truncate">{order.customer_name || "Unknown"}</p>
-                                    <span className="text-[9px] font-black text-primary bg-primary/10 px-1.5 py-0.5 rounded shrink-0">ORD-0{order.id}</span>
+                                    <p className="text-xs font-black text-slate-800 truncate">
+                                      {order.customer_name || "Unknown"}
+                                    </p>
+                                    <span className="text-[9px] font-black text-primary bg-primary/10 px-1.5 py-0.5 rounded shrink-0">
+                                      ORD-0{order.id}
+                                    </span>
                                   </div>
                                   <div className="flex items-center gap-2 mt-0.5">
-                                    <span className="text-[10px] text-slate-400 font-bold truncate">{order.customer_phone || "No phone"}</span>
-                                    <span className="text-[9px] text-slate-300">•</span>
-                                    <span className="text-[10px] font-black text-emerald-600">₹{Number(order.total_amount).toLocaleString('en-IN')}</span>
+                                    <span className="text-[10px] text-slate-400 font-bold truncate">
+                                      {order.customer_phone || "No phone"}
+                                    </span>
+                                    <span className="text-[9px] text-slate-300">
+                                      •
+                                    </span>
+                                    <span className="text-[10px] font-black text-emerald-600">
+                                      ₹
+                                      {Number(
+                                        order.total_amount,
+                                      ).toLocaleString("en-IN")}
+                                    </span>
                                   </div>
                                 </div>
                               </button>
@@ -426,8 +494,12 @@ const Header = ({ onMenuClick }) => {
                         <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3 text-gray-200">
                           <Search size={24} />
                         </div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Repository Clear</p>
-                        <p className="text-[9px] text-slate-300 mt-1 italic">No products or bills match your search.</p>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                          Repository Clear
+                        </p>
+                        <p className="text-[9px] text-slate-300 mt-1 italic">
+                          No products or bills match your search.
+                        </p>
                       </div>
                     )}
                   </div>
@@ -435,9 +507,12 @@ const Header = ({ onMenuClick }) => {
               </div>
             </div>
             <button
-              onClick={() => { setShowSearch(p => !p); if (showSearch) clearSearch(); }}
+              onClick={() => {
+                setShowSearch((p) => !p);
+                if (showSearch) clearSearch();
+              }}
               className={`p-2 rounded-xl transition-all active:scale-95 border
-              ${showSearch ? 'text-primary bg-white border-blue-100 shadow-md shadow-primary/10' : 'bg-white text-slate-500 hover:bg-slate-50 border-slate-200 shadow-sm'}`}
+  ${showSearch ? "bg-gray-900 text-white border-gray-900 shadow-md" : "bg-gray-900 text-white hover:bg-gray-800 border-gray-900 shadow-sm"}`}
             >
               <Search className="w-5 h-5" />
             </button>
@@ -446,90 +521,120 @@ const Header = ({ onMenuClick }) => {
           {/* LOW STOCK ALERT */}
           <div className="relative" ref={lowStockRef}>
             <button
-              onClick={() => { setShowLowStock(p => !p); setShowNotifications(false); }}
+              onClick={() => {
+                setShowLowStock((p) => !p);
+                setShowNotifications(false);
+              }}
               className={`relative p-2 rounded-xl transition-all active:scale-95 border
-              ${showLowStock ? 'bg-amber-50 text-amber-600 border-amber-200 shadow-md' : 'bg-white text-slate-500 hover:bg-amber-50 hover:text-amber-500 border-slate-200 shadow-sm'}`}
+              ${showLowStock ? "bg-gray-900 text-white border-gray-900 shadow-md" : "bg-gray-900 text-white hover:bg-gray-800 border-gray-900 shadow-sm"}`}
               title="Low Stock Alerts"
             >
               <AlertTriangle className="w-5 h-5" />
               {lowStockItems.length > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[9px] font-bold text-white ring-2 ring-white">
-                  {lowStockItems.length > 9 ? '9+' : lowStockItems.length}
+                  {lowStockItems.length > 9 ? "9+" : lowStockItems.length}
                 </span>
               )}
             </button>
 
             {showLowStock && (
               <div className="absolute right-0 mt-4 w-80 bg-white border border-slate-100 rounded-2xl shadow-2xl z-50 overflow-hidden">
-
-                  {/* Header */}
-                  <div className="px-5 py-4 border-b border-slate-50 flex items-center justify-between bg-amber-50">
-                    <div className="flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-amber-500" />
-                      <h3 className="text-sm font-black text-slate-800 uppercase tracking-tight">Low Stock</h3>
-                    </div>
-                    <span className="text-[10px] font-black bg-amber-100 text-amber-700 px-2.5 py-1 rounded-lg uppercase">
-                      {lowStockItems.length} Alert{lowStockItems.length !== 1 ? 's' : ''}
-                    </span>
+                {/* Header */}
+                <div className="px-5 py-4 border-b border-slate-50 flex items-center justify-between bg-amber-50">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-amber-500" />
+                    <h3 className="text-sm font-black text-slate-800 uppercase tracking-tight">
+                      Low Stock
+                    </h3>
                   </div>
+                  <span className="text-[10px] font-black bg-amber-100 text-amber-700 px-2.5 py-1 rounded-lg uppercase">
+                    {lowStockItems.length} Alert
+                    {lowStockItems.length !== 1 ? "s" : ""}
+                  </span>
+                </div>
 
-                  <div className="max-h-[400px] overflow-y-auto divide-y divide-slate-50">
-                    {lowStockItems.length > 0 ? lowStockItems.map(product => {
-                      const stock = parseInt(product.total_stock ?? product.stock ?? 0);
+                <div className="max-h-[400px] overflow-y-auto divide-y divide-slate-50">
+                  {lowStockItems.length > 0 ? (
+                    lowStockItems.map((product) => {
+                      const stock = parseInt(
+                        product.total_stock ?? product.stock ?? 0,
+                      );
                       const isOut = stock <= 0;
-                      const img = (product.variants?.[0]?.images?.[0]) ||
-                        (product.images?.[0]) ||
+                      const img =
+                        product.variants?.[0]?.images?.[0] ||
+                        product.images?.[0] ||
                         `https://ui-avatars.com/api/?name=${encodeURIComponent(product.name)}&background=random`;
                       return (
                         <button
                           key={product.id}
-                          onClick={() => { navigate('/admin/products/stock'); setShowLowStock(false); }}
+                          onClick={() => {
+                            navigate("/admin/products/stock");
+                            setShowLowStock(false);
+                          }}
                           className="w-full px-4 py-3 flex items-center gap-3 hover:bg-amber-50/40 transition-all text-left group"
                         >
                           {/* Product image */}
                           <div className="w-10 h-10 rounded-xl overflow-hidden bg-gray-100 border border-gray-100 shrink-0">
-                            <img src={img} alt={product.name} className="w-full h-full object-cover" />
+                            <img
+                              src={img}
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs font-black text-slate-800 truncate">{product.name}</p>
-                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider truncate mt-0.5">{product.category || product.product_code || '—'}</p>
+                            <p className="text-xs font-black text-slate-800 truncate">
+                              {product.name}
+                            </p>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider truncate mt-0.5">
+                              {product.category || product.product_code || "—"}
+                            </p>
                           </div>
                           <div className="text-right shrink-0">
-                            <p className={`text-sm font-black ${isOut ? 'text-red-600' : 'text-amber-600'}`}>
+                            <p
+                              className={`text-sm font-black ${isOut ? "text-red-600" : "text-amber-600"}`}
+                            >
                               {stock}
                             </p>
-                            <span className={`text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded ${isOut ? 'bg-red-100 text-red-600' : 'bg-amber-100 text-amber-600'
-                              }`}>
-                              {isOut ? 'Out' : 'Low'}
+                            <span
+                              className={`text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded ${
+                                isOut
+                                  ? "bg-red-100 text-red-600"
+                                  : "bg-amber-100 text-amber-600"
+                              }`}
+                            >
+                              {isOut ? "Out" : "Low"}
                             </span>
                           </div>
                         </button>
                       );
-                    }) : (
-                      <div className="px-6 py-10 text-center">
-                        <Package className="mx-auto w-10 h-10 opacity-10 mb-3" />
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">All stock healthy</p>
-                      </div>
-                    )}
-                  </div>
-
-                  <Link
-                    to="/admin/products/stock"
-                    onClick={() => setShowLowStock(false)}
-                    className="block w-full py-3.5 text-center text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] bg-amber-50/60 hover:bg-amber-50 transition-colors border-t border-slate-50"
-                  >
-                    View Full Stock Report →
-                  </Link>
+                    })
+                  ) : (
+                    <div className="px-6 py-10 text-center">
+                      <Package className="mx-auto w-10 h-10 opacity-10 mb-3" />
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        All stock healthy
+                      </p>
+                    </div>
+                  )}
                 </div>
+
+                <Link
+                  to="/admin/products/stock"
+                  onClick={() => setShowLowStock(false)}
+                  className="block w-full py-3.5 text-center text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] bg-amber-50/60 hover:bg-amber-50 transition-colors border-t border-slate-50"
+                >
+                  View Full Stock Report →
+                </Link>
+              </div>
             )}
           </div>
 
           {/* NOTIFICATION */}
           <div className="relative" ref={notifRef}>
             <button
-              onClick={() => setShowNotifications(p => !p)}
+              onClick={() => setShowNotifications((p) => !p)}
               className={`relative p-2 rounded-xl transition-all active:scale-95 border
-              ${showNotifications ? 'bg-white text-primary border-blue-100 shadow-md shadow-primary/10' : 'bg-white text-slate-500 hover:bg-slate-50 border-slate-200 shadow-sm'}`}
+              ${showNotifications ? "bg-gray-900 text-white border-gray-900 shadow-md shadow-gray-800" : "bg-gray-900 text-white hover:bg-gray-800 border-gray-900 shadow-sm"}`}
             >
               <Bell className="w-5 h-5" />
               {unreadCount > 0 && (
@@ -540,141 +645,168 @@ const Header = ({ onMenuClick }) => {
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 mt-4 w-80 
+              <div
+                className="absolute right-0 mt-4 w-80 
               bg-white 
               border border-slate-100
-              rounded-2xl shadow-2xl z-50 overflow-hidden">
+              rounded-2xl shadow-2xl z-50 overflow-hidden"
+              >
+                <div className="px-5 py-4 border-b border-slate-50 flex items-center justify-between bg-white sticky top-0">
+                  <h3 className="text-sm font-black text-slate-800 uppercase tracking-tight">
+                    New Orders
+                  </h3>
+                  <span className="text-[10px] font-black bg-primary/10 text-primary px-2.5 py-1 rounded-lg uppercase">
+                    {(notifications.today?.length || 0) +
+                      (notifications.earlier?.length || 0)}{" "}
+                    Pending
+                  </span>
+                </div>
 
-                  <div className="px-5 py-4 border-b border-slate-50 flex items-center justify-between bg-white sticky top-0">
-                    <h3 className="text-sm font-black text-slate-800 uppercase tracking-tight">
-                      New Orders
-                    </h3>
-                    <span className="text-[10px] font-black bg-primary/10 text-primary px-2.5 py-1 rounded-lg uppercase">
-                      {(notifications.today?.length || 0) + (notifications.earlier?.length || 0)} Pending
-                    </span>
-                  </div>
-
-                  <div className="max-h-[450px] overflow-y-auto custom-scrollbar">
-                    {notifications.today?.length > 0 || notifications.earlier?.length > 0 ? (
-                      <div className="divide-y divide-slate-50">
-                        {/* Today Section */}
-                        {notifications.today?.length > 0 && (
-                          <>
-                            <div className="px-5 py-2 bg-slate-50/50 sticky top-0 z-10 backdrop-blur-sm">
-                              <p className="text-[9px] font-black text-primary uppercase tracking-[0.2em]">Today's Orders</p>
-                            </div>
-                            {notifications.today.map((order) => (
-                              <button
-                                key={order.id}
-                                onClick={() => handleNotificationClick(order.id)}
-                                className="w-full px-5 py-4 flex items-start gap-4 hover:bg-primary/10/30 transition-all text-left group  "
-                              >
-                                <div className="w-10 h-10 rounded-xl bg-blue-100/50 flex items-center justify-center text-primary shrink-0 group-hover:scale-110 transition-transform shadow-sm">
-                                  <ShoppingBag className="w-5 h-5" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center justify-between mb-0.5">
-                                    <p className="text-sm font-black text-slate-800 tracking-tight">ORD-0{order.id}</p>
-                                    <p className="text-[12px] text-primary font-black">₹{Number(order.total_amount).toLocaleString('en-IN')}</p>
-                                  </div>
-                                  <div className="flex items-center justify-between">
-                                    <p className="text-[10px] text-slate-500 font-bold truncate">
-                                      {order.customer_name || "New Customer"}
-                                    </p>
-                                    <span className="text-[9px] bg-primary/10 text-green-600 font-black px-1.5 py-0.5 rounded uppercase">
-                                      {order.status}
-                                    </span>
-                                  </div>
-
-                                </div>
-
-                              </button>
-                            ))}
-                          </>
-                        )}
-
-                        {/* Earlier Section */}
-                        {notifications.earlier?.length > 0 && (
-                          <>
-                            <div className="px-5 py-2 bg-slate-50/50 sticky top-0 z-10 backdrop-blur-sm">
-                              <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Earlier Pending</p>
-                            </div>
-                            {notifications.earlier.map((order) => (
-                              <button
-                                key={order.id}
-                                onClick={() => handleNotificationClick(order.id)}
-                                className="w-full px-5 py-4 flex items-start gap-4 hover:bg-slate-50 transition-all text-left group opacity-80 hover:opacity-100"
-                              >
-                                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 shrink-0 group-hover:scale-110 transition-transform">
-                                  <ShoppingBag className="w-5 h-5" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center justify-between mb-0.5">
-                                    <p className="text-sm font-black text-slate-800 tracking-tight">#ORD-0{order.id}</p>
-                                    <p className="text-[12px] text-slate-600 font-black">₹{Number(order.total_amount).toLocaleString('en-IN')}</p>
-                                  </div>
-                                  <div className="flex items-center justify-between">
-                                    <p className="text-[10px] text-slate-400 font-bold truncate">
-                                      {order.customer_name || "New Customer"}
-                                    </p>
-                                    <span className="text-[9px] bg-slate-100 text-slate-500 font-black px-1.5 py-0.5 rounded uppercase">
-                                      {order.status}
-                                    </span>
-                                  </div>
-                                  <p className="text-[8px] text-slate-300 font-bold uppercase tracking-widest mt-2 flex items-center justify-between">
-                                    <span>{new Date(order.created_at).toLocaleDateString()}</span>
-                                    <span>{new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                <div className="max-h-[450px] overflow-y-auto custom-scrollbar">
+                  {notifications.today?.length > 0 ||
+                  notifications.earlier?.length > 0 ? (
+                    <div className="divide-y divide-slate-50">
+                      {/* Today Section */}
+                      {notifications.today?.length > 0 && (
+                        <>
+                          <div className="px-5 py-2 bg-slate-50/50 sticky top-0 z-10 backdrop-blur-sm">
+                            <p className="text-[9px] font-black text-primary uppercase tracking-[0.2em]">
+                              Today's Orders
+                            </p>
+                          </div>
+                          {notifications.today.map((order) => (
+                            <button
+                              key={order.id}
+                              onClick={() => handleNotificationClick(order.id)}
+                              className="w-full px-5 py-4 flex items-start gap-4 hover:bg-primary/10/30 transition-all text-left group  "
+                            >
+                              <div className="w-10 h-10 rounded-xl bg-blue-100/50 flex items-center justify-center text-primary shrink-0 group-hover:scale-110 transition-transform shadow-sm">
+                                <ShoppingBag className="w-5 h-5" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between mb-0.5">
+                                  <p className="text-sm font-black text-slate-800 tracking-tight">
+                                    ORD-0{order.id}
+                                  </p>
+                                  <p className="text-[12px] text-primary font-black">
+                                    ₹
+                                    {Number(order.total_amount).toLocaleString(
+                                      "en-IN",
+                                    )}
                                   </p>
                                 </div>
+                                <div className="flex items-center justify-between">
+                                  <p className="text-[10px] text-slate-500 font-bold truncate">
+                                    {order.customer_name || "New Customer"}
+                                  </p>
+                                  <span className="text-[9px] bg-primary/10 text-green-600 font-black px-1.5 py-0.5 rounded uppercase">
+                                    {order.status}
+                                  </span>
+                                </div>
+                              </div>
+                            </button>
+                          ))}
+                        </>
+                      )}
 
-                              </button>
-                            ))}
-                          </>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="px-6 py-12 text-center text-slate-400">
-                        <Package className="mx-auto w-12 h-12 opacity-10 mb-3" />
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-50">
-                          All orders processed
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  {(notifications.today?.length > 0 || notifications.earlier?.length > 0) && (
-                    <Link
-                      to="/admin/orders/new"
-                      onClick={() => setShowNotifications(false)}
-                      className="block w-full py-4 text-center text-[10px] font-black text-primary uppercase tracking-[0.2em] bg-primary/10/50 hover:bg-primary/10 transition-colors border-t border-slate-50"
-                    >
-                      View All Manifests
-                    </Link>
+                      {/* Earlier Section */}
+                      {notifications.earlier?.length > 0 && (
+                        <>
+                          <div className="px-5 py-2 bg-slate-50/50 sticky top-0 z-10 backdrop-blur-sm">
+                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                              Earlier Pending
+                            </p>
+                          </div>
+                          {notifications.earlier.map((order) => (
+                            <button
+                              key={order.id}
+                              onClick={() => handleNotificationClick(order.id)}
+                              className="w-full px-5 py-4 flex items-start gap-4 hover:bg-slate-50 transition-all text-left group opacity-80 hover:opacity-100"
+                            >
+                              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 shrink-0 group-hover:scale-110 transition-transform">
+                                <ShoppingBag className="w-5 h-5" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between mb-0.5">
+                                  <p className="text-sm font-black text-slate-800 tracking-tight">
+                                    #ORD-0{order.id}
+                                  </p>
+                                  <p className="text-[12px] text-slate-600 font-black">
+                                    ₹
+                                    {Number(order.total_amount).toLocaleString(
+                                      "en-IN",
+                                    )}
+                                  </p>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <p className="text-[10px] text-slate-400 font-bold truncate">
+                                    {order.customer_name || "New Customer"}
+                                  </p>
+                                  <span className="text-[9px] bg-slate-100 text-slate-500 font-black px-1.5 py-0.5 rounded uppercase">
+                                    {order.status}
+                                  </span>
+                                </div>
+                                <p className="text-[8px] text-slate-300 font-bold uppercase tracking-widest mt-2 flex items-center justify-between">
+                                  <span>
+                                    {new Date(
+                                      order.created_at,
+                                    ).toLocaleDateString()}
+                                  </span>
+                                  <span>
+                                    {new Date(
+                                      order.created_at,
+                                    ).toLocaleTimeString([], {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                  </span>
+                                </p>
+                              </div>
+                            </button>
+                          ))}
+                        </>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="px-6 py-12 text-center text-slate-400">
+                      <Package className="mx-auto w-12 h-12 opacity-10 mb-3" />
+                      <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-50">
+                        All orders processed
+                      </p>
+                    </div>
                   )}
                 </div>
+
+                {(notifications.today?.length > 0 ||
+                  notifications.earlier?.length > 0) && (
+                  <Link
+                    to="/admin/orders/new"
+                    onClick={() => setShowNotifications(false)}
+                    className="block w-full py-4 text-center text-[10px] font-black text-primary uppercase tracking-[0.2em] bg-primary/10/50 hover:bg-primary/10 transition-colors border-t border-slate-50"
+                  >
+                    View All Manifests
+                  </Link>
+                )}
+              </div>
             )}
           </div>
-
-          
-
-         
 
           {/* PROFILE */}
           <div className="relative" ref={profileRef}>
             <button
-              onClick={() => setShowDropdown(p => !p)}
+              onClick={() => setShowDropdown((p) => !p)}
               className={`flex items-center gap-3 px-2 py-1.5 sm:px-3 rounded-2xl transition-all active:scale-95 border
-              ${showDropdown ? 'bg-primary/10 border-blue-100' : 'bg-slate-50 border-slate-100 hover:bg-slate-100'}`}
+              ${showDropdown ? "bg-primary/10 border-blue-100" : "bg-slate-50 border-slate-100 hover:bg-slate-100"}`}
             >
-              <div className="w-8 h-8 rounded-xl 
-                bg-slate-900 flex items-center justify-center text-white text-xs font-black shadow-lg">
+              <div
+                className="w-8 h-8 rounded-xl 
+                bg-slate-900 flex items-center justify-center text-white text-xs font-black shadow-lg"
+              >
                 {userName.charAt(0).toUpperCase()}
               </div>
 
               <div className="hidden md:block text-left leading-tight">
-                <p className="text-xs font-black text-slate-800">
-                  {userName}
-                </p>
+                <p className="text-xs font-black text-slate-800">{userName}</p>
                 <p className="text-[9px] text-primary font-bold uppercase tracking-widest opacity-70">
                   {userRole}
                 </p>
@@ -687,30 +819,27 @@ const Header = ({ onMenuClick }) => {
             </button>
 
             {showDropdown && (
-              <div className="absolute right-0 mt-4 w-52
+              <div
+                className="absolute right-0 mt-4 w-52
                   bg-white 
                   border border-slate-100
-                  rounded-2xl shadow-2xl z-50 p-2 overflow-hidden">
+                  rounded-2xl shadow-2xl z-50 p-2 overflow-hidden"
+              >
+                <div className="px-3 py-2 border-b border-slate-50 mb-1">
+                  <p className="text-sm font-semibold text-black">{userName}</p>
+                  <p className="text-xs text-black/60">{email}</p>
+                </div>
 
-                  <div className="px-3 py-2 border-b border-slate-50 mb-1">
-                    <p className="text-sm font-semibold text-black">
-                      {userName}
-                    </p>
-                    <p className="text-xs text-black/60">
-                      {email}
-                    </p>
-                  </div>
-
-                  <Link
-                    to="/admin/profile"
-                    className="flex items-center gap-3 px-3 py-2.5 
+                <Link
+                  to="/admin/profile"
+                  className="flex items-center gap-3 px-3 py-2.5 
                     rounded-xl hover:bg-primary/10 hover:text-primary
                     text-sm text-slate-600 transition font-bold"
-                  >
-                    <User className="w-4 h-4 opacity-50" /> Profile
-                  </Link>
+                >
+                  <User className="w-4 h-4 opacity-50" /> Profile
+                </Link>
 
-                  {/* <Link
+                {/* <Link
                     to="/admin/settings"
                     className="flex items-center gap-3 px-3 py-2.5 
                     rounded-xl hover:bg-primary/10 hover:text-primary
@@ -719,15 +848,15 @@ const Header = ({ onMenuClick }) => {
                     <Settings className="w-4 h-4 opacity-50" /> Settings
                   </Link> */}
 
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-3 px-3 py-2 
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-3 px-3 py-2 
                     rounded-xl hover:bg-red-500/20 
                     text-sm text-red-400 w-full transition"
-                  >
-                    <LogOut className="w-4 h-4" /> Logout
-                  </button>
-                </div>
+                >
+                  <LogOut className="w-4 h-4" /> Logout
+                </button>
+              </div>
             )}
           </div>
         </div>
