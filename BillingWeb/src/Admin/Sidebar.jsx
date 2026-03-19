@@ -174,7 +174,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
                       w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all
                       ${isMenuOpen
                         ? "bg-blue-600/10 text-white ring-1 ring-blue-500/30"
-                        : "text-white/50 hover:bg-white/5 hover:text-white"
+                        : "text-white/80 hover:bg-white/5 hover:text-white"
                       }
                     `}
                   >
@@ -241,7 +241,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
                     flex items-center gap-3 px-4 py-3 rounded-xl transition-all
                     ${isActive
                       ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md shadow-blue-500/30"
-                      : "text-white/50 hover:bg-blue-500/10 hover:text-white"
+                      : "text-white/80 hover:bg-blue-500/10 hover:text-white"
                     }
                   `}
               >
