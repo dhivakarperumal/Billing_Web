@@ -62,9 +62,11 @@ const Dashboard = () => {
         const totalRevenue = orders.reduce((sum, o) => sum + Number(o.total_amount || 0), 0);
         const todayRevenue = todayOrders.reduce((sum, o) => sum + Number(o.total_amount || 0), 0);
         const uniqueCustomers = new Set(orders.map(o => o.customer_phone)).size;
+        const totalStockQuantity = products.reduce((sum, p) => sum + Number(p.total_stock || 0), 0);
 
         const mainStats = [
           { title: "Total Products", value: products.length, icon: <FiBox />, color: "bg-emerald-100 text-emerald-600" },
+          { title: "Total Stock", value: totalStockQuantity, icon: <FiBox />, color: "bg-orange-100 text-orange-600" },
           { title: "Total Customers", value: uniqueCustomers, icon: <FiUsers />, color: "bg-purple-100 text-purple-600" },
           { title: "Total Bills", value: orders.length, icon: <FiFileText />, color: "bg-rose-100 text-rose-600" },
           { title: "Today's Bills", value: todayOrders.length, icon: <FiShoppingBag />, color: "bg-indigo-100 text-indigo-600" },
@@ -141,7 +143,7 @@ const Dashboard = () => {
     
 
       {/* QUICK ACTIONS */}
-     <div className="flex items-center justify-end gap-4 mb-4 p-4 bg-gradient-to-r from-rose-50 to-white border border-gray-100 rounded-2xl shadow-sm">
+     {/* <div className="flex items-center justify-end gap-4 mb-4 p-4 bg-gradient-to-r from-rose-50 to-white border border-gray-100 rounded-2xl shadow-sm">
 
   <button 
     onClick={() => navigate('/admin/billing/create')}
@@ -164,30 +166,71 @@ const Dashboard = () => {
     <FiBox className="text-lg text-rose-500" /> Add Product
   </button>
 
-</div>
+</div> */}
 
       {/* STATS GRID */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {data.stats.map((item, i) => (
-          <div
-            key={i}
-            className="bg-white/80 backdrop-blur border border-gray-100 p-6 rounded-[2rem] shadow-sm hover:shadow-xl transition-all hover:-translate-y-1 group"
-          >
-            <div className="flex justify-between items-center mb-4">
-              <span className={`p-3 rounded-2xl ${item.color} shadow-inner group-hover:scale-110 transition-transform`}>
-                {item.icon}
-              </span>
+        {data.stats.map((item, i) => {
+          const bgGradients = [
+            { from: "from-[#4387F6]", to: "to-[#5C9CF8]", text: "text-[#4387F6]" }, // Blue
+            { from: "from-[#F85A6C]", to: "to-[#FA7082]", text: "text-[#F85A6C]" }, // Red
+            { from: "from-[#28C382]", to: "to-[#3DD09A]", text: "text-[#28C382]" }, // Green
+            { from: "from-[#FC8C41]", to: "to-[#FD9D5B]", text: "text-[#FC8C41]" }, // Orange
+            { from: "from-[#8B5CF6]", to: "to-[#A78BFA]", text: "text-[#8B5CF6]" }, // Purple
+            { from: "from-[#14B8A6]", to: "to-[#2DD4BF]", text: "text-[#14B8A6]" }, // Teal
+            { from: "from-[#F59E0B]", to: "to-[#FBBF24]", text: "text-[#F59E0B]" }, // Yellow
+          ];
+          const dummyTrends = [
+            { isUp: true, val: "+427" },
+            { isUp: false, val: "-23.09%" },
+            { isUp: true, val: "52.09%" },
+            { isUp: false, val: "-152.3" },
+            { isUp: true, val: "+14.5%" },
+            { isUp: true, val: "+8.2%" },
+            { isUp: false, val: "-2.4%" }
+          ];
+
+          const styleInfo = bgGradients[i % bgGradients.length];
+          const trend = dummyTrends[i % dummyTrends.length];
+
+          return (
+            <div
+              key={i}
+              className={`relative overflow-hidden bg-gradient-to-r ${styleInfo.from} ${styleInfo.to} p-5 rounded-md shadow-sm transition-all hover:-translate-y-1 text-white flex flex-col justify-between`}
+            >
+              <div className="z-10 relative">
+                <p className="text-[11px] font-bold uppercase tracking-wider mb-2 text-white/90">
+                  {item.title}
+                </p>
+                
+                <div className="flex justify-between items-end mb-4">
+                  <p className="text-2xl font-bold tracking-tight">
+                    {item.value}
+                  </p>
+                  <div className="flex items-center gap-1 text-sm font-medium">
+                    <div className={`w-4 h-4 rounded-full bg-white flex items-center justify-center ${styleInfo.text}`}>
+                       {trend.isUp ? (
+                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
+                       ) : (
+                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+                       )}
+                    </div>
+                    {trend.val}
+                  </div>
+                </div>
+
+                <p className="text-[11px] text-white/80 mt-1">
+                  Compared to last week
+                </p>
+              </div>
+
+              {/* Bottom wave SVG */}
+              <svg className="absolute bottom-0 left-0 w-full opacity-[0.25] pointer-events-none translate-y-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none" style={{ height: '45px' }}>
+                <path fill="#ffffff" fillOpacity="1" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,218.7C672,235,768,245,864,229.3C960,213,1056,171,1152,149.3C1248,128,1344,128,1392,128L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+              </svg>
             </div>
-
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-              {item.title}
-            </p>
-
-            <p className="text-2xl font-black text-slate-800 mt-1 tracking-tight italic">
-              {item.value}
-            </p>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* STOCK OVERVIEW */}
@@ -228,26 +271,38 @@ const Dashboard = () => {
       {/* CHART + REVENUE */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* REVENUE GRAPH */}
-        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-3">
-          <h2 className="text-sm font-black text-slate-800 mb-4">
+        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-6 pt-5">
+          <h2 className="text-[1.1rem] font-black text-slate-800 mb-6">
             Shipment Statistic
           </h2>
 
-          <div className="h-80 w-full">
+          <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data.revenueGraphData} barSize={25}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 10, fontWeight: 900}} />
-                <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fontWeight: 900}} />
+              <BarChart data={data.revenueGraphData} barSize={20} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="5 5" vertical={false} stroke="#E2E8F0" />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{fill: '#475569', fontSize: 12, fontWeight: 800}} 
+                  dy={10}
+                />
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{fill: '#475569', fontSize: 12, fontWeight: 800}} 
+                  dx={-10}
+                />
                 <Tooltip 
+                   cursor={{fill: '#f8fafc'}}
                    contentStyle={{backgroundColor: '#fff', borderRadius: '1rem', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}}
                    itemStyle={{fontWeight: 900, fontSize: '12px'}}
                 />
                 <Bar
-                  dataKey="total"
+                  dataKey="count"
                   fill="#F43F5E"
                   radius={[10, 10, 0, 0]}
-                  name="Revenue (₹)"
+                  name="Shipments"
                 />
               </BarChart>
             </ResponsiveContainer>

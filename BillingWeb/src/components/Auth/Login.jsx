@@ -63,9 +63,9 @@ function Login() {
       toast.success("Google Login Successful!");
 
       if (res.data.user.role === "admin") {
-        navigate("/admin");
+        navigate("/");
       } else {
-        navigate("/admin");
+        navigate("/");
       }
 
     } catch (error) {

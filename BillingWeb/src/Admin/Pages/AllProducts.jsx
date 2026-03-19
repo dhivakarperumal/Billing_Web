@@ -397,21 +397,65 @@ const AllProducts = () => {
                     {/* Quick Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
-                            { label: "Products", value: stats.total, icon: <FiBox />, color: "text-rose-600", bg: "bg-rose-50" },
-                            { label: "Active", value: stats.active, icon: <FiCheckCircle />, color: "text-emerald-600", bg: "bg-emerald-50" },
-                            { label: "Low Stock", value: stats.lowStock, icon: <FiAlertCircle />, color: "text-amber-600", bg: "bg-amber-50" },
-                            { label: "Out of Stock", value: stats.outOfStock, icon: <FiXCircle />, color: "text-rose-600", bg: "bg-rose-50" },
-                        ].map((stat, i) => (
-                            <div key={i} className="bg-white px-4 py-5 md:p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col md:flex-row items-start md:items-center gap-4 transition-all hover:shadow-md">
-                                <div className={`w-10 h-10 md:w-12 md:h-12 ${stat.bg} ${stat.color} rounded-xl flex items-center justify-center text-lg shadow-inner`}>
-                                    {stat.icon}
+                            { label: "Products", value: stats.total },
+                            { label: "Active", value: stats.active },
+                            { label: "Low Stock", value: stats.lowStock },
+                            { label: "Out of Stock", value: stats.outOfStock },
+                        ].map((stat, i) => {
+                            const bgGradients = [
+                              { from: "from-[#4387F6]", to: "to-[#5C9CF8]", text: "text-[#4387F6]" }, // Blue
+                              { from: "from-[#F85A6C]", to: "to-[#FA7082]", text: "text-[#F85A6C]" }, // Red
+                              { from: "from-[#28C382]", to: "to-[#3DD09A]", text: "text-[#28C382]" }, // Green
+                              { from: "from-[#FC8C41]", to: "to-[#FD9D5B]", text: "text-[#FC8C41]" }, // Orange
+                            ];
+                            const dummyTrends = [
+                              { isUp: true, val: "+427" },
+                              { isUp: false, val: "-23.09%" },
+                              { isUp: true, val: "52.09%" },
+                              { isUp: false, val: "-152.3" }
+                            ];
+                  
+                            const styleInfo = bgGradients[i % bgGradients.length];
+                            const trend = dummyTrends[i % dummyTrends.length];
+                  
+                            return (
+                              <div
+                                key={i}
+                                className={`relative overflow-hidden bg-gradient-to-r ${styleInfo.from} ${styleInfo.to} p-5 rounded-md shadow-sm transition-all hover:-translate-y-1 text-white flex flex-col justify-between`}
+                              >
+                                <div className="z-10 relative">
+                                  <p className="text-[11px] font-bold uppercase tracking-wider mb-2 text-white/90">
+                                    {stat.label}
+                                  </p>
+                                  
+                                  <div className="flex justify-between items-end mb-4">
+                                    <p className="text-2xl font-bold tracking-tight">
+                                      {stat.value}
+                                    </p>
+                                    <div className="flex items-center gap-1 text-sm font-medium">
+                                      <div className={`w-4 h-4 rounded-full bg-white flex items-center justify-center ${styleInfo.text}`}>
+                                         {trend.isUp ? (
+                                           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
+                                         ) : (
+                                           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+                                         )}
+                                      </div>
+                                      {trend.val}
+                                    </div>
+                                  </div>
+                  
+                                  <p className="text-[11px] text-white/80 mt-1">
+                                    Compared to last week
+                                  </p>
                                 </div>
-                                <div>
-                                    <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest">{stat.label}</p>
-                                    <p className="text-xl md:text-2xl font-black text-slate-800 leading-none mt-1">{stat.value}</p>
-                                </div>
-                            </div>
-                        ))}
+                  
+                                {/* Bottom wave SVG */}
+                                <svg className="absolute bottom-0 left-0 w-full opacity-[0.25] pointer-events-none translate-y-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none" style={{ height: '45px' }}>
+                                  <path fill="#ffffff" fillOpacity="1" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,218.7C672,235,768,245,864,229.3C960,213,1056,171,1152,149.3C1248,128,1344,128,1392,128L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                                </svg>
+                              </div>
+                            );
+                        })}
                     </div>
 
                     {/* Controls */}
@@ -447,7 +491,7 @@ const AllProducts = () => {
                         <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left border-collapse block md:table">
-                                    <thead className="hidden md:table-header-group">
+                                    <thead className="hidden md:table-header-group border-b border-gray-200">
                                         <tr className="bg-slate-50/50">
                                             <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Product Name</th>
                                             <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Status</th>
@@ -456,9 +500,9 @@ const AllProducts = () => {
                                             <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] text-right">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="block md:table-row-group md:divide-y divide-gray-50/50 p-4 md:p-0">
+                                    <tbody className="block md:table-row-group md:divide-y divide-gray-200 p-4 md:p-0">
                                         {currentItems.map((product) => (
-                                            <tr key={product.id} className="hover:bg-primary/10/20 transition-colors group block md:table-row bg-white md:bg-transparent border border-gray-100 md:border-0 rounded-2xl md:rounded-none mb-4 md:mb-0 shadow-sm md:shadow-none">
+                                            <tr key={product.id} className="hover:bg-primary/10/20 transition-colors group block md:table-row bg-white md:bg-transparent border border-gray-100 md:border-x-0 md:border-t-0 md:border-b md:border-gray-200 rounded-2xl md:rounded-none mb-4 md:mb-0 shadow-sm md:shadow-none">
                                                 <td className="px-4 py-5 md:px-8 md:py-6 block md:table-cell border-b border-gray-50 md:border-b-0">
                                                     <div className="flex flex-col md:block w-full gap-3 md:gap-0">
                                                         <span className="md:hidden text-[11px] font-black text-gray-400 uppercase tracking-widest">Product Name</span>

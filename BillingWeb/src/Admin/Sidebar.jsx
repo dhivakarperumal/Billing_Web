@@ -120,7 +120,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, onToggleCollapse }) => {
       <aside
         className={`
         fixed top-0 left-0 z-50 h-full
-        bg-gradient-to-b from-blue-900 via-blue-900 to-blue-900 border-r border-white/5
+        bg-gradient-to-b from-gray-900 via-gray-900 to-gray-900 border-r border-white/5
         
         flex flex-col transition-all duration-300
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
