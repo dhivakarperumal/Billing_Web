@@ -7,6 +7,9 @@ import categoryRouter from "./src/routers/categoryRouter.js";
 import productRouter from "./src/routers/productRouter.js";
 import dashboardRouter from "./src/routers/dashboardRouter.js";
 import orderRouter from "./src/routers/orderRouter.js";
+import dealerRouter from "./src/routers/dealerRouter.js";
+import invoiceRouter from "./src/routers/invoiceRouter.js";
+import reportRouter from "./src/routers/reportRouter.js";
 
 import path from "path";
 import { fileURLToPath } from "url";
@@ -18,12 +21,9 @@ const app = express();
 
 app.use(cors());
 
-// Limit Logger
+// Route Logger
 app.use((req, res, next) => {
-    if (req.headers['content-length']) {
-        const sizeInMb = (parseInt(req.headers['content-length']) / (1024 * 1024)).toFixed(2);
-        console.log(`[DEBUG] Incoming Request: ${req.method} ${req.url} - Size: ${sizeInMb}MB`);
-    }
+    console.log(`[DEBUG] Incoming: ${req.method} ${req.url}`);
     next();
 });
 
@@ -37,6 +37,9 @@ app.use("/api/categories", categoryRouter);
 app.use("/api/products", productRouter);
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/dealers", dealerRouter);
+app.use("/api/invoices", invoiceRouter);
+app.use("/api/reports", reportRouter);
 
 
 // Test Route

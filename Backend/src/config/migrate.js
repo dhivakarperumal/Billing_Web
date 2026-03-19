@@ -95,7 +95,56 @@ const migrate = async () => {
             ) ENGINE=InnoDB;
         `);
 
-        // 6. Schema Upgrades (Ensure consistency)
+        // 6. Dealers Table
+        console.log("🛠️ Checking table: dealers...");
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS dealers (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                contact VARCHAR(255) NOT NULL,
+                email VARCHAR(255),
+                phone VARCHAR(20) NOT NULL,
+                location VARCHAR(255),
+                status VARCHAR(50) DEFAULT 'Pending',
+                rating DECIMAL(3,2) DEFAULT 4.5,
+                orders INT DEFAULT 0,
+                image LONGTEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB;
+        `);
+
+        // 7. Invoices Table
+        console.log("🛠️ Checking table: invoices...");
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS invoices (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                dealer_id INT NOT NULL,
+                invoice_date DATE NOT NULL,
+                total_amount DECIMAL(12,2) NOT NULL,
+                status VARCHAR(50) DEFAULT 'Pending',
+                document_path VARCHAR(255),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (dealer_id) REFERENCES dealers(id) ON DELETE CASCADE
+            ) ENGINE=InnoDB;
+        `);
+
+        // 8. Invoice Items Table
+        console.log("🛠️ Checking table: invoice_items...");
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS invoice_items (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                invoice_id INT NOT NULL,
+                product_id INT NOT NULL,
+                name VARCHAR(255) NOT NULL,
+                price DECIMAL(12,2) NOT NULL,
+                quantity INT NOT NULL,
+                total DECIMAL(12,2) NOT NULL,
+                FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE,
+                FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+            ) ENGINE=InnoDB;
+        `);
+
+        // 9. Schema Upgrades (Ensure consistency)
         console.log("🔄 Verifying schema consistency for existing tables...");
 
         const upgrades = [
