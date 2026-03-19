@@ -40,15 +40,9 @@ const navItems = [
     ],
   },
 
-  
+  { path: "/billing/create", label: "Create Bill", icon: PlusCircle },
 
-  {
-    label: "Billing",
-    icon: ShoppingCart,
-    children: [
-      { path: "/billing/create", label: "Create Bill", icon: PlusCircle },
-    ],
-  },
+ 
 
   { path: "/users/all", label: "Customers", icon: Users },
   {

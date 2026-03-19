@@ -10,19 +10,19 @@ const More = () => {
       title: "Printer Configuration",
       desc: "Setup and manage billing printer",
       icon: Printer,
-      path: "/admin/printer",
+      path: "/printer",
     },
     {
       title: "Printer Settings",
       desc: "Customize invoice print layout & behavior",
       icon: Settings,
-      path: "/admin/printer-settings",
+      path: "/printer-settings",
     },
     {
       title: "GST Settings",
       desc: "Configure GST for billing",
       icon: Database,
-      path: "/admin/gst-settings",
+      path: "/gst-settings",
     },
   ];
 
