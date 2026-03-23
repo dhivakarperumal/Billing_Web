@@ -345,7 +345,7 @@ const AddProducts = () => {
         await axios.post("http://localhost:5000/api/products", payload);
         toast.success("Product added successfully!");
       }
-      navigate("/products/all");
+      navigate("/admin/products/all");
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.message || "Failed to save product");
@@ -366,7 +366,7 @@ const AddProducts = () => {
               icon={<FiInfo className="text-blue-500" />}
             >
               <div className="space-y-6">
-                <div className="grid md:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-2 gap-6">
                   <FormInput
                     label="Product Name"
                     name="name"
@@ -374,13 +374,6 @@ const AddProducts = () => {
                     onChange={handleChange}
                     placeholder="e.g. Organic Brown Rice"
                     required
-                  />
-                  <FormInput
-                    label="Tamil Name"
-                    name="name_tamil"
-                    value={formData.name_tamil}
-                    onChange={handleChange}
-                    placeholder="e.g. ஆர்கானிக் பிரவுன் ரைஸ்"
                   />
                   <FormInput
                     label="Product Code / Barcode"
@@ -703,7 +696,7 @@ const AddProducts = () => {
           <div className="max-w-6xl mx-auto flex justify-end gap-4 border-t border-gray-200 pt-4">
             <button
               type="button"
-              onClick={() => navigate("/products/all")}
+              onClick={() => navigate("/admin/products/all")}
               className="px-6 py-3 rounded-xl border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 transition-all"
             >
               Cancel
