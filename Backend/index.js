@@ -30,7 +30,6 @@ app.use((req, res, next) => {
 
 app.use(express.json({ limit: 524288000 })); 
 app.use(express.urlencoded({ limit: 524288000, extended: true }));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 
 app.use("/api/auth", authRouter);

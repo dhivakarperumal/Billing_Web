@@ -1,39 +1,33 @@
 import db from "../config/db.js";
 import sharp from "sharp";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Helper to compress Base64 images on the server without disk writes
+const processImages = async (imagesArray) => {
+    if (!imagesArray || imagesArray.length === 0) return [];
 
-// Ensure uploads directory exists in the Backend folder
-const uploadsDir = path.join(__dirname, "../../uploads");
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
+    const compressed = [];
 
-// Helper to save and compress image (handles Base64 strings from frontend)
-const processImages = async (base64Array) => {
-    if (!base64Array || base64Array.length === 0) return [];
+    for (const image of imagesArray) {
+        if (typeof image !== 'string') continue;
 
-    const imagePaths = [];
-    for (let i = 0; i < base64Array.length; i++) {
-        const base64Str = base64Array[i];
-        if (!base64Str.startsWith('data:image')) continue; // Skip non-image strings
+        if (image.startsWith('data:image')) {
+            try {
+                const parts = image.split(';base64,');
+                const buffer = Buffer.from(parts[1], 'base64');
 
-        // Extract buffer from base64
-        const parts = base64Str.split(';base64,');
-        const buffer = Buffer.from(parts[1], 'base64');
-
-        const fileName = `${Date.now()}-${i}.webp`;
-        const filePath = path.join(uploadsDir, fileName);
-
-        await sharp(buffer)
-            .webp({ quality: 80 })
-            .toFile(filePath);
-
-        imagePaths.push(`/uploads/${fileName}`);
+                const webpBuffer = await sharp(buffer).webp({ quality: 80 }).toBuffer();
+                compressed.push(`data:image/webp;base64,${webpBuffer.toString('base64')}`);
+            } catch (err) {
+                console.error("Image compression error:", err);
+                compressed.push(image); // fallback to original data URL
+            }
+        } else {
+            // Keep existing URL or path as-is
+            compressed.push(image);
+        }
     }
-    return imagePaths;
+
+    return compressed;
 };
 
 // Helper to generate Product Code
@@ -261,16 +255,9 @@ export const updateProduct = async (req, res) => {
     const { id } = req.params;
     let { product_code, name, category, subCategory, mrp, offer_price, total_stock, status, images, variants, description, expiry, supplier, rating, name_tamil } = req.body;
     try {
-        // Separate existing images from new base64 strings
-        const existingImages = (images || []).filter(img => !img.startsWith('data:image'));
-        const newBase64Images = (images || []).filter(img => img.startsWith('data:image'));
-
-        // Process new base64 images
-        const newImagePaths = await processImages(newBase64Images);
-        
-        // Combine existing URLs with new file paths
-        const finalImagePaths = [...existingImages, ...newImagePaths];
-        const imagesJson = JSON.stringify(finalImagePaths);
+        // Process all images (base64 compress + keep any existing URL/path as-is)
+        const finalImages = await processImages(images || []);
+        const imagesJson = JSON.stringify(finalImages);
 
         const variantsJson = JSON.stringify(variants || []);
         const expiryJson = JSON.stringify(expiry || {});
@@ -301,7 +288,7 @@ export const updateProduct = async (req, res) => {
 
         await db.promise().query(updateQuery, updateParams);
 
-        res.status(200).json({ message: "Product updated successfully", images: finalImagePaths });
+        res.status(200).json({ message: "Product updated successfully", images: finalImages });
     } catch (error) {
         console.error("Update Product Error:", error);
         res.status(500).json({ message: "Failed to update product", error: error.message });
